@@ -1,0 +1,112 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "deepseek-v4.1-flash",
+ "name": "DeepSeek-V4.1-Flash",
+ "provider": "deepseek-ai",
+ "hf_repo": "deepseek-ai/DeepSeek-V4.1-Flash",
+ "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash",
+ "variant": "instruct",
+ "released": "2026-09-10",
+ "params_total": 763205315794,
+ "params_active": 25173149515,
+ "params_active_source": "estimated",
+ "context_max": 1048576,
+ "native_bits": 8.0,
+ "license": {
+  "name": "mit",
+  "url": null,
+  "commercial": true,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "deepseek_v41",
+  "text-generation",
+  "image-text-to-text",
+  "eval-results",
+  "endpoints_compatible",
+  "8-bit",
+  "fp8"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [
+  "architecture read from config, but the model family is unfamiliar — treat cache math as approximate"
+ ],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "deepseek_v41_text",
+  "attention": "latent",
+  "layers": 40,
+  "kv_layers": 40,
+  "sliding_layers": 0,
+  "linear_layers": 0,
+  "kv_heads": 1,
+  "head_dim": 512,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": 64,
+  "window_size": null,
+  "full_bytes_per_token_8bit": 23040,
+  "sliding_bytes_per_token_8bit": 0,
+  "linear_state_bytes": 0,
+  "hidden_size": 5120,
+  "experts_total": 384,
+  "experts_active": 6,
+  "experts_shared": 1,
+  "moe_intermediate": 2304,
+  "moe_layers": 40,
+  "accel_mtp": true,
+  "accel_dflash_repo": null,
+  "accel_dspark_repo": "JigSawPT/DeepSeek-V4.1-Flash-DSpark-GGUF",
+  "conventional_assumed": true,
+  "source": "config",
+  "config_sha": "0110b6f9349cf640",
+  "notes": [],
+  "kv_cache_gb_at_128k_8bit": 3.02
+ },
+ "quants": [
+  {
+   "repo": "deepseek-ai/DeepSeek-V4.1-Flash",
+   "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash",
+   "format": "safetensors",
+   "label": "FP8",
+   "bits": 5.35,
+   "size_gb": 510.3,
+   "size_bytes": 510296708312,
+   "quantizer": "official",
+   "file_count": 48,
+   "qat": false,
+   "first_seen": "2026-09-12"
+  }
+ ],
+ "reference": {
+  "q4": null,
+  "q8": {
+   "repo": "deepseek-ai/DeepSeek-V4.1-Flash",
+   "label": "FP8"
+  },
+  "mlx4": null,
+  "native": {
+   "repo": "deepseek-ai/DeepSeek-V4.1-Flash",
+   "label": "FP8"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": null,
+  "dspark": "JigSawPT/DeepSeek-V4.1-Flash-DSpark-GGUF"
+ },
+ "timestamps": {
+  "first_seen": "2026-09-12T07:51:19.840373+00:00",
+  "last_checked": "2026-09-12T07:51:19.840373+00:00",
+  "last_changed": "2026-09-12T07:51:19.840373+00:00"
+ },
+ "generated_at": "2026-09-15T08:35:16+00:00",
+ "sha": "54d53614720ecb38"
+}

@@ -1,0 +1,129 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "hy4-preview",
+ "name": "Hy4-preview",
+ "provider": "tencent",
+ "hf_repo": "tencent/Hy4-preview",
+ "url": "https://huggingface.co/tencent/Hy4-preview",
+ "variant": "instruct",
+ "released": "2026-08-27",
+ "params_total": 779960992733,
+ "params_active": 62017782749,
+ "params_active_source": "estimated",
+ "context_max": 1048576,
+ "native_bits": 16.0,
+ "license": {
+  "name": "apache-2.0",
+  "url": null,
+  "commercial": true,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "hy_v4",
+  "text-generation",
+  "hunyuan",
+  "hy4",
+  "moe",
+  "conversational",
+  "eval-results",
+  "endpoints_compatible"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [
+  "architecture read from config, but the model family is unfamiliar — treat cache math as approximate"
+ ],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "hy_v4",
+  "attention": "mla",
+  "layers": 78,
+  "kv_layers": 78,
+  "sliding_layers": 0,
+  "linear_layers": 0,
+  "kv_heads": 8,
+  "head_dim": 64,
+  "k_eq_v": false,
+  "kv_lora_rank": 512,
+  "rope_dim": 64,
+  "window_size": null,
+  "full_bytes_per_token_8bit": 44928,
+  "sliding_bytes_per_token_8bit": 0,
+  "linear_state_bytes": 0,
+  "hidden_size": 6144,
+  "experts_total": 256,
+  "experts_active": 8,
+  "experts_shared": 1,
+  "moe_intermediate": 2048,
+  "moe_layers": 77,
+  "accel_mtp": true,
+  "accel_dflash_repo": null,
+  "accel_dspark_repo": null,
+  "conventional_assumed": true,
+  "source": "config",
+  "config_sha": "76e26f89de3f511c",
+  "notes": [],
+  "kv_cache_gb_at_128k_8bit": 5.89
+ },
+ "quants": [
+  {
+   "repo": "mlx-community/Hy4-preview-4bit",
+   "url": "https://huggingface.co/mlx-community/Hy4-preview-4bit",
+   "format": "mlx",
+   "label": "MLX-4bit",
+   "bits": 4.44,
+   "size_gb": 433.36,
+   "size_bytes": 433355075408,
+   "quantizer": "mlx-community",
+   "file_count": 103,
+   "qat": false,
+   "first_seen": "2026-09-03"
+  },
+  {
+   "repo": "tencent/Hy4-preview",
+   "url": "https://huggingface.co/tencent/Hy4-preview",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.0,
+   "size_gb": 1559.98,
+   "size_bytes": 1559983809380,
+   "quantizer": "official",
+   "file_count": 131,
+   "qat": false,
+   "first_seen": "2026-09-03"
+  }
+ ],
+ "reference": {
+  "q4": {
+   "repo": "mlx-community/Hy4-preview-4bit",
+   "label": "MLX-4bit"
+  },
+  "q8": null,
+  "mlx4": {
+   "repo": "mlx-community/Hy4-preview-4bit",
+   "label": "MLX-4bit"
+  },
+  "native": {
+   "repo": "tencent/Hy4-preview",
+   "label": "BF16"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": null,
+  "dspark": null
+ },
+ "timestamps": {
+  "first_seen": "2026-09-03T07:56:44.012864+00:00",
+  "last_checked": "2026-09-03T07:56:44.012864+00:00",
+  "last_changed": "2026-09-03T07:56:44.012864+00:00"
+ },
+ "generated_at": "2026-09-15T08:35:16+00:00",
+ "sha": "37b84e22b9a97ced"
+}

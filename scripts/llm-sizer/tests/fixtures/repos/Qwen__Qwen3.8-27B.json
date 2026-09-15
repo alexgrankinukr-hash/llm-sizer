@@ -1,0 +1,146 @@
+{
+ "id": "Qwen/Qwen3.8-27B",
+ "sha": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+ "gated": false,
+ "downloads": 4960483,
+ "pipeline_tag": "image-text-to-text",
+ "last_modified": "2026-08-14 15:00:01+00:00",
+ "created_at": "2026-08-05 08:22:59+00:00",
+ "card_base_model": null,
+ "safetensors": {
+  "total": 27781427952,
+  "parameters": {
+   "BF16": 27781427952
+  }
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "size": 1570
+  },
+  {
+   "rfilename": "LICENSE",
+   "size": 11544
+  },
+  {
+   "rfilename": "README.md",
+   "size": 65012
+  },
+  {
+   "rfilename": "chat_template.jinja",
+   "size": 8952
+  },
+  {
+   "rfilename": "config.json",
+   "size": 4312
+  },
+  {
+   "rfilename": "crc32.txt",
+   "size": 238
+  },
+  {
+   "rfilename": "generation_config.json",
+   "size": 202
+  },
+  {
+   "rfilename": "merges.txt",
+   "size": 3353259
+  },
+  {
+   "rfilename": "model-00001-of-00018.safetensors",
+   "size": 3966730552
+  },
+  {
+   "rfilename": "model-00002-of-00018.safetensors",
+   "size": 3043080328
+  },
+  {
+   "rfilename": "model-00003-of-00018.safetensors",
+   "size": 2542796952
+  },
+  {
+   "rfilename": "model-00004-of-00018.safetensors",
+   "size": 3988973152
+  },
+  {
+   "rfilename": "model-00005-of-00018.safetensors",
+   "size": 2099339864
+  },
+  {
+   "rfilename": "model-00006-of-00018.safetensors",
+   "size": 3979553696
+  },
+  {
+   "rfilename": "model-00007-of-00018.safetensors",
+   "size": 2108759344
+  },
+  {
+   "rfilename": "model-00008-of-00018.safetensors",
+   "size": 3979553696
+  },
+  {
+   "rfilename": "model-00009-of-00018.safetensors",
+   "size": 2108759344
+  },
+  {
+   "rfilename": "model-00010-of-00018.safetensors",
+   "size": 3979553696
+  },
+  {
+   "rfilename": "model-00011-of-00018.safetensors",
+   "size": 2108759344
+  },
+  {
+   "rfilename": "model-00012-of-00018.safetensors",
+   "size": 3979553696
+  },
+  {
+   "rfilename": "model-00013-of-00018.safetensors",
+   "size": 2108759344
+  },
+  {
+   "rfilename": "model-00014-of-00018.safetensors",
+   "size": 3979553696
+  },
+  {
+   "rfilename": "model-00015-of-00018.safetensors",
+   "size": 2108759344
+  },
+  {
+   "rfilename": "model-00016-of-00018.safetensors",
+   "size": 3979564040
+  },
+  {
+   "rfilename": "model-00017-of-00018.safetensors",
+   "size": 2108759344
+  },
+  {
+   "rfilename": "model-00018-of-00018.safetensors",
+   "size": 3392197344
+  },
+  {
+   "rfilename": "model.safetensors.index.json",
+   "size": 112216
+  },
+  {
+   "rfilename": "preprocessor_config.json",
+   "size": 390
+  },
+  {
+   "rfilename": "tokenizer.json",
+   "size": 12809320
+  },
+  {
+   "rfilename": "tokenizer_config.json",
+   "size": 17928
+  },
+  {
+   "rfilename": "video_preprocessor_config.json",
+   "size": 385
+  },
+  {
+   "rfilename": "vocab.json",
+   "size": 6722759
+  }
+ ]
+}

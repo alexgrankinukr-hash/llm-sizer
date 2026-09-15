@@ -1,0 +1,107 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "deepseek-v4-flash-vision-exp",
+ "name": "DeepSeek-V4-Flash-Vision-Exp",
+ "provider": "deepseek-ai",
+ "hf_repo": "deepseek-ai/DeepSeek-V4-Flash-Vision-Exp",
+ "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp",
+ "variant": "instruct",
+ "released": "2026-08-31",
+ "params_total": 304646824126,
+ "params_active": 17291018240,
+ "params_active_source": "estimated",
+ "context_max": 1048576,
+ "native_bits": 4.0,
+ "license": {
+  "name": "mit",
+  "url": null,
+  "commercial": true,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "deepseek_v4",
+  "text-generation",
+  "image-text-to-text",
+  "eval-results",
+  "endpoints_compatible",
+  "8-bit",
+  "fp8"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "deepseek_v4",
+  "attention": "latent",
+  "layers": 43,
+  "kv_layers": 43,
+  "sliding_layers": 0,
+  "linear_layers": 0,
+  "kv_heads": 1,
+  "head_dim": 512,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": 64,
+  "window_size": null,
+  "full_bytes_per_token_8bit": 24768,
+  "sliding_bytes_per_token_8bit": 0,
+  "linear_state_bytes": 0,
+  "hidden_size": 4096,
+  "experts_total": 256,
+  "experts_active": 6,
+  "experts_shared": 1,
+  "moe_intermediate": 2048,
+  "moe_layers": 43,
+  "accel_mtp": true,
+  "accel_dflash_repo": null,
+  "accel_dspark_repo": null,
+  "conventional_assumed": false,
+  "source": "config",
+  "config_sha": "a23909345adfb3f1",
+  "notes": [],
+  "kv_cache_gb_at_128k_8bit": 3.25
+ },
+ "quants": [
+  {
+   "repo": "deepseek-ai/DeepSeek-V4-Flash-Vision-Exp",
+   "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp",
+   "format": "safetensors",
+   "label": "FP4",
+   "bits": 4.41,
+   "size_gb": 167.82,
+   "size_bytes": 167819404368,
+   "quantizer": "official",
+   "file_count": 48,
+   "qat": false,
+   "first_seen": "2026-09-04"
+  }
+ ],
+ "reference": {
+  "q4": null,
+  "q8": null,
+  "mlx4": null,
+  "native": {
+   "repo": "deepseek-ai/DeepSeek-V4-Flash-Vision-Exp",
+   "label": "FP4"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": null,
+  "dspark": null
+ },
+ "timestamps": {
+  "first_seen": "2026-09-04T07:54:53.379440+00:00",
+  "last_checked": "2026-09-10T08:02:41.557123+00:00",
+  "last_changed": "2026-09-04T07:54:53.379440+00:00"
+ },
+ "generated_at": "2026-09-15T08:35:16+00:00",
+ "sha": "2e5f250e2fdfb371"
+}

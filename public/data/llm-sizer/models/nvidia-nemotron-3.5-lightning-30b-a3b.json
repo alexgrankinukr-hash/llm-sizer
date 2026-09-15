@@ -1,0 +1,166 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "nvidia-nemotron-3.5-lightning-30b-a3b",
+ "name": "NVIDIA-Nemotron-3.5-Lightning-30B-A3B",
+ "provider": "nvidia",
+ "hf_repo": "nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16",
+ "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16",
+ "variant": "instruct",
+ "released": "2026-08-01",
+ "params_total": 31577937344,
+ "params_active": 3000000000,
+ "params_active_source": "name",
+ "context_max": 262144,
+ "native_bits": 16.0,
+ "license": {
+  "name": "other",
+  "url": null,
+  "commercial": null,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "nemotron_h",
+  "text-generation",
+  "nvidia",
+  "pytorch",
+  "nemotron-3.5",
+  "conversational",
+  "en",
+  "es",
+  "fr",
+  "de",
+  "it",
+  "ja",
+  "dataset:nvidia/nemotron-post-training-v3",
+  "dataset:nvidia/nemotron-pre-training-datasets",
+  "eval-results",
+  "endpoints_compatible",
+  "deploy:azure",
+  "deploy:sagemaker"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "nemotron_h",
+  "attention": "gqa",
+  "layers": 52,
+  "kv_layers": 6,
+  "sliding_layers": 0,
+  "linear_layers": 23,
+  "kv_heads": 2,
+  "head_dim": 128,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": null,
+  "window_size": null,
+  "full_bytes_per_token_8bit": 3072,
+  "sliding_bytes_per_token_8bit": 0,
+  "linear_state_bytes": 20772864,
+  "hidden_size": 2688,
+  "experts_total": 128,
+  "experts_active": 6,
+  "experts_shared": 1,
+  "moe_intermediate": 1856,
+  "moe_layers": 23,
+  "accel_mtp": true,
+  "accel_dflash_repo": "apolo13x/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-DFlash-GGUF",
+  "accel_dspark_repo": "mlx-community/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-DSpark-bf16",
+  "conventional_assumed": false,
+  "source": "config",
+  "config_sha": "e3397418b4b11d6a",
+  "notes": [
+   "block list: only attention blocks counted for the cache",
+   "linear-layer state size estimated"
+  ],
+  "kv_cache_gb_at_128k_8bit": 0.42
+ },
+ "quants": [
+  {
+   "repo": "ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF",
+   "url": "https://huggingface.co/ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q4_0",
+   "bits": 4.79,
+   "size_gb": 18.9,
+   "size_bytes": 18898091584,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-06"
+  },
+  {
+   "repo": "ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF",
+   "url": "https://huggingface.co/ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 8.51,
+   "size_gb": 33.59,
+   "size_bytes": 33585495616,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-06"
+  },
+  {
+   "repo": "ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF",
+   "url": "https://huggingface.co/ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF",
+   "format": "gguf",
+   "label": "BF16",
+   "bits": 16.01,
+   "size_gb": 63.18,
+   "size_bytes": 63181504576,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-06"
+  },
+  {
+   "repo": "nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16",
+   "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.68,
+   "size_gb": 65.83,
+   "size_bytes": 65827374264,
+   "quantizer": "official",
+   "file_count": 14,
+   "qat": false,
+   "first_seen": "2026-09-06"
+  }
+ ],
+ "reference": {
+  "q4": {
+   "repo": "ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF",
+   "label": "Q4_0"
+  },
+  "q8": {
+   "repo": "ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF",
+   "label": "Q8_0"
+  },
+  "mlx4": null,
+  "native": {
+   "repo": "nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16",
+   "label": "BF16"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": "apolo13x/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-DFlash-GGUF",
+  "dspark": "mlx-community/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-DSpark-bf16"
+ },
+ "timestamps": {
+  "first_seen": "2026-09-06T07:49:39.658493+00:00",
+  "last_checked": "2026-09-13T08:13:44.000647+00:00",
+  "last_changed": "2026-09-06T07:49:39.658493+00:00"
+ },
+ "generated_at": "2026-09-15T08:35:16+00:00",
+ "sha": "52ea6082cec51b00"
+}

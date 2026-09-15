@@ -1,0 +1,847 @@
+[
+ {
+  "id": "mlx-community/moge-3-vitg-mlx-fp32",
+  "sha": "3ca4cbe53a7a60a11fd33294b4cde7e60c4a7bb2",
+  "last_modified": "2026-09-02 18:00:25+00:00",
+  "created_at": "2026-09-02 17:59:38+00:00",
+  "downloads": 0,
+  "pipeline_tag": "depth-estimation",
+  "card_base_model": null,
+  "safetensors_total": 1250741135
+ },
+ {
+  "id": "mlx-community/moge-3-vitl-mlx-fp32",
+  "sha": "424ee57df1646138a4ecc768a7b44a9146276819",
+  "last_modified": "2026-09-02 18:00:24+00:00",
+  "created_at": "2026-09-02 17:59:28+00:00",
+  "downloads": 0,
+  "pipeline_tag": "depth-estimation",
+  "card_base_model": null,
+  "safetensors_total": 370284399
+ },
+ {
+  "id": "mlx-community/IndexTTS-2.5-fp16",
+  "sha": "65644cd70da15309ffeb74aa03f3686bb04e3eb1",
+  "last_modified": "2026-09-02 14:21:33+00:00",
+  "created_at": "2026-09-02 14:21:24+00:00",
+  "downloads": 0,
+  "pipeline_tag": "text-to-speech",
+  "card_base_model": "IndexTeam/IndexTTS-2.5",
+  "safetensors_total": 580493120
+ },
+ {
+  "id": "mlx-community/Qwen3.8-Flash-Next-4bit",
+  "sha": "07b5dc6c54600a359b87f1e53e7adf6351c72a2c",
+  "last_modified": "2026-09-02 12:24:16+00:00",
+  "created_at": "2026-08-31 23:57:55+00:00",
+  "downloads": 88,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": "Qwen/Qwen3.8-Flash-Next",
+  "safetensors_total": 177392830611
+ },
+ {
+  "id": "mlx-community/GLM-5.3-4bit",
+  "sha": "81ad9b73c6188f808737dbb52458f082d249dcbe",
+  "last_modified": "2026-09-02 09:40:08+00:00",
+  "created_at": "2026-09-02 08:29:28+00:00",
+  "downloads": 0,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "zai-org/GLM-5.3-BF16",
+  "safetensors_total": 743377019904
+ },
+ {
+  "id": "mlx-community/GLM-5.3-mixed-4_5bit",
+  "sha": "d253c81d0701ee06074dda30e4c81c3e0a185135",
+  "last_modified": "2026-09-02 09:38:46+00:00",
+  "created_at": "2026-09-02 08:26:23+00:00",
+  "downloads": 0,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "zai-org/GLM-5.3-BF16",
+  "safetensors_total": 743377019904
+ },
+ {
+  "id": "mlx-community/MOSS-TTS-Local-Transformer-v1.5-bf16",
+  "sha": "ae0e2a9d3cdb4e8702905b273116677bab52fd45",
+  "last_modified": "2026-09-02 05:49:09+00:00",
+  "created_at": "2026-09-02 05:48:48+00:00",
+  "downloads": 0,
+  "pipeline_tag": "text-to-speech",
+  "card_base_model": "OpenMOSS-Team/MOSS-TTS-Local-Transformer-v1.5",
+  "safetensors_total": 4550403584
+ },
+ {
+  "id": "mlx-community/MOSS-TTS-Local-Transformer-v1.5-4bit",
+  "sha": "613364100996995dd095f7abd04b24372ce11a8e",
+  "last_modified": "2026-09-02 05:48:46+00:00",
+  "created_at": "2026-09-02 05:46:05+00:00",
+  "downloads": 0,
+  "pipeline_tag": "text-to-speech",
+  "card_base_model": "OpenMOSS-Team/MOSS-TTS-Local-Transformer-v1.5",
+  "safetensors_total": 4550403584
+ },
+ {
+  "id": "mlx-community/MOSS-TTS-Local-Transformer-v1.5-8bit",
+  "sha": "baa1c765bc50b3ca000e4b74dceccc766b9dea1a",
+  "last_modified": "2026-09-02 05:46:03+00:00",
+  "created_at": "2026-09-02 05:45:47+00:00",
+  "downloads": 0,
+  "pipeline_tag": "text-to-speech",
+  "card_base_model": "OpenMOSS-Team/MOSS-TTS-Local-Transformer-v1.5",
+  "safetensors_total": 4550403584
+ },
+ {
+  "id": "mlx-community/MOSS-Audio-Tokenizer-v2-bf16",
+  "sha": "1ffc0359a93ee0dc1ae6667d536906d6551190df",
+  "last_modified": "2026-09-02 05:45:45+00:00",
+  "created_at": "2026-09-02 05:45:27+00:00",
+  "downloads": 0,
+  "pipeline_tag": null,
+  "card_base_model": "OpenMOSS-Team/MOSS-Audio-Tokenizer-v2",
+  "safetensors_total": 2123701248
+ },
+ {
+  "id": "mlx-community/Metric-Video-Depth-Anything-Large-MLX",
+  "sha": "0aab5e5a5d4653c6a063317158ba68ed269bc425",
+  "last_modified": "2026-09-01 07:12:28+00:00",
+  "created_at": "2026-09-01 06:31:51+00:00",
+  "downloads": 0,
+  "pipeline_tag": "depth-estimation",
+  "card_base_model": null,
+  "safetensors_total": 384554177
+ },
+ {
+  "id": "mlx-community/Metric-Video-Depth-Anything-Base-MLX",
+  "sha": "e4a047ff7a1de3088c97777cba5a9d07496bc3ba",
+  "last_modified": "2026-09-01 07:12:27+00:00",
+  "created_at": "2026-09-01 06:31:26+00:00",
+  "downloads": 0,
+  "pipeline_tag": "depth-estimation",
+  "card_base_model": null,
+  "safetensors_total": 114531521
+ },
+ {
+  "id": "mlx-community/Metric-Video-Depth-Anything-Small-MLX",
+  "sha": "0d4ff7a5907b62654d4115d83ce3b2af317649e2",
+  "last_modified": "2026-09-01 07:12:25+00:00",
+  "created_at": "2026-09-01 06:30:59+00:00",
+  "downloads": 0,
+  "pipeline_tag": "depth-estimation",
+  "card_base_model": null,
+  "safetensors_total": 29080193
+ },
+ {
+  "id": "mlx-community/Video-Depth-Anything-Large-MLX",
+  "sha": "5cd5f8ebba833bb8e6ffd6631eadbb44be6d151f",
+  "last_modified": "2026-09-01 07:12:24+00:00",
+  "created_at": "2026-09-01 06:30:38+00:00",
+  "downloads": 0,
+  "pipeline_tag": "depth-estimation",
+  "card_base_model": null,
+  "safetensors_total": 384554177
+ },
+ {
+  "id": "mlx-community/Video-Depth-Anything-Base-MLX",
+  "sha": "c4ec598c5cbaf376a338958650b29598c1915945",
+  "last_modified": "2026-09-01 07:12:22+00:00",
+  "created_at": "2026-09-01 06:30:18+00:00",
+  "downloads": 0,
+  "pipeline_tag": "depth-estimation",
+  "card_base_model": null,
+  "safetensors_total": 114531521
+ },
+ {
+  "id": "mlx-community/Video-Depth-Anything-Small-MLX",
+  "sha": "a12a442242291eed6b885b196cbbdb51f3bcdb87",
+  "last_modified": "2026-09-01 07:12:20+00:00",
+  "created_at": "2026-09-01 06:29:35+00:00",
+  "downloads": 0,
+  "pipeline_tag": "depth-estimation",
+  "card_base_model": null,
+  "safetensors_total": 29080193
+ },
+ {
+  "id": "mlx-community/Qwen3.8-Flash-Next-oQ8e-mtp",
+  "sha": "2a9de025436ea977720e4e3d6f369b185838e791",
+  "last_modified": "2026-08-31 21:42:13+00:00",
+  "created_at": "2026-08-31 20:48:11+00:00",
+  "downloads": 76,
+  "pipeline_tag": null,
+  "card_base_model": "Qwen/Qwen3.8-Flash-Next",
+  "safetensors_total": 179999981459
+ },
+ {
+  "id": "mlx-community/Qwen3.8-Flash-Next-oQ6e-mtp",
+  "sha": "e171af86f499f1855b0fb71d781105e8dd609610",
+  "last_modified": "2026-08-31 21:42:11+00:00",
+  "created_at": "2026-08-31 20:48:10+00:00",
+  "downloads": 50,
+  "pipeline_tag": null,
+  "card_base_model": "Qwen/Qwen3.8-Flash-Next",
+  "safetensors_total": 179999981459
+ },
+ {
+  "id": "mlx-community/LongCat-Flash-Lite-Sparse-6bit",
+  "sha": "ab41c475d8c9d8d13de71afd272edfb04f4112eb",
+  "last_modified": "2026-08-31 17:48:58+00:00",
+  "created_at": "2026-08-29 15:32:38+00:00",
+  "downloads": 437,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "meituan-longcat/LongCat-Flash-Lite-Sparse",
+  "safetensors_total": 68612700160
+ },
+ {
+  "id": "mlx-community/LongCat-Flash-Lite-Sparse-4bit",
+  "sha": "03296f3f32078f19d5c553021bf3c06a0042c315",
+  "last_modified": "2026-08-31 17:48:20+00:00",
+  "created_at": "2026-08-28 03:29:37+00:00",
+  "downloads": 124,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "meituan-longcat/LongCat-Flash-Lite-Sparse",
+  "safetensors_total": 68612700160
+ },
+ {
+  "id": "mlx-community/LongCat-Flash-Lite-Sparse-8bit",
+  "sha": "ef30baf82679977d21c87d072a2156adeb7e4a23",
+  "last_modified": "2026-08-31 17:46:38+00:00",
+  "created_at": "2026-08-29 15:32:39+00:00",
+  "downloads": 39,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "meituan-longcat/LongCat-Flash-Lite-Sparse",
+  "safetensors_total": 68612700160
+ },
+ {
+  "id": "mlx-community/IndexTTS-1.5-MLX",
+  "sha": "10a443ab4cf53e3476c1a3f733d0f782826b352e",
+  "last_modified": "2026-08-31 07:35:16+00:00",
+  "created_at": "2026-08-31 07:31:01+00:00",
+  "downloads": 8,
+  "pipeline_tag": "text-to-speech",
+  "card_base_model": "IndexTeam/IndexTTS-1.5",
+  "safetensors_total": null
+ },
+ {
+  "id": "mlx-community/IndexTTS-2-MLX",
+  "sha": "d571c8a9f37f3aa051ad57c11124a8498c7867f6",
+  "last_modified": "2026-08-31 07:34:13+00:00",
+  "created_at": "2026-08-31 07:31:05+00:00",
+  "downloads": 15,
+  "pipeline_tag": "text-to-speech",
+  "card_base_model": "IndexTeam/IndexTTS-2",
+  "safetensors_total": null
+ },
+ {
+  "id": "mlx-community/Audio8-TTS-Preview-0.1b-bf16",
+  "sha": "084df8928ee718eab19afe4329f0e5a9ce180133",
+  "last_modified": "2026-08-30 19:33:29+00:00",
+  "created_at": "2026-08-30 19:33:23+00:00",
+  "downloads": 33,
+  "pipeline_tag": "text-to-speech",
+  "card_base_model": "Audio8/Audio8-TTS-Preview-0.1b",
+  "safetensors_total": 169779904
+ },
+ {
+  "id": "mlx-community/gpt-oss-20b-OptiQ-4bit",
+  "sha": "5caf167bbc74a6b8b1fbe5c990ca59df988fdfde",
+  "last_modified": "2026-08-29 15:40:42+00:00",
+  "created_at": "2026-06-20 11:54:17+00:00",
+  "downloads": 7854,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "openai/gpt-oss-20b",
+  "safetensors_total": 20914755648
+ },
+ {
+  "id": "mlx-community/Qwen3.5-122B-A10B-OptiQ-2bit-REAP-63B",
+  "sha": "2a91d706cfdf7a3209404ddb3cb5a2eacb79d0e4",
+  "last_modified": "2026-08-29 02:10:54+00:00",
+  "created_at": "2026-08-29 01:57:01+00:00",
+  "downloads": 259,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "mlx-community/Qwen3.5-122B-A10B-OptiQ-2bit",
+  "safetensors_total": 64561884912
+ },
+ {
+  "id": "mlx-community/XYZ-Aquila-mini-OptiQ-4bit-REAP-18B",
+  "sha": "2d3916d977b6b83ea2b5844510670dfe84687531",
+  "last_modified": "2026-08-28 14:50:53+00:00",
+  "created_at": "2026-08-28 14:25:54+00:00",
+  "downloads": 47,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "mlx-community/XYZ-Aquila-mini-OptiQ-4bit",
+  "safetensors_total": 18990568816
+ },
+ {
+  "id": "mlx-community/Hy4-preview-4bit",
+  "sha": "6c83660fe83ef0626bfbb70d7281cfb77d3f4245",
+  "last_modified": "2026-08-28 14:19:02+00:00",
+  "created_at": "2026-08-28 11:46:24+00:00",
+  "downloads": 415,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "tencent/Hy4-preview",
+  "safetensors_total": 769907403805
+ },
+ {
+  "id": "mlx-community/Ornith-1.0-35B-OptiQ-4bit-REAP-19B",
+  "sha": "2008e947fe0273d9ee8d7c6c30c00c4d6d5aa04e",
+  "last_modified": "2026-08-28 12:36:25+00:00",
+  "created_at": "2026-08-28 12:01:49+00:00",
+  "downloads": 139,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "mlx-community/Ornith-1.0-35B-OptiQ-4bit",
+  "safetensors_total": 18990568816
+ },
+ {
+  "id": "mlx-community/Ornith-1.5-35B-A3B-OptiQ-4bit-REAP-19B",
+  "sha": "85f580782fcec357d997088f351739dc4974c8b8",
+  "last_modified": "2026-08-28 11:49:35+00:00",
+  "created_at": "2026-08-28 11:40:53+00:00",
+  "downloads": 295,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "mlx-community/Ornith-1.5-35B-A3B-OptiQ-4bit",
+  "safetensors_total": 18990568816
+ },
+ {
+  "id": "mlx-community/gemma-4-26B-A4B-it-OptiQ-4bit-REAP-14B",
+  "sha": "6445e4283800c6a54c8b50b77d3972a30de08213",
+  "last_modified": "2026-08-28 08:18:44+00:00",
+  "created_at": "2026-08-28 08:05:50+00:00",
+  "downloads": 555,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "mlx-community/gemma-4-26B-A4B-it-OptiQ-4bit",
+  "safetensors_total": 14381534926
+ },
+ {
+  "id": "mlx-community/Agents-A1-OptiQ-4bit-REAP-19B",
+  "sha": "65e5c94043dadb982480791be1054b4d36f6b154",
+  "last_modified": "2026-08-28 08:04:16+00:00",
+  "created_at": "2026-08-28 07:44:28+00:00",
+  "downloads": 64,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "mlx-community/Agents-A1-OptiQ-4bit",
+  "safetensors_total": 18990568816
+ },
+ {
+  "id": "mlx-community/BTL-4-OptiQ-4bit-REAP-18B",
+  "sha": "ed9e3e82f68c9e1205d60535f58628aaf1d03481",
+  "last_modified": "2026-08-28 07:15:54+00:00",
+  "created_at": "2026-08-28 06:59:03+00:00",
+  "downloads": 48,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "mlx-community/BTL-4-OptiQ-4bit",
+  "safetensors_total": 18543997568
+ },
+ {
+  "id": "mlx-community/KAT-Coder-V2.5-Dev-OptiQ-4bit-REAP-18B",
+  "sha": "01d1e750975821726874ba84de28486ccc5ccb6d",
+  "last_modified": "2026-08-28 06:58:14+00:00",
+  "created_at": "2026-08-28 06:28:51+00:00",
+  "downloads": 437,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "mlx-community/KAT-Coder-V2.5-Dev-OptiQ-4bit",
+  "safetensors_total": 18543997568
+ },
+ {
+  "id": "mlx-community/Qwen3.5-35B-A3B-OptiQ-4bit-REAP-19B",
+  "sha": "212e00f5c653fcf4753a1513272ff598cf5a1f4e",
+  "last_modified": "2026-08-28 06:58:12+00:00",
+  "created_at": "2026-08-28 05:47:13+00:00",
+  "downloads": 201,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "mlx-community/Qwen3.5-35B-A3B-OptiQ-4bit",
+  "safetensors_total": 18990568816
+ },
+ {
+  "id": "mlx-community/Qwen3.6-35B-A3B-OptiQ-4bit-REAP-19B",
+  "sha": "95193a560399d81cd6272c393db8e96d59f54f50",
+  "last_modified": "2026-08-28 02:27:34+00:00",
+  "created_at": "2026-08-28 01:57:33+00:00",
+  "downloads": 280,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "mlx-community/Qwen3.6-35B-A3B-OptiQ-4bit",
+  "safetensors_total": 18990568816
+ },
+ {
+  "id": "mlx-community/Breeze-TTS-2-mlx",
+  "sha": "3c8829fb7fd335818f085cd2ef49b4100c0e46c8",
+  "last_modified": "2026-08-26 18:45:41+00:00",
+  "created_at": "2026-08-26 16:25:38+00:00",
+  "downloads": 322,
+  "pipeline_tag": "text-to-speech",
+  "card_base_model": [
+   "BreezeBlue/Breeze-TTS-2"
+  ],
+  "safetensors_total": 3454262272
+ },
+ {
+  "id": "mlx-community/Breeze-TTS-2-mlx-8bit",
+  "sha": "c6e4a2ff6ab9afba68b7853de802273ffe23fb49",
+  "last_modified": "2026-08-26 18:45:25+00:00",
+  "created_at": "2026-08-26 16:21:35+00:00",
+  "downloads": 200,
+  "pipeline_tag": "text-to-speech",
+  "card_base_model": [
+   "BreezeBlue/Breeze-TTS-2"
+  ],
+  "safetensors_total": 3454262272
+ },
+ {
+  "id": "mlx-community/Breeze-TTS-2-mlx-4bit",
+  "sha": "3a06d26b172ea4ae1da2f42d708383e9c79d5526",
+  "last_modified": "2026-08-26 18:45:11+00:00",
+  "created_at": "2026-08-26 16:09:29+00:00",
+  "downloads": 184,
+  "pipeline_tag": "text-to-speech",
+  "card_base_model": [
+   "BreezeBlue/Breeze-TTS-2"
+  ],
+  "safetensors_total": 3454262272
+ },
+ {
+  "id": "mlx-community/lil-bard",
+  "sha": "c4073d33aff6866e6692dfbcb2d2baf53766480d",
+  "last_modified": "2026-08-26 05:14:24+00:00",
+  "created_at": "2026-08-26 05:12:52+00:00",
+  "downloads": 322,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "N8Programs/lil-bard",
+  "safetensors_total": 172052992
+ },
+ {
+  "id": "bartowski/tencent_ContextPilot-14B-GGUF",
+  "sha": "b343f8d1489d9f9d4cef1dea89bab6bbd465da70",
+  "last_modified": "2026-09-01 11:13:44+00:00",
+  "created_at": "2026-09-01 10:36:50+00:00",
+  "downloads": 0,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "tencent/ContextPilot-14B",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/CogEvol_CogEvol-4B-GGUF",
+  "sha": "644fbb74eb68333046fbe8ddc1a86810699959b8",
+  "last_modified": "2026-09-01 06:30:34+00:00",
+  "created_at": "2026-09-01 06:19:57+00:00",
+  "downloads": 0,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": "CogEvol/CogEvol-4B",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/occamy-ai_occamy-1.0-GGUF",
+  "sha": "3b9aeb1f784d7b249f460f3c7039f739092fc17f",
+  "last_modified": "2026-08-31 13:58:55+00:00",
+  "created_at": "2026-08-31 10:37:59+00:00",
+  "downloads": 2041,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": "occamy-ai/occamy-1.0",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/darkps_ice-AI-GGUF",
+  "sha": "c21bf9f7bc958032f78677124deeac1d9761b0bd",
+  "last_modified": "2026-08-31 10:34:11+00:00",
+  "created_at": "2026-08-31 10:14:21+00:00",
+  "downloads": 795,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "darkps/ice-AI",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/beyoru_Kiwen1.1-27B-GGUF",
+  "sha": "e77534b3f957bb6a9d370e194f2b58064290f7ac",
+  "last_modified": "2026-08-29 19:11:00+00:00",
+  "created_at": "2026-08-29 17:44:03+00:00",
+  "downloads": 2547,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": "beyoru/Kiwen1.1-27B",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/Qwen3.8-Flash-Next-GGUF",
+  "sha": "928589fdb66c6ff07f22ac561e3fbce76553548f",
+  "last_modified": "2026-08-29 00:13:26+00:00",
+  "created_at": "2026-08-28 12:21:10+00:00",
+  "downloads": 10261,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": "Qwen/Qwen3.8-Flash-Next",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/UI-Venus-2-9B-GGUF",
+  "sha": "3d2022e8bbe1fb95f12ca530a9d6ef063807d593",
+  "last_modified": "2026-08-27 07:34:16+00:00",
+  "created_at": "2026-08-27 07:14:23+00:00",
+  "downloads": 2059,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": "inclusionAI/UI-Venus-2-9B",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/orcarouter_Qwen3.8-27B-Uncensored-GGUF",
+  "sha": "87d37daf5e5eb72a926d8b413e08809a57f1a120",
+  "last_modified": "2026-08-27 02:34:32+00:00",
+  "created_at": "2026-08-27 01:11:35+00:00",
+  "downloads": 23496,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": "orcarouter/Qwen3.8-27B-Uncensored",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/TheDrummer_Orion-26B-A4B-v1-GGUF",
+  "sha": "5a12f5b78e5a9018b1721fd9ceed1fdb7c5543dc",
+  "last_modified": "2026-08-27 00:33:10+00:00",
+  "created_at": "2026-08-26 23:23:31+00:00",
+  "downloads": 8608,
+  "pipeline_tag": "any-to-any",
+  "card_base_model": "TheDrummer/Orion-26B-A4B-v1",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/OraRL_Video-ORA-9B-GGUF",
+  "sha": "86693c9fdab09e8c30f7555c90dc65cd80283fb2",
+  "last_modified": "2026-08-26 18:11:26+00:00",
+  "created_at": "2026-08-26 17:51:27+00:00",
+  "downloads": 1837,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": "OraRL/Video-ORA-9B",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/apodex_Apodex-1.1-mini-GGUF",
+  "sha": "0942a4675189a49c065ddd2c4bc067eb7046c0f1",
+  "last_modified": "2026-08-26 09:14:35+00:00",
+  "created_at": "2026-08-26 07:24:25+00:00",
+  "downloads": 5220,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": "apodex/Apodex-1.1-mini",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/thomsonreuters_Thomson-1.0-Small-GGUF",
+  "sha": "8c78087c8a247efc21ea0713d8680823956c7c0d",
+  "last_modified": "2026-08-26 07:26:55+00:00",
+  "created_at": "2026-08-26 04:45:39+00:00",
+  "downloads": 70172,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": "thomsonreuters/Thomson-1.0-Small",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/granite-4.2-30b-GGUF",
+  "sha": "1847d3b70241af9d656f382a4cf29d5c6573e584",
+  "last_modified": "2026-08-25 17:53:55+00:00",
+  "created_at": "2026-08-25 16:19:37+00:00",
+  "downloads": 12187,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "ibm-granite/granite-4.2-30b",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/granite-4.2-8b-GGUF",
+  "sha": "a592100df8fe4931c7cffbac7b28e8176a1d52da",
+  "last_modified": "2026-08-25 16:02:02+00:00",
+  "created_at": "2026-08-25 15:42:16+00:00",
+  "downloads": 4800,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "ibm-granite/granite-4.2-8b",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/granite-4.2-3b-GGUF",
+  "sha": "4093456941a783ab5d8268e00a7725532c1e9af3",
+  "last_modified": "2026-08-25 15:39:04+00:00",
+  "created_at": "2026-08-25 15:29:33+00:00",
+  "downloads": 2707,
+  "pipeline_tag": "text-generation",
+  "card_base_model": "ibm-granite/granite-4.2-3b",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/kai-os_Carnice-V3-GGUF",
+  "sha": "f156cc233631c7e9c88a20e737cce7f6851110e7",
+  "last_modified": "2026-08-24 11:51:25+00:00",
+  "created_at": "2026-08-24 10:16:55+00:00",
+  "downloads": 2384,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": "kai-os/Carnice-V3",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/dots-studio_dots3-note-prev-GGUF",
+  "sha": "b5e996be8568b43a95c1b2ab9ae1ec0eab6cf6a0",
+  "last_modified": "2026-08-24 01:21:30+00:00",
+  "created_at": "2026-08-22 06:58:29+00:00",
+  "downloads": 3212,
+  "pipeline_tag": "any-to-any",
+  "card_base_model": "dots-studio/dots3-note-prev",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/Ornith-1.5-397B-GGUF",
+  "sha": "217875e8f6cf3989807cfe0313b43309874c4e90",
+  "last_modified": "2026-08-21 03:18:24+00:00",
+  "created_at": "2026-08-20 00:30:22+00:00",
+  "downloads": 5805,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": "ornith-ai/Ornith-1.5-397B",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/Ornith-1.5-35B-A3B-GGUF",
+  "sha": "64b0493d34a5ca4c1b4ad67bb99b41d74b4f07d6",
+  "last_modified": "2026-08-19 22:18:09+00:00",
+  "created_at": "2026-08-19 19:06:54+00:00",
+  "downloads": 86232,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": "ornith-ai/Ornith-1.5-35B-A3B",
+  "safetensors_total": null
+ },
+ {
+  "id": "bartowski/Ornith-1.5-9B-GGUF",
+  "sha": "1fc60d6805eaa18bbed4088391db9336eb9581c4",
+  "last_modified": "2026-08-19 18:58:47+00:00",
+  "created_at": "2026-08-19 18:36:39+00:00",
+  "downloads": 15099,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": "ornith-ai/Ornith-1.5-9B",
+  "safetensors_total": null
+ },
+ {
+  "id": "unsloth/DeepSeek-V4-Flash-Vision-Exp-GGUF",
+  "sha": "37044a3cff5ed45e3832f3e833bf1cff91f7f168",
+  "last_modified": "2026-09-02 14:57:39+00:00",
+  "created_at": "2026-08-31 10:44:53+00:00",
+  "downloads": 1570,
+  "pipeline_tag": null,
+  "card_base_model": [
+   "deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
+  ],
+  "safetensors_total": null
+ },
+ {
+  "id": "unsloth/Qwen3.8-Flash-Next-GGUF",
+  "sha": "38bb39ee97821de2c9009abb7e93950eec396e66",
+  "last_modified": "2026-09-02 14:02:41+00:00",
+  "created_at": "2026-08-26 12:29:32+00:00",
+  "downloads": 431339,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": [
+   "Qwen/Qwen3.8-Flash-Next"
+  ],
+  "safetensors_total": null
+ },
+ {
+  "id": "unsloth/DeepSeek-V4-Flash-Vision-Exp",
+  "sha": "276b3b4584c436b8126c00b947c564634a39cf45",
+  "last_modified": "2026-09-01 04:13:50+00:00",
+  "created_at": "2026-08-31 10:40:00+00:00",
+  "downloads": 230,
+  "pipeline_tag": "text-generation",
+  "card_base_model": [
+   "deepseek-ai/DeepSeek-V4-Flash-Vision-Exp"
+  ],
+  "safetensors_total": 304646824126
+ },
+ {
+  "id": "unsloth/GLM-5.3-Flash-GGUF",
+  "sha": "2975ab414d30340466d8c51533c6e91f0cca64c1",
+  "last_modified": "2026-08-29 10:43:43+00:00",
+  "created_at": "2026-08-26 14:21:15+00:00",
+  "downloads": 63718,
+  "pipeline_tag": "text-generation",
+  "card_base_model": [
+   "zai-org/GLM-5.3-Flash"
+  ],
+  "safetensors_total": null
+ },
+ {
+  "id": "unsloth/Qwen3.8-27B-NVFP4",
+  "sha": "57926baca9a82b4d6906b43f2750d55315f5b10f",
+  "last_modified": "2026-08-29 09:45:23+00:00",
+  "created_at": "2026-08-13 08:28:51+00:00",
+  "downloads": 2588917,
+  "pipeline_tag": null,
+  "card_base_model": [
+   "Qwen/Qwen3.8-27B"
+  ],
+  "safetensors_total": 19869895952
+ },
+ {
+  "id": "unsloth/GLM-5.3-GGUF",
+  "sha": "346b3591c7f28d1a23716f97a065ecf12ec14771",
+  "last_modified": "2026-08-29 02:35:58+00:00",
+  "created_at": "2026-08-28 04:05:14+00:00",
+  "downloads": 74544,
+  "pipeline_tag": "text-generation",
+  "card_base_model": [
+   "zai-org/GLM-5.3"
+  ],
+  "safetensors_total": null
+ },
+ {
+  "id": "unsloth/GLM-5.3",
+  "sha": "05cd131f7ab554f983b81c6be97916450b0ff8d2",
+  "last_modified": "2026-08-29 01:27:54+00:00",
+  "created_at": "2026-08-28 03:42:39+00:00",
+  "downloads": 470,
+  "pipeline_tag": "text-generation",
+  "card_base_model": [
+   "zai-org/GLM-5.3",
+   "zai-org/GLM-5.3-BF16"
+  ],
+  "safetensors_total": 753329940480
+ },
+ {
+  "id": "unsloth/GLM-5.3-Flash-FP8",
+  "sha": "a160e2291674d9e3e92e98fd82faa2544a2867a3",
+  "last_modified": "2026-08-26 14:13:12+00:00",
+  "created_at": "2026-08-26 14:05:32+00:00",
+  "downloads": 5466,
+  "pipeline_tag": "text-generation",
+  "card_base_model": [
+   "zai-org/GLM-5.3-Flash"
+  ],
+  "safetensors_total": 321323031390
+ },
+ {
+  "id": "unsloth/GLM-5.3-Flash",
+  "sha": "61d609da1b5fef8f25c754534a0fba313aba1caf",
+  "last_modified": "2026-08-26 14:12:14+00:00",
+  "created_at": "2026-08-26 13:19:17+00:00",
+  "downloads": 1190,
+  "pipeline_tag": "text-generation",
+  "card_base_model": [
+   "zai-org/GLM-5.3-Flash-BF16"
+  ],
+  "safetensors_total": 321323031390
+ },
+ {
+  "id": "unsloth/Qwen3.8-Flash-Next",
+  "sha": "85e350e2eae6bb7abd02c922b09a69a96db9b08e",
+  "last_modified": "2026-08-26 12:57:40+00:00",
+  "created_at": "2026-08-25 12:30:58+00:00",
+  "downloads": 1160,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": null,
+  "safetensors_total": 179999981459
+ },
+ {
+  "id": "unsloth/Qwen3.8-Flash-Next-FP8",
+  "sha": "41cc25fe32cc20053a59c89716196897580cddf6",
+  "last_modified": "2026-08-26 12:38:50+00:00",
+  "created_at": "2026-08-26 12:38:30+00:00",
+  "downloads": 2665,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": [
+   "Qwen/Qwen3.8-Flash-Next"
+  ],
+  "safetensors_total": 179999981459
+ },
+ {
+  "id": "unsloth/Qwen3.8-27B-unsloth-bnb-4bit",
+  "sha": "8aa5f05d26b7205477066e1449e0af13f762a299",
+  "last_modified": "2026-08-25 10:27:47+00:00",
+  "created_at": "2026-08-13 08:29:01+00:00",
+  "downloads": 114842,
+  "pipeline_tag": null,
+  "card_base_model": [
+   "Qwen/Qwen3.8-27B"
+  ],
+  "safetensors_total": 27356728560
+ },
+ {
+  "id": "unsloth/Qwen3.8-27B-GGUF",
+  "sha": "4ca720788d1e01f1bff70c033e0d0028fd02e502",
+  "last_modified": "2026-08-20 12:04:25+00:00",
+  "created_at": "2026-08-13 08:28:40+00:00",
+  "downloads": 9354057,
+  "pipeline_tag": null,
+  "card_base_model": [
+   "Qwen/Qwen3.8-27B"
+  ],
+  "safetensors_total": null
+ },
+ {
+  "id": "unsloth/Qwen3.8-27B",
+  "sha": "3ea932cee0a432ae86e9c7826cbe8aef52323a28",
+  "last_modified": "2026-08-14 15:16:02+00:00",
+  "created_at": "2026-08-13 08:28:31+00:00",
+  "downloads": 299509,
+  "pipeline_tag": null,
+  "card_base_model": [
+   "Qwen/Qwen3.8-27B"
+  ],
+  "safetensors_total": 27781427952
+ },
+ {
+  "id": "unsloth/Qwen3.8-27B-FP8",
+  "sha": "d51e38f6f2b5877bb91e06ba231e41ffc63bde6f",
+  "last_modified": "2026-08-14 15:00:11+00:00",
+  "created_at": "2026-08-13 09:59:54+00:00",
+  "downloads": 62877,
+  "pipeline_tag": "image-text-to-text",
+  "card_base_model": [
+   "Qwen/Qwen3.8-27B"
+  ],
+  "safetensors_total": 27781427952
+ },
+ {
+  "id": "unsloth/MiniMax-H3-FP8",
+  "sha": "37794083e8693f7b328061d831c104e6351eef5d",
+  "last_modified": "2026-08-14 13:51:33+00:00",
+  "created_at": "2026-08-07 16:07:17+00:00",
+  "downloads": 0,
+  "pipeline_tag": "image-text-to-video",
+  "card_base_model": [
+   "MiniMaxAI/MiniMax-H3"
+  ],
+  "safetensors_total": null
+ },
+ {
+  "id": "unsloth/MiniMax-H3-GGUF",
+  "sha": "d629413c2e5b51b38c453668b75ca3b06ca92703",
+  "last_modified": "2026-08-14 13:50:21+00:00",
+  "created_at": "2026-08-07 04:13:22+00:00",
+  "downloads": 484690,
+  "pipeline_tag": "image-text-to-video",
+  "card_base_model": [
+   "MiniMaxAI/MiniMax-H3"
+  ],
+  "safetensors_total": null
+ },
+ {
+  "id": "unsloth/DeepSeek-V4-Pro-0813",
+  "sha": "4a02c16f841f5909755b6d22d04a7f4e769b4048",
+  "last_modified": "2026-08-14 04:13:16+00:00",
+  "created_at": "2026-08-13 23:39:31+00:00",
+  "downloads": 759,
+  "pipeline_tag": "text-generation",
+  "card_base_model": [
+   "deepseek-ai/DeepSeek-V4-Pro-0813"
+  ],
+  "safetensors_total": 1650497936906
+ },
+ {
+  "id": "unsloth/DeepSeek-V4-Pro-0813-GGUF",
+  "sha": "6d053616d152293da72569f56b861466f10ace7d",
+  "last_modified": "2026-08-14 04:01:57+00:00",
+  "created_at": "2026-08-13 13:41:12+00:00",
+  "downloads": 96824,
+  "pipeline_tag": null,
+  "card_base_model": [
+   "deepseek-ai/DeepSeek-V4-Pro-0813"
+  ],
+  "safetensors_total": null
+ },
+ {
+  "id": "unsloth/Qwen3.8-2.4T-A95B-GGUF",
+  "sha": "567d3e6ac26c5474b18311e619c04350fb9a5556",
+  "last_modified": "2026-08-13 01:01:45+00:00",
+  "created_at": "2026-08-10 16:41:01+00:00",
+  "downloads": 24957,
+  "pipeline_tag": "text-generation",
+  "card_base_model": [
+   "Qwen/Qwen3.8-2.4T-A95B"
+  ],
+  "safetensors_total": null
+ }
+]

@@ -1,0 +1,1288 @@
+{
+  "schema": "llm-sizer/machines v1 — hand-curated; one row per family × chip bin with distinct memory bandwidth; field definitions and sources: https://github.com/alexgrankinukr-hash/llm-sizer-data",
+  "data_as_of": "2026-09-02",
+  "machines": [
+    {
+      "id": "macbook-air-m1",
+      "kind": "mac",
+      "family": "MacBook Air",
+      "chip": "M1",
+      "generation": "M1",
+      "year": 2020,
+      "memory_options_gb": [
+        8,
+        16
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 68,
+      "gpu_cores": [
+        7,
+        8
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt3",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "Apple's tech-specs page does not state M1 bandwidth; 68.25 GB/s (128-bit LPDDR4X-4266) per Wikipedia, rounded to 68. 7-core and 8-core GPU bins share the same memory system.",
+      "sources": [
+        "https://support.apple.com/en-us/111883",
+        "https://en.wikipedia.org/wiki/Apple_M1"
+      ]
+    },
+    {
+      "id": "macbook-air-m2",
+      "kind": "mac",
+      "family": "MacBook Air",
+      "chip": "M2",
+      "generation": "M2",
+      "year": 2022,
+      "memory_options_gb": [
+        8,
+        16,
+        24
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 100,
+      "gpu_cores": [
+        8,
+        10
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt3",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "13-inch launched 2022; 15-inch (10-core GPU only) added 2023. Ports are Thunderbolt/USB 4 rated at Thunderbolt 3 speeds (40Gb/s).",
+      "sources": [
+        "https://support.apple.com/en-us/111867",
+        "https://support.apple.com/en-us/111346"
+      ]
+    },
+    {
+      "id": "macbook-air-m3",
+      "kind": "mac",
+      "family": "MacBook Air",
+      "chip": "M3",
+      "generation": "M3",
+      "year": 2024,
+      "memory_options_gb": [
+        8,
+        16,
+        24
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 100,
+      "gpu_cores": [
+        8,
+        10
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt3",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "13-inch and 15-inch, both March 2024. 15-inch is 10-core GPU only. Thunderbolt/USB 4 ports at Thunderbolt 3 speeds.",
+      "sources": [
+        "https://support.apple.com/en-us/118551",
+        "https://support.apple.com/en-us/118552"
+      ]
+    },
+    {
+      "id": "macbook-air-m4",
+      "kind": "mac",
+      "family": "MacBook Air",
+      "chip": "M4",
+      "generation": "M4",
+      "year": 2025,
+      "memory_options_gb": [
+        16,
+        24,
+        32
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 120,
+      "gpu_cores": [
+        8,
+        10
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "Replaced by the M5 MacBook Air on 2026-03-11; no longer sold new by Apple.",
+      "sources": [
+        "https://support.apple.com/en-us/122209"
+      ]
+    },
+    {
+      "id": "macbook-air-m5",
+      "kind": "mac",
+      "family": "MacBook Air",
+      "chip": "M5",
+      "generation": "M5",
+      "year": 2026,
+      "memory_options_gb": [
+        16,
+        24,
+        32
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 153,
+      "gpu_cores": [
+        8,
+        10
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "current",
+      "price_usd": {
+        "16": 1299,
+        "24": 1499,
+        "32": 1699
+      },
+      "notes": "Announced 2026-03-03, available 2026-03-11. Prices reflect Apple's 2026-06-25 US price increase (13-inch base rose from $1,099 to $1,299; base storage 512GB). 8-core GPU bin is sold with 16GB only in the US store; 24/32GB require the 10-core GPU bin. 15-inch is 10-core GPU only, from $1,499.",
+      "sources": [
+        "https://support.apple.com/en-us/126320",
+        "https://support.apple.com/en-us/126321",
+        "https://www.apple.com/newsroom/2026/03/apple-introduces-the-new-macbook-air-with-m5/",
+        "https://www.apple.com/shop/buy-mac/macbook-air/13-inch"
+      ]
+    },
+    {
+      "id": "macbook-pro-m1",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M1",
+      "generation": "M1",
+      "year": 2020,
+      "memory_options_gb": [
+        8,
+        16
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 68,
+      "gpu_cores": [
+        8
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt3",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "13-inch only. Apple's tech-specs page does not state M1 bandwidth; 68.25 GB/s (128-bit LPDDR4X-4266) per Wikipedia, rounded to 68.",
+      "sources": [
+        "https://support.apple.com/en-us/111893",
+        "https://en.wikipedia.org/wiki/Apple_M1"
+      ]
+    },
+    {
+      "id": "macbook-pro-m1-pro",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M1 Pro",
+      "generation": "M1",
+      "year": 2021,
+      "memory_options_gb": [
+        16,
+        32
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 200,
+      "gpu_cores": [
+        14,
+        16
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "14-inch and 16-inch (2021). Apple states 200GB/s; Wikipedia lists the theoretical 204.8GB/s.",
+      "sources": [
+        "https://support.apple.com/en-us/111902",
+        "https://support.apple.com/en-us/111901"
+      ]
+    },
+    {
+      "id": "macbook-pro-m1-max",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M1 Max",
+      "generation": "M1",
+      "year": 2021,
+      "memory_options_gb": [
+        32,
+        64
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 400,
+      "gpu_cores": [
+        24,
+        32
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "24-core and 32-core GPU bins share 400GB/s (stated on the 16-inch tech-specs page). Wikipedia lists the theoretical 409.6GB/s.",
+      "sources": [
+        "https://support.apple.com/en-us/111901",
+        "https://support.apple.com/en-us/111902"
+      ]
+    },
+    {
+      "id": "macbook-pro-m2",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M2",
+      "generation": "M2",
+      "year": 2022,
+      "memory_options_gb": [
+        8,
+        16,
+        24
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 100,
+      "gpu_cores": [
+        10
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt3",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "13-inch only (last Touch Bar model). Thunderbolt/USB 4 ports at Thunderbolt 3 speeds.",
+      "sources": [
+        "https://support.apple.com/en-us/111869"
+      ]
+    },
+    {
+      "id": "macbook-pro-m2-pro",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M2 Pro",
+      "generation": "M2",
+      "year": 2023,
+      "memory_options_gb": [
+        16,
+        32
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 200,
+      "gpu_cores": [
+        16,
+        19
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "14-inch and 16-inch (Jan 2023). 16-inch ships with the 19-core GPU bin.",
+      "sources": [
+        "https://support.apple.com/en-us/111340",
+        "https://support.apple.com/en-us/111838"
+      ]
+    },
+    {
+      "id": "macbook-pro-m2-max",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M2 Max",
+      "generation": "M2",
+      "year": 2023,
+      "memory_options_gb": [
+        32,
+        64,
+        96
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 400,
+      "gpu_cores": [
+        30,
+        38
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "96GB only with the 38-core GPU bin; both bins share 400GB/s.",
+      "sources": [
+        "https://support.apple.com/en-us/111340",
+        "https://support.apple.com/en-us/111838"
+      ]
+    },
+    {
+      "id": "macbook-pro-m3",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M3",
+      "generation": "M3",
+      "year": 2023,
+      "memory_options_gb": [
+        8,
+        16,
+        24
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 100,
+      "gpu_cores": [
+        10
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt3",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "14-inch only (Nov 2023). Two Thunderbolt/USB 4 ports at Thunderbolt 3 speeds.",
+      "sources": [
+        "https://support.apple.com/en-us/117735"
+      ]
+    },
+    {
+      "id": "macbook-pro-m3-pro",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M3 Pro",
+      "generation": "M3",
+      "year": 2023,
+      "memory_options_gb": [
+        18,
+        36
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 150,
+      "gpu_cores": [
+        14,
+        18
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "14-inch 14-core GPU bin is 18GB only; 36GB requires the 18-core GPU bin. 16-inch is 18-core GPU only.",
+      "sources": [
+        "https://support.apple.com/en-us/117736",
+        "https://support.apple.com/en-us/117737"
+      ]
+    },
+    {
+      "id": "macbook-pro-m3-max-30c",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M3 Max (30-core GPU)",
+      "generation": "M3",
+      "year": 2023,
+      "memory_options_gb": [
+        36,
+        96
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 300,
+      "gpu_cores": [
+        30
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "14-core CPU / 30-core GPU bin: 36GB or 96GB, 300GB/s. Distinct bandwidth from the 40-core bin.",
+      "sources": [
+        "https://support.apple.com/en-us/117737",
+        "https://support.apple.com/en-us/117736"
+      ]
+    },
+    {
+      "id": "macbook-pro-m3-max-40c",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M3 Max (40-core GPU)",
+      "generation": "M3",
+      "year": 2023,
+      "memory_options_gb": [
+        48,
+        64,
+        128
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 400,
+      "gpu_cores": [
+        40
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "16-core CPU / 40-core GPU bin: 48GB, 64GB or 128GB, 400GB/s.",
+      "sources": [
+        "https://support.apple.com/en-us/117737",
+        "https://support.apple.com/en-us/117736"
+      ]
+    },
+    {
+      "id": "macbook-pro-m4",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M4",
+      "generation": "M4",
+      "year": 2024,
+      "memory_options_gb": [
+        16,
+        24,
+        32
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 120,
+      "gpu_cores": [
+        10
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "14-inch only. Replaced by the M5 14-inch in Oct 2025.",
+      "sources": [
+        "https://support.apple.com/en-us/121552"
+      ]
+    },
+    {
+      "id": "macbook-pro-m4-pro",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M4 Pro",
+      "generation": "M4",
+      "year": 2024,
+      "memory_options_gb": [
+        24,
+        48
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 273,
+      "gpu_cores": [
+        16,
+        20
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt5",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "MacBook Pro M4 Pro topped out at 48GB (the Mac mini M4 Pro offered 64GB). 16-inch is 20-core GPU only.",
+      "sources": [
+        "https://support.apple.com/en-us/121553",
+        "https://support.apple.com/en-us/121554"
+      ]
+    },
+    {
+      "id": "macbook-pro-m4-max-32c",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M4 Max (32-core GPU)",
+      "generation": "M4",
+      "year": 2024,
+      "memory_options_gb": [
+        36
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 410,
+      "gpu_cores": [
+        32
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt5",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "14-core CPU / 32-core GPU bin: 36GB only, 410GB/s.",
+      "sources": [
+        "https://support.apple.com/en-us/121553",
+        "https://support.apple.com/en-us/121554"
+      ]
+    },
+    {
+      "id": "macbook-pro-m4-max-40c",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M4 Max (40-core GPU)",
+      "generation": "M4",
+      "year": 2024,
+      "memory_options_gb": [
+        48,
+        64,
+        128
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 546,
+      "gpu_cores": [
+        40
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt5",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "16-core CPU / 40-core GPU bin: 48GB, 64GB or 128GB, 546GB/s.",
+      "sources": [
+        "https://support.apple.com/en-us/121553",
+        "https://support.apple.com/en-us/121554"
+      ]
+    },
+    {
+      "id": "macbook-pro-m5",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M5",
+      "generation": "M5",
+      "year": 2025,
+      "memory_options_gb": [
+        16,
+        24,
+        32
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 153,
+      "gpu_cores": [
+        10
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "current",
+      "price_usd": {
+        "16": 1999,
+        "24": 2199,
+        "32": 2399
+      },
+      "notes": "14-inch only (Oct 2025). Prices reflect the 2026-06-25 US increase (from $1,599 to $1,999 base) and a 1TB base SSD; memory +$200 per step per Apple's configurator on 2026-09-02.",
+      "sources": [
+        "https://support.apple.com/en-us/125405",
+        "https://www.apple.com/macbook-pro/specs/",
+        "https://www.apple.com/shop/buy-mac/macbook-pro/14-inch"
+      ]
+    },
+    {
+      "id": "macbook-pro-m5-pro",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M5 Pro",
+      "generation": "M5",
+      "year": 2026,
+      "memory_options_gb": [
+        24,
+        48,
+        64
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 307,
+      "gpu_cores": [
+        16,
+        20
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt5",
+      "status": "current",
+      "price_usd": {
+        "24": 2499,
+        "48": 3099,
+        "64": 3699
+      },
+      "notes": "Announced 2026-03-03. 64GB requires the 18-core CPU / 20-core GPU bin (cheapest 64GB = 14-inch 20-core, 1TB, $3,699). 16-inch is 20-core GPU only, from $2,999. Post-June-2026 prices from Apple's US configurator.",
+      "sources": [
+        "https://support.apple.com/en-us/126318",
+        "https://support.apple.com/en-us/126319",
+        "https://www.apple.com/newsroom/2026/03/apple-introduces-macbook-pro-with-all-new-m5-pro-and-m5-max/",
+        "https://www.apple.com/shop/buy-mac/macbook-pro/14-inch"
+      ]
+    },
+    {
+      "id": "macbook-pro-m5-max-32c",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M5 Max (32-core GPU)",
+      "generation": "M5",
+      "year": 2026,
+      "memory_options_gb": [
+        36
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 460,
+      "gpu_cores": [
+        32
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt5",
+      "status": "current",
+      "price_usd": {
+        "36": 4099
+      },
+      "notes": "Apple lists 460GB/s for the 32-core GPU bin (not 614GB/s, which is the 40-core bin). 36GB only; base SSD 2TB. Price = 14-inch, post-June-2026 US price.",
+      "sources": [
+        "https://support.apple.com/en-us/126318",
+        "https://support.apple.com/en-us/126319",
+        "https://www.apple.com/macbook-pro/specs/",
+        "https://www.apple.com/shop/buy-mac/macbook-pro/14-inch"
+      ]
+    },
+    {
+      "id": "macbook-pro-m5-max-40c",
+      "kind": "mac",
+      "family": "MacBook Pro",
+      "chip": "M5 Max (40-core GPU)",
+      "generation": "M5",
+      "year": 2026,
+      "memory_options_gb": [
+        48,
+        64,
+        128
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 614,
+      "gpu_cores": [
+        40
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt5",
+      "status": "current",
+      "price_usd": {
+        "48": 4699,
+        "64": 5099,
+        "128": 6699
+      },
+      "notes": "40-core GPU bin: 48/64/128GB at 614GB/s. On the 14-inch it is a build-to-order upgrade from the 32-core model (+$300 GPU, +$300 for the required 36->48GB step); 64GB +$400 and 128GB +$2,000 over 48GB. 16-inch 48GB stock model is $4,999.",
+      "sources": [
+        "https://support.apple.com/en-us/126318",
+        "https://support.apple.com/en-us/126319",
+        "https://www.apple.com/shop/buy-mac/macbook-pro/14-inch"
+      ]
+    },
+    {
+      "id": "mac-mini-m1",
+      "kind": "mac",
+      "family": "Mac mini",
+      "chip": "M1",
+      "generation": "M1",
+      "year": 2020,
+      "memory_options_gb": [
+        8,
+        16
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 68,
+      "gpu_cores": [
+        8
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt3",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "Apple's tech-specs page does not state M1 bandwidth; 68.25 GB/s (128-bit LPDDR4X-4266) per Wikipedia, rounded to 68.",
+      "sources": [
+        "https://support.apple.com/en-us/111894",
+        "https://en.wikipedia.org/wiki/Apple_M1"
+      ]
+    },
+    {
+      "id": "mac-mini-m2",
+      "kind": "mac",
+      "family": "Mac mini",
+      "chip": "M2",
+      "generation": "M2",
+      "year": 2023,
+      "memory_options_gb": [
+        8,
+        16,
+        24
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 100,
+      "gpu_cores": [
+        10
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "Two Thunderbolt 4 ports on the M2 model.",
+      "sources": [
+        "https://support.apple.com/en-us/111837"
+      ]
+    },
+    {
+      "id": "mac-mini-m2-pro",
+      "kind": "mac",
+      "family": "Mac mini",
+      "chip": "M2 Pro",
+      "generation": "M2",
+      "year": 2023,
+      "memory_options_gb": [
+        16,
+        32
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 200,
+      "gpu_cores": [
+        16,
+        19
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "Four Thunderbolt 4 ports on the M2 Pro model.",
+      "sources": [
+        "https://support.apple.com/en-us/111837"
+      ]
+    },
+    {
+      "id": "mac-mini-m4",
+      "kind": "mac",
+      "family": "Mac mini",
+      "chip": "M4",
+      "generation": "M4",
+      "year": 2024,
+      "memory_options_gb": [
+        16,
+        24,
+        32
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 120,
+      "gpu_cores": [
+        10
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "Removed from Apple's store on 2026-08-25 when the M6 Mac mini was announced.",
+      "sources": [
+        "https://support.apple.com/en-us/121555"
+      ]
+    },
+    {
+      "id": "mac-mini-m4-pro",
+      "kind": "mac",
+      "family": "Mac mini",
+      "chip": "M4 Pro",
+      "generation": "M4",
+      "year": 2024,
+      "memory_options_gb": [
+        24,
+        48,
+        64
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 273,
+      "gpu_cores": [
+        16,
+        20
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt5",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "Removed from Apple's store on 2026-08-25 when the M5 Pro Mac mini was announced.",
+      "sources": [
+        "https://support.apple.com/en-us/121555"
+      ]
+    },
+    {
+      "id": "mac-mini-m6-16gb",
+      "kind": "mac",
+      "family": "Mac mini",
+      "chip": "M6 (16 GB)",
+      "generation": "M6",
+      "year": 2026,
+      "memory_options_gb": [
+        16
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 153,
+      "gpu_cores": [
+        12
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "current",
+      "price_usd": {
+        "16": 899
+      },
+      "notes": "16 GB configuration: Apple lists 153 GB/s memory bandwidth (170 GB/s for 24/32 GB). Thunderbolt 4.",
+      "sources": [
+        "https://www.apple.com/newsroom/2026/08/apple-unveils-a-more-powerful-mac-mini-featuring-the-all-new-m6-and-m5-pro/",
+        "https://www.apple.com/mac-mini/specs/",
+        "https://www.apple.com/shop/buy-mac/mac-mini"
+      ]
+    },
+    {
+      "id": "mac-mini-m6",
+      "kind": "mac",
+      "family": "Mac mini",
+      "chip": "M6 (24/32 GB)",
+      "generation": "M6",
+      "year": 2026,
+      "memory_options_gb": [
+        24,
+        32
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 170,
+      "gpu_cores": [
+        12
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "current",
+      "price_usd": {
+        "24": 1099,
+        "32": 1299
+      },
+      "notes": "24/32 GB configurations: 170 GB/s (16 GB is 153 GB/s). Thunderbolt 4.",
+      "sources": [
+        "https://www.apple.com/newsroom/2026/08/apple-unveils-a-more-powerful-mac-mini-featuring-the-all-new-m6-and-m5-pro/",
+        "https://www.apple.com/mac-mini/specs/",
+        "https://www.apple.com/shop/buy-mac/mac-mini"
+      ]
+    },
+    {
+      "id": "mac-mini-m5-pro",
+      "kind": "mac",
+      "family": "Mac mini",
+      "chip": "M5 Pro",
+      "generation": "M5",
+      "year": 2026,
+      "memory_options_gb": [
+        24,
+        48,
+        64
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 307,
+      "gpu_cores": [
+        16,
+        20
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt5",
+      "status": "current",
+      "price_usd": {
+        "24": 1699,
+        "48": 2299,
+        "64": 2699
+      },
+      "notes": "Announced 2026-08-25; ships 2026-09-22. 48GB +$600 and 64GB +$1,000 over the $1,699 base (available on both the 16-core and 20-core GPU bins in the Mac mini).",
+      "sources": [
+        "https://www.apple.com/newsroom/2026/08/apple-unveils-a-more-powerful-mac-mini-featuring-the-all-new-m6-and-m5-pro/",
+        "https://www.apple.com/mac-mini/specs/",
+        "https://www.apple.com/shop/buy-mac/mac-mini"
+      ]
+    },
+    {
+      "id": "mac-studio-m1-max",
+      "kind": "mac",
+      "family": "Mac Studio",
+      "chip": "M1 Max",
+      "generation": "M1",
+      "year": 2022,
+      "memory_options_gb": [
+        32,
+        64
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 400,
+      "gpu_cores": [
+        24,
+        32
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "Both GPU bins share 400GB/s.",
+      "sources": [
+        "https://support.apple.com/en-us/111900"
+      ]
+    },
+    {
+      "id": "mac-studio-m1-ultra",
+      "kind": "mac",
+      "family": "Mac Studio",
+      "chip": "M1 Ultra",
+      "generation": "M1",
+      "year": 2022,
+      "memory_options_gb": [
+        64,
+        128
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 800,
+      "gpu_cores": [
+        48,
+        64
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "Apple states 800GB/s; Wikipedia lists the theoretical 819.2GB/s.",
+      "sources": [
+        "https://support.apple.com/en-us/111900"
+      ]
+    },
+    {
+      "id": "mac-studio-m2-max",
+      "kind": "mac",
+      "family": "Mac Studio",
+      "chip": "M2 Max",
+      "generation": "M2",
+      "year": 2023,
+      "memory_options_gb": [
+        32,
+        64,
+        96
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 400,
+      "gpu_cores": [
+        30,
+        38
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "96GB only with the 38-core GPU bin.",
+      "sources": [
+        "https://support.apple.com/en-us/111835"
+      ]
+    },
+    {
+      "id": "mac-studio-m2-ultra",
+      "kind": "mac",
+      "family": "Mac Studio",
+      "chip": "M2 Ultra",
+      "generation": "M2",
+      "year": 2023,
+      "memory_options_gb": [
+        64,
+        128,
+        192
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 800,
+      "gpu_cores": [
+        60,
+        76
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "Both GPU bins share 800GB/s.",
+      "sources": [
+        "https://support.apple.com/en-us/111835"
+      ]
+    },
+    {
+      "id": "mac-studio-m4-max-32c",
+      "kind": "mac",
+      "family": "Mac Studio",
+      "chip": "M4 Max (32-core GPU)",
+      "generation": "M4",
+      "year": 2025,
+      "memory_options_gb": [
+        36
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 410,
+      "gpu_cores": [
+        32
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt5",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "14-core CPU / 32-core GPU bin: 36GB only, 410GB/s. Removed from Apple's store on 2026-08-25.",
+      "sources": [
+        "https://support.apple.com/en-us/122211"
+      ]
+    },
+    {
+      "id": "mac-studio-m4-max-40c",
+      "kind": "mac",
+      "family": "Mac Studio",
+      "chip": "M4 Max (40-core GPU)",
+      "generation": "M4",
+      "year": 2025,
+      "memory_options_gb": [
+        48,
+        64,
+        128
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 546,
+      "gpu_cores": [
+        40
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt5",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "16-core CPU / 40-core GPU bin: 48/64/128GB, 546GB/s. Removed from Apple's store on 2026-08-25.",
+      "sources": [
+        "https://support.apple.com/en-us/122211"
+      ]
+    },
+    {
+      "id": "mac-studio-m3-ultra",
+      "kind": "mac",
+      "family": "Mac Studio",
+      "chip": "M3 Ultra",
+      "generation": "M3",
+      "year": 2025,
+      "memory_options_gb": [
+        96,
+        256,
+        512
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 819,
+      "gpu_cores": [
+        60,
+        80
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt5",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "Apple states 819GB/s for both GPU bins. 512GB required the 32-core CPU / 80-core GPU bin. Removed from Apple's store on 2026-08-25.",
+      "sources": [
+        "https://support.apple.com/en-us/122211"
+      ]
+    },
+    {
+      "id": "mac-studio-m5-max-32c",
+      "kind": "mac",
+      "family": "Mac Studio",
+      "chip": "M5 Max (32-core GPU)",
+      "generation": "M5",
+      "year": 2026,
+      "memory_options_gb": [
+        36
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 460,
+      "gpu_cores": [
+        32
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt5",
+      "status": "current",
+      "price_usd": {
+        "36": 2499
+      },
+      "notes": "Announced 2026-08-25; ships 2026-09-22. Apple lists 460GB/s for the 32-core GPU bin; 36GB only.",
+      "sources": [
+        "https://www.apple.com/newsroom/2026/08/apple-introduces-new-mac-studio-with-m5-max-and-m5-ultra/",
+        "https://www.apple.com/mac-studio/specs/",
+        "https://www.apple.com/shop/buy-mac/mac-studio"
+      ]
+    },
+    {
+      "id": "mac-studio-m5-max-40c",
+      "kind": "mac",
+      "family": "Mac Studio",
+      "chip": "M5 Max (40-core GPU)",
+      "generation": "M5",
+      "year": 2026,
+      "memory_options_gb": [
+        48,
+        64,
+        128
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 614,
+      "gpu_cores": [
+        40
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt5",
+      "status": "current",
+      "price_usd": {
+        "48": 3099,
+        "64": 3499,
+        "128": 5099
+      },
+      "notes": "Announced 2026-08-25; ships 2026-09-22. 40-core GPU bin is +$300 over the base and requires the 48GB step (+$300); 64GB +$400 and 128GB +$2,000 over 48GB (Apple US configurator, 2026-09-02).",
+      "sources": [
+        "https://www.apple.com/newsroom/2026/08/apple-introduces-new-mac-studio-with-m5-max-and-m5-ultra/",
+        "https://www.apple.com/mac-studio/specs/",
+        "https://www.apple.com/shop/buy-mac/mac-studio"
+      ]
+    },
+    {
+      "id": "mac-studio-m5-ultra",
+      "kind": "mac",
+      "family": "Mac Studio",
+      "chip": "M5 Ultra",
+      "generation": "M5",
+      "year": 2026,
+      "memory_options_gb": [
+        96,
+        256,
+        512
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 1200,
+      "gpu_cores": [
+        64,
+        80
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt5",
+      "status": "current",
+      "price_usd": {
+        "96": 5499,
+        "256": 9499,
+        "512": null
+      },
+      "notes": "Announced 2026-08-25; ships 2026-09-22. Apple states 1.2TB/s for both the 64-core and 80-core GPU bins (Wikipedia: 1228.8GB/s theoretical). 256GB is +$4,000 on either bin; 80-core GPU bin is +$1,300. 512GB requires the 36-core CPU / 80-core GPU bin, ships late October 2026 and is unpriced as of 2026-09-02.",
+      "sources": [
+        "https://www.apple.com/newsroom/2026/08/apple-introduces-new-mac-studio-with-m5-max-and-m5-ultra/",
+        "https://www.apple.com/newsroom/2026/08/apple-introduces-m6-and-m5-ultra-for-a-big-leap-in-performance-and-ai-compute/",
+        "https://www.apple.com/mac-studio/specs/",
+        "https://www.apple.com/shop/buy-mac/mac-studio"
+      ]
+    },
+    {
+      "id": "imac-m1",
+      "kind": "mac",
+      "family": "iMac",
+      "chip": "M1",
+      "generation": "M1",
+      "year": 2021,
+      "memory_options_gb": [
+        8,
+        16
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 68,
+      "gpu_cores": [
+        7,
+        8
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt3",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "24-inch. Apple's tech-specs page does not state M1 bandwidth; 68.25 GB/s (128-bit LPDDR4X-4266) per Wikipedia, rounded to 68.",
+      "sources": [
+        "https://support.apple.com/en-us/111895",
+        "https://en.wikipedia.org/wiki/Apple_M1"
+      ]
+    },
+    {
+      "id": "imac-m3",
+      "kind": "mac",
+      "family": "iMac",
+      "chip": "M3",
+      "generation": "M3",
+      "year": 2023,
+      "memory_options_gb": [
+        8,
+        16,
+        24
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 100,
+      "gpu_cores": [
+        8,
+        10
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt3",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "24-inch, two-port (8-core GPU) and four-port (10-core GPU) models. Thunderbolt/USB 4 ports at Thunderbolt 3 speeds.",
+      "sources": [
+        "https://support.apple.com/en-us/117734",
+        "https://support.apple.com/en-us/117733"
+      ]
+    },
+    {
+      "id": "imac-m4",
+      "kind": "mac",
+      "family": "iMac",
+      "chip": "M4",
+      "generation": "M4",
+      "year": 2024,
+      "memory_options_gb": [
+        16,
+        24,
+        32
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 120,
+      "gpu_cores": [
+        8,
+        10
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "current",
+      "price_usd": {
+        "16": 1499,
+        "24": 1699,
+        "32": 2099
+      },
+      "notes": "24-inch. Still Apple's current iMac on 2026-09-02 (no M5/M6 iMac shipped yet). Prices reflect the 2026-06-25 US increase (base from $1,299 to $1,499). 32GB requires the 10-core GPU model ($1,699 + $400) and showed as 'currently unavailable' in the US configurator on 2026-09-02; 24GB is +$200 on the 8-core model.",
+      "sources": [
+        "https://support.apple.com/en-us/121557",
+        "https://www.apple.com/imac/specs/",
+        "https://www.apple.com/shop/buy-mac/imac"
+      ]
+    },
+    {
+      "id": "mac-pro-m2-ultra",
+      "kind": "mac",
+      "family": "Mac Pro",
+      "chip": "M2 Ultra",
+      "generation": "M2",
+      "year": 2023,
+      "memory_options_gb": [
+        64,
+        128,
+        192
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 800,
+      "gpu_cores": [
+        60,
+        76
+      ],
+      "platform": "apple",
+      "interconnect": "thunderbolt4",
+      "status": "discontinued",
+      "price_usd": null,
+      "notes": "Tower and rack. Discontinued by Apple on 2026-03-26 with no successor announced.",
+      "sources": [
+        "https://support.apple.com/en-us/111836"
+      ]
+    },
+    {
+      "id": "nvidia-dgx-spark",
+      "kind": "prebuilt",
+      "family": "NVIDIA DGX Spark",
+      "chip": "GB10 Grace Blackwell",
+      "generation": "GB10",
+      "year": 2025,
+      "memory_options_gb": [
+        128
+      ],
+      "memory_kind": "unified",
+      "bandwidth_gbs": 273,
+      "gpu_cores": [],
+      "platform": "cuda",
+      "interconnect": "connectx7-200gbe",
+      "status": "current",
+      "price_usd": {
+        "128": 4699
+      },
+      "notes": "128GB LPDDR5x coherent unified memory, 273GB/s. gpu_cores is CUDA cores (6,144), not Apple-style GPU cores. ConnectX-7 200Gb/s lets two units pair. Launched 2025-10-15 at $3,999; NVIDIA raised the price to $4,699 on 2026-02-23. Partner variants (ASUS, Dell, HP, Lenovo etc.) are priced separately. GB10 GPU has 6,144 CUDA cores (not comparable to Apple GPU core counts).",
+      "sources": [
+        "https://www.nvidia.com/en-us/products/workstations/dgx-spark/",
+        "https://marketplace.nvidia.com/en-us/enterprise/personal-ai-supercomputers/dgx-spark/"
+      ]
+    }
+  ]
+}

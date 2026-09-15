@@ -1,0 +1,43 @@
+{
+ "id": "ggml-org/Qwen3.8-Flash-Next-GGUF",
+ "sha": "01534bc2e1877d5de995b73d247d4459d273e688",
+ "gated": false,
+ "downloads": 6191,
+ "pipeline_tag": "image-text-to-text",
+ "last_modified": "2026-08-27 18:06:18+00:00",
+ "created_at": "2026-08-27 17:57:50+00:00",
+ "card_base_model": [
+  "Qwen/Qwen3.8-Flash-Next"
+ ],
+ "safetensors": null,
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "size": 1751
+  },
+  {
+   "rfilename": ".src_sha",
+   "size": 49
+  },
+  {
+   "rfilename": "Qwen3.8-Flash-Next-Q8_0-00001-of-00002.gguf",
+   "size": 10945312
+  },
+  {
+   "rfilename": "Qwen3.8-Flash-Next-Q8_0-00002-of-00002.gguf",
+   "size": 162613881344
+  },
+  {
+   "rfilename": "README.md",
+   "size": 420
+  },
+  {
+   "rfilename": "convert.log",
+   "size": 396090
+  },
+  {
+   "rfilename": "mmproj-Qwen3.8-Flash-Next-Q8_0.gguf",
+   "size": 616703104
+  }
+ ]
+}

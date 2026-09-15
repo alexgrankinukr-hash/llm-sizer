@@ -1,0 +1,699 @@
+{
+ "id": "unsloth/Kimi-K3-GGUF",
+ "sha": "a0836360ce58dfec088d966a97f2ddc8a606279b",
+ "gated": false,
+ "downloads": 569822,
+ "pipeline_tag": "image-text-to-text",
+ "last_modified": "2026-08-07 02:12:13+00:00",
+ "created_at": "2026-07-27 17:24:30+00:00",
+ "card_base_model": [
+  "moonshotai/Kimi-K3"
+ ],
+ "safetensors": null,
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "size": 26134
+  },
+  {
+   "rfilename": "README.md",
+   "size": 44541
+  },
+  {
+   "rfilename": "UD-IQ1_M/Kimi-K3-UD-IQ1_M-00001-of-00015.gguf",
+   "size": 6934144
+  },
+  {
+   "rfilename": "UD-IQ1_M/Kimi-K3-UD-IQ1_M-00002-of-00015.gguf",
+   "size": 48284490176
+  },
+  {
+   "rfilename": "UD-IQ1_M/Kimi-K3-UD-IQ1_M-00003-of-00015.gguf",
+   "size": 49314306624
+  },
+  {
+   "rfilename": "UD-IQ1_M/Kimi-K3-UD-IQ1_M-00004-of-00015.gguf",
+   "size": 49372224480
+  },
+  {
+   "rfilename": "UD-IQ1_M/Kimi-K3-UD-IQ1_M-00005-of-00015.gguf",
+   "size": 48384572352
+  },
+  {
+   "rfilename": "UD-IQ1_M/Kimi-K3-UD-IQ1_M-00006-of-00015.gguf",
+   "size": 49372224480
+  },
+  {
+   "rfilename": "UD-IQ1_M/Kimi-K3-UD-IQ1_M-00007-of-00015.gguf",
+   "size": 49994559904
+  },
+  {
+   "rfilename": "UD-IQ1_M/Kimi-K3-UD-IQ1_M-00008-of-00015.gguf",
+   "size": 49857848480
+  },
+  {
+   "rfilename": "UD-IQ1_M/Kimi-K3-UD-IQ1_M-00009-of-00015.gguf",
+   "size": 48365900224
+  },
+  {
+   "rfilename": "UD-IQ1_M/Kimi-K3-UD-IQ1_M-00010-of-00015.gguf",
+   "size": 49286304192
+  },
+  {
+   "rfilename": "UD-IQ1_M/Kimi-K3-UD-IQ1_M-00011-of-00015.gguf",
+   "size": 49372224480
+  },
+  {
+   "rfilename": "UD-IQ1_M/Kimi-K3-UD-IQ1_M-00012-of-00015.gguf",
+   "size": 49332978816
+  },
+  {
+   "rfilename": "UD-IQ1_M/Kimi-K3-UD-IQ1_M-00013-of-00015.gguf",
+   "size": 48570117056
+  },
+  {
+   "rfilename": "UD-IQ1_M/Kimi-K3-UD-IQ1_M-00014-of-00015.gguf",
+   "size": 47848961952
+  },
+  {
+   "rfilename": "UD-IQ1_M/Kimi-K3-UD-IQ1_M-00015-of-00015.gguf",
+   "size": 11508365088
+  },
+  {
+   "rfilename": "UD-IQ1_S/Kimi-K3-UD-IQ1_S-00001-of-00014.gguf",
+   "size": 6934144
+  },
+  {
+   "rfilename": "UD-IQ1_S/Kimi-K3-UD-IQ1_S-00002-of-00014.gguf",
+   "size": 47094999008
+  },
+  {
+   "rfilename": "UD-IQ1_S/Kimi-K3-UD-IQ1_S-00003-of-00014.gguf",
+   "size": 49220694048
+  },
+  {
+   "rfilename": "UD-IQ1_S/Kimi-K3-UD-IQ1_S-00004-of-00014.gguf",
+   "size": 48208733792
+  },
+  {
+   "rfilename": "UD-IQ1_S/Kimi-K3-UD-IQ1_S-00005-of-00014.gguf",
+   "size": 48276643808
+  },
+  {
+   "rfilename": "UD-IQ1_S/Kimi-K3-UD-IQ1_S-00006-of-00014.gguf",
+   "size": 48006508320
+  },
+  {
+   "rfilename": "UD-IQ1_S/Kimi-K3-UD-IQ1_S-00007-of-00014.gguf",
+   "size": 48208733792
+  },
+  {
+   "rfilename": "UD-IQ1_S/Kimi-K3-UD-IQ1_S-00008-of-00014.gguf",
+   "size": 50742894560
+  },
+  {
+   "rfilename": "UD-IQ1_S/Kimi-K3-UD-IQ1_S-00009-of-00014.gguf",
+   "size": 51608874592
+  },
+  {
+   "rfilename": "UD-IQ1_S/Kimi-K3-UD-IQ1_S-00010-of-00014.gguf",
+   "size": 49441859168
+  },
+  {
+   "rfilename": "UD-IQ1_S/Kimi-K3-UD-IQ1_S-00011-of-00014.gguf",
+   "size": 51976019936
+  },
+  {
+   "rfilename": "UD-IQ1_S/Kimi-K3-UD-IQ1_S-00012-of-00014.gguf",
+   "size": 48526061152
+  },
+  {
+   "rfilename": "UD-IQ1_S/Kimi-K3-UD-IQ1_S-00013-of-00014.gguf",
+   "size": 48728286656
+  },
+  {
+   "rfilename": "UD-IQ1_S/Kimi-K3-UD-IQ1_S-00014-of-00014.gguf",
+   "size": 3993680640
+  },
+  {
+   "rfilename": "UD-IQ2_XXS/Kimi-K3-UD-IQ2_XXS-00001-of-00016.gguf",
+   "size": 6934144
+  },
+  {
+   "rfilename": "UD-IQ2_XXS/Kimi-K3-UD-IQ2_XXS-00002-of-00016.gguf",
+   "size": 48075715040
+  },
+  {
+   "rfilename": "UD-IQ2_XXS/Kimi-K3-UD-IQ2_XXS-00003-of-00016.gguf",
+   "size": 49830236512
+  },
+  {
+   "rfilename": "UD-IQ2_XXS/Kimi-K3-UD-IQ2_XXS-00004-of-00016.gguf",
+   "size": 48292113216
+  },
+  {
+   "rfilename": "UD-IQ2_XXS/Kimi-K3-UD-IQ2_XXS-00005-of-00016.gguf",
+   "size": 49104523200
+  },
+  {
+   "rfilename": "UD-IQ2_XXS/Kimi-K3-UD-IQ2_XXS-00006-of-00016.gguf",
+   "size": 47922150336
+  },
+  {
+   "rfilename": "UD-IQ2_XXS/Kimi-K3-UD-IQ2_XXS-00007-of-00016.gguf",
+   "size": 48333819840
+  },
+  {
+   "rfilename": "UD-IQ2_XXS/Kimi-K3-UD-IQ2_XXS-00008-of-00016.gguf",
+   "size": 48292113216
+  },
+  {
+   "rfilename": "UD-IQ2_XXS/Kimi-K3-UD-IQ2_XXS-00009-of-00016.gguf",
+   "size": 48129122560
+  },
+  {
+   "rfilename": "UD-IQ2_XXS/Kimi-K3-UD-IQ2_XXS-00010-of-00016.gguf",
+   "size": 49514113632
+  },
+  {
+   "rfilename": "UD-IQ2_XXS/Kimi-K3-UD-IQ2_XXS-00011-of-00016.gguf",
+   "size": 48129122560
+  },
+  {
+   "rfilename": "UD-IQ2_XXS/Kimi-K3-UD-IQ2_XXS-00012-of-00016.gguf",
+   "size": 48419740160
+  },
+  {
+   "rfilename": "UD-IQ2_XXS/Kimi-K3-UD-IQ2_XXS-00013-of-00016.gguf",
+   "size": 49463557056
+  },
+  {
+   "rfilename": "UD-IQ2_XXS/Kimi-K3-UD-IQ2_XXS-00014-of-00016.gguf",
+   "size": 49825796544
+  },
+  {
+   "rfilename": "UD-IQ2_XXS/Kimi-K3-UD-IQ2_XXS-00015-of-00016.gguf",
+   "size": 48157125088
+  },
+  {
+   "rfilename": "UD-IQ2_XXS/Kimi-K3-UD-IQ2_XXS-00016-of-00016.gguf",
+   "size": 29571590560
+  },
+  {
+   "rfilename": "UD-Q1_0/Kimi-K3-UD-Q1_0-00001-of-00011.gguf",
+   "size": 6934176
+  },
+  {
+   "rfilename": "UD-Q1_0/Kimi-K3-UD-Q1_0-00002-of-00011.gguf",
+   "size": 49451648256
+  },
+  {
+   "rfilename": "UD-Q1_0/Kimi-K3-UD-Q1_0-00003-of-00011.gguf",
+   "size": 49915144704
+  },
+  {
+   "rfilename": "UD-Q1_0/Kimi-K3-UD-Q1_0-00004-of-00011.gguf",
+   "size": 48718816992
+  },
+  {
+   "rfilename": "UD-Q1_0/Kimi-K3-UD-Q1_0-00005-of-00011.gguf",
+   "size": 48704075008
+  },
+  {
+   "rfilename": "UD-Q1_0/Kimi-K3-UD-Q1_0-00006-of-00011.gguf",
+   "size": 48812431168
+  },
+  {
+   "rfilename": "UD-Q1_0/Kimi-K3-UD-Q1_0-00007-of-00011.gguf",
+   "size": 49955195808
+  },
+  {
+   "rfilename": "UD-Q1_0/Kimi-K3-UD-Q1_0-00008-of-00011.gguf",
+   "size": 48678765856
+  },
+  {
+   "rfilename": "UD-Q1_0/Kimi-K3-UD-Q1_0-00009-of-00011.gguf",
+   "size": 48831701952
+  },
+  {
+   "rfilename": "UD-Q1_0/Kimi-K3-UD-Q1_0-00010-of-00011.gguf",
+   "size": 48684804256
+  },
+  {
+   "rfilename": "UD-Q1_0/Kimi-K3-UD-Q1_0-00011-of-00011.gguf",
+   "size": 24609938144
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00001-of-00019.gguf",
+   "size": 6934144
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00002-of-00019.gguf",
+   "size": 49949612160
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00003-of-00019.gguf",
+   "size": 48978554752
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00004-of-00019.gguf",
+   "size": 49824551744
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00005-of-00019.gguf",
+   "size": 49393005856
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00006-of-00019.gguf",
+   "size": 47742644320
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00007-of-00019.gguf",
+   "size": 49744198080
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00008-of-00019.gguf",
+   "size": 47870271264
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00009-of-00019.gguf",
+   "size": 48999332128
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00010-of-00019.gguf",
+   "size": 49165754528
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00011-of-00019.gguf",
+   "size": 49843822496
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00012-of-00019.gguf",
+   "size": 48999332128
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00013-of-00019.gguf",
+   "size": 49997009440
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00014-of-00019.gguf",
+   "size": 49012567584
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00015-of-00019.gguf",
+   "size": 49924176160
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00016-of-00019.gguf",
+   "size": 49165754528
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00017-of-00019.gguf",
+   "size": 49843822496
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00018-of-00019.gguf",
+   "size": 48999332128
+  },
+  {
+   "rfilename": "UD-Q2_K_XL/Kimi-K3-UD-Q2_K_XL-00019-of-00019.gguf",
+   "size": 23817182976
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00001-of-00032.gguf",
+   "size": 6934144
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00002-of-00032.gguf",
+   "size": 47478326816
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00003-of-00032.gguf",
+   "size": 49151700032
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00004-of-00032.gguf",
+   "size": 49024073088
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00005-of-00032.gguf",
+   "size": 49024073152
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00006-of-00032.gguf",
+   "size": 49123697600
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00007-of-00032.gguf",
+   "size": 49151700096
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00008-of-00032.gguf",
+   "size": 49024073184
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00009-of-00032.gguf",
+   "size": 49024073184
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00010-of-00032.gguf",
+   "size": 49123697600
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00011-of-00032.gguf",
+   "size": 49151700096
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00012-of-00032.gguf",
+   "size": 49024073184
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00013-of-00032.gguf",
+   "size": 49024073184
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00014-of-00032.gguf",
+   "size": 49123697600
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00015-of-00032.gguf",
+   "size": 49151700096
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00016-of-00032.gguf",
+   "size": 49024073184
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00017-of-00032.gguf",
+   "size": 49024073184
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00018-of-00032.gguf",
+   "size": 49123697600
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00019-of-00032.gguf",
+   "size": 49151700096
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00020-of-00032.gguf",
+   "size": 49024073184
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00021-of-00032.gguf",
+   "size": 49024073184
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00022-of-00032.gguf",
+   "size": 49123697600
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00023-of-00032.gguf",
+   "size": 49151700096
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00024-of-00032.gguf",
+   "size": 49024073184
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00025-of-00032.gguf",
+   "size": 49024073184
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00026-of-00032.gguf",
+   "size": 49123697600
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00027-of-00032.gguf",
+   "size": 49151700096
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00028-of-00032.gguf",
+   "size": 49024073184
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00029-of-00032.gguf",
+   "size": 49024073184
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00030-of-00032.gguf",
+   "size": 49123697600
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00031-of-00032.gguf",
+   "size": 49151700096
+  },
+  {
+   "rfilename": "UD-Q4_K_XL/Kimi-K3-UD-Q4_K_XL-00032-of-00032.gguf",
+   "size": 37766913792
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00001-of-00034.gguf",
+   "size": 46835693536
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00002-of-00034.gguf",
+   "size": 45344738656
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00003-of-00034.gguf",
+   "size": 45344738656
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00004-of-00034.gguf",
+   "size": 49944848960
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00005-of-00034.gguf",
+   "size": 45128189504
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00006-of-00034.gguf",
+   "size": 45344738752
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00007-of-00034.gguf",
+   "size": 45344738752
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00008-of-00034.gguf",
+   "size": 49944848992
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00009-of-00034.gguf",
+   "size": 45128189504
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00010-of-00034.gguf",
+   "size": 45344738752
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00011-of-00034.gguf",
+   "size": 45768143456
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00012-of-00034.gguf",
+   "size": 49880484416
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00013-of-00034.gguf",
+   "size": 44769149344
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00014-of-00034.gguf",
+   "size": 45768143456
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00015-of-00034.gguf",
+   "size": 45344738752
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00016-of-00034.gguf",
+   "size": 49880484416
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00017-of-00034.gguf",
+   "size": 45192554080
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00018-of-00034.gguf",
+   "size": 45344738752
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00019-of-00034.gguf",
+   "size": 45344738752
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00020-of-00034.gguf",
+   "size": 49944848992
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00021-of-00034.gguf",
+   "size": 45128189504
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00022-of-00034.gguf",
+   "size": 45344738752
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00023-of-00034.gguf",
+   "size": 45344738752
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00024-of-00034.gguf",
+   "size": 49944848992
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00025-of-00034.gguf",
+   "size": 45128189504
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00026-of-00034.gguf",
+   "size": 45344738752
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00027-of-00034.gguf",
+   "size": 45768143456
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00028-of-00034.gguf",
+   "size": 49880484416
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00029-of-00034.gguf",
+   "size": 44769149344
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00030-of-00034.gguf",
+   "size": 45768143456
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00031-of-00034.gguf",
+   "size": 45344738752
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00032-of-00034.gguf",
+   "size": 49880484416
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00033-of-00034.gguf",
+   "size": 45192554080
+  },
+  {
+   "rfilename": "UD-Q8_K_XL/Kimi-K3-UD-Q8_K_XL-00034-of-00034.gguf",
+   "size": 27375253728
+  },
+  {
+   "rfilename": "UD-TQ1_0/Kimi-K3-UD-TQ1_0-00001-of-00012.gguf",
+   "size": 6934176
+  },
+  {
+   "rfilename": "UD-TQ1_0/Kimi-K3-UD-TQ1_0-00002-of-00012.gguf",
+   "size": 49728525568
+  },
+  {
+   "rfilename": "UD-TQ1_0/Kimi-K3-UD-TQ1_0-00003-of-00012.gguf",
+   "size": 49497214208
+  },
+  {
+   "rfilename": "UD-TQ1_0/Kimi-K3-UD-TQ1_0-00004-of-00012.gguf",
+   "size": 49369587296
+  },
+  {
+   "rfilename": "UD-TQ1_0/Kimi-K3-UD-TQ1_0-00005-of-00012.gguf",
+   "size": 49397589824
+  },
+  {
+   "rfilename": "UD-TQ1_0/Kimi-K3-UD-TQ1_0-00006-of-00012.gguf",
+   "size": 49497214240
+  },
+  {
+   "rfilename": "UD-TQ1_0/Kimi-K3-UD-TQ1_0-00007-of-00012.gguf",
+   "size": 49497214240
+  },
+  {
+   "rfilename": "UD-TQ1_0/Kimi-K3-UD-TQ1_0-00008-of-00012.gguf",
+   "size": 49369587296
+  },
+  {
+   "rfilename": "UD-TQ1_0/Kimi-K3-UD-TQ1_0-00009-of-00012.gguf",
+   "size": 49397589824
+  },
+  {
+   "rfilename": "UD-TQ1_0/Kimi-K3-UD-TQ1_0-00010-of-00012.gguf",
+   "size": 49497214240
+  },
+  {
+   "rfilename": "UD-TQ1_0/Kimi-K3-UD-TQ1_0-00011-of-00012.gguf",
+   "size": 49497214240
+  },
+  {
+   "rfilename": "UD-TQ1_0/Kimi-K3-UD-TQ1_0-00012-of-00012.gguf",
+   "size": 14156396800
+  },
+  {
+   "rfilename": "UD-TQ2_0/Kimi-K3-UD-TQ2_0-00001-of-00013.gguf",
+   "size": 6934176
+  },
+  {
+   "rfilename": "UD-TQ2_0/Kimi-K3-UD-TQ2_0-00002-of-00013.gguf",
+   "size": 49469193824
+  },
+  {
+   "rfilename": "UD-TQ2_0/Kimi-K3-UD-TQ2_0-00003-of-00013.gguf",
+   "size": 49939837536
+  },
+  {
+   "rfilename": "UD-TQ2_0/Kimi-K3-UD-TQ2_0-00004-of-00013.gguf",
+   "size": 49465810176
+  },
+  {
+   "rfilename": "UD-TQ2_0/Kimi-K3-UD-TQ2_0-00005-of-00013.gguf",
+   "size": 49546163840
+  },
+  {
+   "rfilename": "UD-TQ2_0/Kimi-K3-UD-TQ2_0-00006-of-00013.gguf",
+   "size": 49939837568
+  },
+  {
+   "rfilename": "UD-TQ2_0/Kimi-K3-UD-TQ2_0-00007-of-00013.gguf",
+   "size": 49465810176
+  },
+  {
+   "rfilename": "UD-TQ2_0/Kimi-K3-UD-TQ2_0-00008-of-00013.gguf",
+   "size": 49546163840
+  },
+  {
+   "rfilename": "UD-TQ2_0/Kimi-K3-UD-TQ2_0-00009-of-00013.gguf",
+   "size": 49812210624
+  },
+  {
+   "rfilename": "UD-TQ2_0/Kimi-K3-UD-TQ2_0-00010-of-00013.gguf",
+   "size": 49465810176
+  },
+  {
+   "rfilename": "UD-TQ2_0/Kimi-K3-UD-TQ2_0-00011-of-00013.gguf",
+   "size": 49546163840
+  },
+  {
+   "rfilename": "UD-TQ2_0/Kimi-K3-UD-TQ2_0-00012-of-00013.gguf",
+   "size": 49712586208
+  },
+  {
+   "rfilename": "UD-TQ2_0/Kimi-K3-UD-TQ2_0-00013-of-00013.gguf",
+   "size": 5538585504
+  },
+  {
+   "rfilename": "mmproj-BF16.gguf",
+   "size": 904449056
+  },
+  {
+   "rfilename": "mmproj-F16.gguf",
+   "size": 903244832
+  },
+  {
+   "rfilename": "mmproj-F32.gguf",
+   "size": 1789447200
+  }
+ ]
+}

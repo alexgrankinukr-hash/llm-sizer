@@ -1,0 +1,486 @@
+{
+ "schema": "llm-sizer/factors v1 — derived by scripts/llm-sizer/calibrate.py from benchmarks.json; do not edit by hand",
+ "data_as_of": "2026-09-05",
+ "efficiency": {
+  "_formula": "decode tok/s = bandwidth_gbs × efficiency ÷ gigabytes read per token (active weights at the quant's bits + context cache per token)",
+  "_resolve": "exact chip if present in by_chip, else assumed[chip] if present, else the tier median (tier from the chip name: base | Pro | Max | Ultra; DGX Spark = spark)",
+  "by_chip": {
+   "DGX Spark": {
+    "value": 0.748,
+    "n": 5,
+    "measured": true,
+    "tier": "spark",
+    "generation": null,
+    "range": [
+     0.596,
+     0.873
+    ]
+   },
+   "M1": {
+    "value": 0.791,
+    "n": 1,
+    "measured": true,
+    "tier": "base",
+    "generation": "M1",
+    "range": [
+     0.791,
+     0.791
+    ]
+   },
+   "M1 Max": {
+    "value": 0.581,
+    "n": 1,
+    "measured": true,
+    "tier": "max",
+    "generation": "M1",
+    "range": [
+     0.581,
+     0.581
+    ]
+   },
+   "M1 Pro": {
+    "value": 0.692,
+    "n": 1,
+    "measured": true,
+    "tier": "pro",
+    "generation": "M1",
+    "range": [
+     0.692,
+     0.692
+    ]
+   },
+   "M1 Ultra": {
+    "value": 0.398,
+    "n": 1,
+    "measured": true,
+    "tier": "ultra",
+    "generation": "M1",
+    "range": [
+     0.398,
+     0.398
+    ]
+   },
+   "M2": {
+    "value": 0.833,
+    "n": 1,
+    "measured": true,
+    "tier": "base",
+    "generation": "M2",
+    "range": [
+     0.833,
+     0.833
+    ]
+   },
+   "M2 Max": {
+    "value": 0.627,
+    "n": 1,
+    "measured": true,
+    "tier": "max",
+    "generation": "M2",
+    "range": [
+     0.627,
+     0.627
+    ]
+   },
+   "M2 Pro": {
+    "value": 0.738,
+    "n": 1,
+    "measured": true,
+    "tier": "pro",
+    "generation": "M2",
+    "range": [
+     0.738,
+     0.738
+    ]
+   },
+   "M2 Ultra": {
+    "value": 0.448,
+    "n": 1,
+    "measured": true,
+    "tier": "ultra",
+    "generation": "M2",
+    "range": [
+     0.448,
+     0.448
+    ]
+   },
+   "M3": {
+    "value": 0.811,
+    "n": 1,
+    "measured": true,
+    "tier": "base",
+    "generation": "M3",
+    "range": [
+     0.811,
+     0.811
+    ]
+   },
+   "M3 Max": {
+    "value": 0.63,
+    "n": 1,
+    "measured": true,
+    "tier": "max",
+    "generation": "M3",
+    "range": [
+     0.63,
+     0.63
+    ]
+   },
+   "M3 Pro": {
+    "value": 0.779,
+    "n": 1,
+    "measured": true,
+    "tier": "pro",
+    "generation": "M3",
+    "range": [
+     0.779,
+     0.779
+    ]
+   },
+   "M3 Ultra": {
+    "value": 0.438,
+    "n": 3,
+    "measured": true,
+    "tier": "ultra",
+    "generation": "M3",
+    "range": [
+     0.438,
+     0.575
+    ]
+   },
+   "M4": {
+    "value": 0.763,
+    "n": 1,
+    "measured": true,
+    "tier": "base",
+    "generation": "M4",
+    "range": [
+     0.763,
+     0.763
+    ]
+   },
+   "M4 Max": {
+    "value": 0.645,
+    "n": 2,
+    "measured": true,
+    "tier": "max",
+    "generation": "M4",
+    "range": [
+     0.578,
+     0.713
+    ]
+   },
+   "M4 Pro": {
+    "value": 0.706,
+    "n": 1,
+    "measured": true,
+    "tier": "pro",
+    "generation": "M4",
+    "range": [
+     0.706,
+     0.706
+    ]
+   },
+   "M5": {
+    "value": 0.787,
+    "n": 1,
+    "measured": true,
+    "tier": "base",
+    "generation": "M5",
+    "range": [
+     0.787,
+     0.787
+    ]
+   },
+   "M5 Max": {
+    "value": 0.816,
+    "n": 3,
+    "measured": true,
+    "tier": "max",
+    "generation": "M5",
+    "range": [
+     0.742,
+     0.849
+    ]
+   },
+   "M5 Pro": {
+    "value": 0.821,
+    "n": 1,
+    "measured": true,
+    "tier": "pro",
+    "generation": "M5",
+    "range": [
+     0.821,
+     0.821
+    ]
+   }
+  },
+  "assumed": {
+   "M5 Ultra": {
+    "value": 0.554,
+    "measured": false,
+    "tier": "ultra",
+    "generation": "M5",
+    "note": "ultra-tier median 0.438 × M5 generation lift 1.265 (M5 Max vs M4 Max); replace when measured"
+   },
+   "M6": {
+    "value": 0.791,
+    "measured": false,
+    "tier": "base",
+    "generation": "M6",
+    "note": "base-tier median until measured"
+   },
+   "M6 Pro": {
+    "value": 0.738,
+    "measured": false,
+    "tier": "pro",
+    "generation": "M6",
+    "note": "pro-tier median until measured"
+   }
+  },
+  "by_tier": {
+   "base": {
+    "value": 0.791,
+    "n_chips": 5,
+    "range": [
+     0.763,
+     0.833
+    ]
+   },
+   "pro": {
+    "value": 0.738,
+    "n_chips": 5,
+    "range": [
+     0.692,
+     0.821
+    ]
+   },
+   "max": {
+    "value": 0.63,
+    "n_chips": 5,
+    "range": [
+     0.581,
+     0.816
+    ]
+   },
+   "ultra": {
+    "value": 0.438,
+    "n_chips": 3,
+    "range": [
+     0.398,
+     0.448
+    ]
+   },
+   "spark": {
+    "value": 0.748,
+    "n_chips": 1,
+    "range": [
+     0.748,
+     0.748
+    ]
+   }
+  },
+  "m5_generation_lift": 1.265
+ },
+ "runtime": {
+  "gguf": {
+   "factor": 1.0,
+   "note": "llama.cpp / LM Studio GGUF is the baseline"
+  },
+  "mlx": {
+   "dense_under_14b": {
+    "factor": 1.1,
+    "range": [
+     1.0,
+     1.2
+    ]
+   },
+   "dense_14b_and_up": {
+    "factor": 1.15,
+    "range": [
+     1.1,
+     1.2
+    ]
+   },
+   "moe": {
+    "factor": 1.9,
+    "range": [
+     1.5,
+     3.0
+    ]
+   },
+   "flatten_above_context": 36000,
+   "note": "2026 community MLX-vs-llama.cpp reports; applied in full up to 24K context and fading linearly to 1.0 at 36K",
+   "measured_here": false
+  }
+ },
+ "acceleration": {
+  "mtp": {
+   "min": 1.6,
+   "median": 2.106,
+   "max": 2.61,
+   "n": 2,
+   "examples": [
+    "Qwen3.8-27B MLX-4bit on M4 Pro: 7.0 → 18.3 (2.61×, mtp)",
+    "Qwen3.5-9B MLX-4bit on M4: 14.4 → 23.0 (1.60×, mtp)"
+   ]
+  },
+  "draft_dense": {
+   "min": 2.01,
+   "median": 2.775,
+   "max": 3.63,
+   "n": 5,
+   "examples": [
+    "Qwen3.8-27B MLX-4bit on M4 Pro: 14.7 → 33.8 (2.30×, dflash2)",
+    "Qwen3.8-27B MLX-4bit on M4 Pro: 14.7 → 29.5 (2.01×, dspark)",
+    "Qwen3.8-27B MLX-8bit on M4 Pro: 8.4 → 30.5 (3.63×, dflash2)",
+    "gemma-4-12B MLX-8bit on M4 Pro: 17.8 → 49.4 (2.78×, dspark)",
+    "Qwen3-8B bf16 on M3 Max: 13.7 → 45.8 (3.34×, dflash)"
+   ]
+  },
+  "draft_small_active_moe": {
+   "min": 1.32,
+   "median": 1.318,
+   "max": 1.32,
+   "n": 1,
+   "examples": [
+    "Qwen3.6-35B-A3B (3B active) MLX-4bit on M4 Pro: 86.9 → 114.5 (1.32×, dspark)"
+   ]
+  },
+  "_rule": "MTP: native heads, factor in [min, max] when the runtime uses them. Draft models (DFlash/DSpark): use draft_dense unless the model is a mixture-of-experts with under 6.0 B active parameters, then draft_small_active_moe. Always show the range, never the headline."
+ },
+ "prefill": {
+  "DGX Spark": {
+   "pp_times_weights_gb": 54520.422,
+   "n": 5,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M1": {
+   "pp_times_weights_gb": 448.248,
+   "n": 1,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M1 Max": {
+   "pp_times_weights_gb": 2014.228,
+   "n": 1,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M1 Pro": {
+   "pp_times_weights_gb": 1011.75,
+   "n": 1,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M1 Ultra": {
+   "pp_times_weights_gb": 3914.152,
+   "n": 1,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M2": {
+   "pp_times_weights_gb": 682.366,
+   "n": 1,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M2 Max": {
+   "pp_times_weights_gb": 2550.978,
+   "n": 1,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M2 Pro": {
+   "pp_times_weights_gb": 1296.522,
+   "n": 1,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M2 Ultra": {
+   "pp_times_weights_gb": 4706.224,
+   "n": 1,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M3": {
+   "pp_times_weights_gb": 709.65,
+   "n": 1,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M3 Max": {
+   "pp_times_weights_gb": 2886.86,
+   "n": 1,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M3 Pro": {
+   "pp_times_weights_gb": 1298.346,
+   "n": 1,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M3 Ultra": {
+   "pp_times_weights_gb": 8150.392,
+   "n": 2,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M4": {
+   "pp_times_weights_gb": 840.902,
+   "n": 1,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M4 Max": {
+   "pp_times_weights_gb": 4893.776,
+   "n": 2,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M4 Pro": {
+   "pp_times_weights_gb": 1671.164,
+   "n": 1,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M5": {
+   "pp_times_weights_gb": 2746.602,
+   "n": 1,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M5 Max": {
+   "pp_times_weights_gb": 22635.432,
+   "n": 3,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  },
+  "M5 Pro": {
+   "pp_times_weights_gb": 6158.432,
+   "n": 1,
+   "note": "prefill tok/s ≈ this ÷ weights_gb (v1.5 feature)"
+  }
+ },
+ "feels_like": [
+  {
+   "max_tok_s": 5,
+   "label": "painful",
+   "description": "slower than reading"
+  },
+  {
+   "max_tok_s": 12,
+   "label": "usable",
+   "description": "usable for short answers"
+  },
+  {
+   "max_tok_s": 30,
+   "label": "comfortable",
+   "description": "comfortable chat"
+  },
+  {
+   "max_tok_s": 60,
+   "label": "fast",
+   "description": "agents and coding feel fine"
+  },
+  {
+   "max_tok_s": null,
+   "label": "cloud-like",
+   "description": "as fast as a hosted model"
+  }
+ ],
+ "sources": [
+  "https://github.com/ARahim3/mlx-dspark",
+  "https://github.com/eauchs/mlx-dflash",
+  "https://github.com/ggml-org/llama.cpp/blob/master/benches/dgx-spark/dgx-spark.md",
+  "https://github.com/ggml-org/llama.cpp/discussions/4167",
+  "https://github.com/youssofal/MTPLX",
+  "https://lmsys.org/blog/2025-10-13-nvidia-dgx-spark/",
+  "https://vinoth12940.github.io/blog/articles/genai-20260519-local-mtp-speculative-decoding/",
+  "https://www.macrumors.com/2025/03/17/apples-m3-ultra-runs-deepseek-r1-efficiently/"
+ ]
+}

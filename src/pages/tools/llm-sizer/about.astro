@@ -1,0 +1,432 @@
+---
+/**
+ * How LLM Sizer computes its numbers: FAQ, the methodology (METHODOLOGY.md rendered as-is), and the sources
+ * behind every machine, benchmark and factor.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PublicHeader from '../../../components/PublicHeader.astro';
+import '../../../components/llm-sizer/llm-sizer.css';
+import { Content, getHeadings, rawContent } from '../../../lib/llm-sizer/METHODOLOGY.md';
+import { getLiveExport } from '../../../lib/llm-sizer/adapters/db';
+import { SITE } from '../../../lib/llm-sizer/adapters/site';
+import { ABOUT_ANCHORS, efficiencyProvenance, machineAnchor } from '../../../lib/llm-sizer/app/provenance';
+import { chipKey, resolveChipProfile } from '../../../lib/llm-sizer/engine/speed';
+import { formatBandwidth, formatDate, formatPrice } from '../../../lib/llm-sizer/engine/format';
+import type { Factors, FittedTerm, Machine } from '../../../lib/llm-sizer/engine/types';
+import machinesFile from '../../../../public/data/llm-sizer/machines.json';
+import benchmarksFile from '../../../../public/data/llm-sizer/benchmarks.json';
+import factorsFile from '../../../../public/data/llm-sizer/factors.json';
+
+interface BenchmarkRow {
+  chip: string;
+  model: string;
+  quant: string;
+  runtime: string;
+  accel?: string | null;
+  tg: number | null;
+  pp?: number | null;
+  baseline_tg?: number | null;
+  source: string;
+  date: string;
+  note?: string;
+  build?: string;
+  context_tokens?: number;
+}
+interface FactorsFull extends Factors {
+  sources?: string[];
+  efficiency: Factors['efficiency'] & { _formula?: string; _resolve?: string };
+  runtime: Factors['runtime'] & { mlx: Factors['runtime']['mlx'] & { note?: string } };
+  speed_model?: Factors['speed_model'] & { _formula?: string };
+  acceleration: Record<string, { min: number; median: number; max: number; n: number; examples?: string[] } | string>;
+}
+
+const machines = machinesFile.machines as unknown as Machine[];
+const benchmarks = (benchmarksFile as { rows: BenchmarkRow[] }).rows;
+const factors = factorsFile as unknown as FactorsFull;
+
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+
+const versionMatch = /\*\*Version (\S+) · (\d{4}-\d{2}-\d{2})/.exec(rawContent());
+const version = versionMatch ? { v: versionMatch[1], date: versionMatch[2] } : null;
+let modelsAsOf: string | null = null;
+try {
+  const live = await getLiveExport('index');
+  modelsAsOf = live ? formatDate((JSON.parse(live.body) as { generated_at?: string }).generated_at ?? null) : null;
+} catch {
+  modelsAsOf = null;
+}
+const toc = getHeadings().filter((h) => h.depth === 2);
+const host = (url: string) => {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return url;
+  }
+};
+
+// Numbers the FAQ quotes, taken from the data so they cannot drift.
+const currentMacs = machines.filter((m) => m.kind === 'mac' && m.status !== 'discontinued');
+const olderMacs = machines.filter((m) => m.kind === 'mac' && m.status === 'discontinued');
+const bands = factors.feels_like;
+const m5Ultra = factors.efficiency.assumed['M5 Ultra'];
+const measuredChips = Object.entries(factors.efficiency.by_chip).filter(([, e]) => e.measured).length;
+const sm = factors.speed_model;
+const mlxGroups = sm?.mlx.overhead_factor;
+const pct = (t?: FittedTerm) => (t ? `${Math.round(t.value * 100)} %` : '?');
+const ms = (t?: FittedTerm, digits = 1) => (t ? `${t.value.toFixed(digits)} ms` : '?');
+const m5UltraProfile = m5Ultra?.b_eff_ratio !== undefined && m5Ultra.t0_ms !== undefined ? `${Math.round(m5Ultra.b_eff_ratio * 100)} % of its 1,200 GB/s and ${m5Ultra.t0_ms.toFixed(1)} ms of fixed cost per token` : 'assumed';
+const termRows = (rec: Record<string, FittedTerm> | undefined, names: Record<string, string>, unit: string) =>
+  Object.entries(rec ?? {}).map(([k, t]) => ({ name: names[k] ?? k.replace(/_/g, ' '), value: unit === 'ms' ? `${t.value.toFixed(1)} ms` : `×${t.value.toFixed(2)}`, n: t.n ?? null, source: t.source, range: t.range ? `${t.range[0]} – ${t.range[1]}` : '', platforms: t.platforms?.join(', ') ?? '' }));
+const classNames: Record<string, string> = { dense: 'dense', moe: 'mixture of experts', moe_hybrid: 'mixture of experts with linear-attention layers', moe_latent: 'mixture of experts with latent attention', deepseek_v4: 'DeepSeek V4' };
+const groupNames: Record<string, string> = { dense: 'dense', small_active_moe_m4plus: 'mixture under 6B active, M4 and newer', small_active_moe_pre_m4: 'mixture under 6B active, M1 to M3', moe_other: 'other mixtures of experts' };
+const familyNames: Record<string, string> = { q4_0: 'Q4_0 / Q5_0 (plain)', q8_0: 'Q8_0 / FP8', f16: 'F16 / BF16', mxfp4: 'MXFP4 / NVFP4', mlx: 'MLX files', gguf_kquant: 'GGUF K-quant and IQ files' };
+
+// Efficiency table: one row per chip in the catalog (measured, assumed or tier), in catalog order.
+const seen = new Set<string>();
+const chipRows = machines
+  .filter((m) => {
+    const k = chipKey(m.chip);
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  })
+  .map((m) => ({ chip: chipKey(m.chip), family: m.family, spec: m.bandwidth_gbs, profile: resolveChipProfile(m, factors), ...efficiencyProvenance(m, factors) }));
+const accelerations = Object.entries(factors.acceleration).filter((e): e is [string, { min: number; median: number; max: number; n: number; examples?: string[] }] => typeof e[1] === 'object');
+
+interface Faq {
+  id: string;
+  q: string;
+  html: string;
+}
+const A = ABOUT_ANCHORS;
+const faqs: Faq[] = [
+  {
+    id: 'context',
+    q: 'Does it count the context window?',
+    html: `<p>Yes. Every column has a context length (32K by default; 8K, 32K, 128K and 256K are one tap away, any number in Advanced), and the cell adds the context cache to the weights. The cache per token is read from each model's architecture: a conventional model caches every layer, models with sliding windows, linear-attention layers or compressed (latent) attention cache far less. That is why a 300-billion-parameter model can cost under 1 GB at 128K while a 27-billion dense model costs several. The formula is in <a href="#${A.needed}">section 5</a>.</p>`,
+  },
+  {
+    id: 'q8',
+    q: 'Can I see Q8 instead of Q4?',
+    html: `<p>Yes. Each column has a quantization control (Q2 to Q8 buckets; the exact file labels in Advanced), and "All columns" changes every column at once. Q4 is the default because it is what most people run and what the reference tables use; Q8 roughly doubles the weights and rarely fits where Q4 was tight.</p>`,
+  },
+  {
+    id: 'speed',
+    q: 'How fast will it write?',
+    html: `<p>Every cell that fits shows an estimated writing speed in tokens per second. It is the inverse of a time per token: the time to read the bytes per token at the chip's effective bandwidth, plus a fixed cost per token for the chip and for the model's architecture, plus a small cost per token of context. The chip profiles are fitted to the community llama.cpp table, the architecture and runtime terms to measured runs, and the whole model is judged on runs it never saw. It is an estimate, labelled as one, with the profile's source next to it. The bands are: ${bands.map((b) => `<strong>${b.label}</strong>${b.max_tok_s ? ` under ${b.max_tok_s} tok/s` : ' above that'}`).join(', ')}. Details in <a href="#${A.decode}">section 6.1</a>.</p>`,
+  },
+  {
+    id: 'assumptions',
+    q: 'What does the tool assume?',
+    html: `<p>Eight things, all adjustable in Advanced except the first: memory sizes are binary gigabytes, so a 32 GB Mac has 34.4 GB in the units file sizes use; macOS keeps 6 GB, or the larger of 6 GB and 5.5 % of the memory once you lift the GPU limit; the work toggle reserves 16 GB for your own apps (off by default); macOS lets the GPU use two thirds of RAM under 36 GB and three quarters from 36 GB, unless you set the override; the context cache is stored at FP16, as every runtime does by default; buffers take 1.5 GB plus 1 % of the weights; MLX files set aside 0.15 GB per 1K tokens of context beyond 8K to process the prompt; a cell is "tight" under 10 % headroom. All of it is written out in <a href="#${A.available}">section 4</a> and <a href="#${A.needed}">section 5</a>.</p>`,
+  },
+  {
+    id: 'linked-machines',
+    q: 'Can I link two Macs, or two DGX Sparks?',
+    html: `<p>Yes, from version 0.13. Pick a machine that is already in the table a second time (or use the ×1 to ×4 chips in Settings) and the row becomes a pool: "2 × NVIDIA DGX Spark · 128 GB each · 256 GB pooled", with the summed price, on every view. Memory adds up, each machine keeping its own reserve and GPU limit, with 2 GB per machine for the link. Speed depends on the split you pick: on a <strong>layer split</strong> (llama.cpp's RPC mode on any link, MLX pipeline) the pool writes at one machine's speed minus a few milliseconds per extra machine, so a model that fits one machine is slower across two; in <strong>tensor parallel</strong> (MLX over Thunderbolt 5 RDMA on macOS 26.2 or later, vLLM over the Spark's 200 Gb/s ports, PCIe in a GPU box) two machines write about 1.7 times faster on a dense model and about 1.3 times on a mixture of experts, and reading scales too. Tensor parallel needs 2 or 4 machines, a direct fast link between every pair and the raised memory limit on each, and every machine keeps the whole download on disk. The constants are fitted on a handful of published cluster runs and the sheet says which applied; it also names the cheapest single machine that runs the same model as asked, because one bigger box is usually cheaper and faster than two. Sections <a href="#${A.available}">4</a>, <a href="#${A.decode}">6.1</a> and 8 of the methodology have the formulas and the evidence.</p>`,
+  },
+  {
+    id: 'other-machines',
+    q: 'Linux, PCs, older Macs?',
+    html: `<p>Every Apple silicon Mac from the M1 onwards is in the catalog (${currentMacs.length} current configurations, ${olderMacs.length} older ones behind "older machines" in the picker), plus the NVIDIA DGX Spark. Any other machine can be typed in under Advanced with its memory and bandwidth, and the memory math is the same everywhere: only the reserves and the speed factor differ (<a href="#${A.otherMachines}">section 7</a>). A PC builder with graphics cards is planned for v2.</p>`,
+  },
+  {
+    id: 'tiers',
+    q: 'Which memory size makes sense?',
+    html: `<p>The table answers that for the models you care about, so add them and read the rows: the first row where a column turns gold is the size to buy for that model. Or ask it the other way round: the "What can it run?" tile takes one machine at one memory size and lists every model with the best build that runs and the longest context it holds at Q4. Buying for one model? The "Which machine?" tile maps every current machine by memory size and estimated speed for it; set a minimum speed, a budget and laptop or desktop, and it names the cheapest configuration that qualifies. As a rule of thumb from today's featured models: 16 to 24 GB runs small models at short context, 32 GB runs a 27-billion dense model at Q4, 64 GB adds the mid-size mixture-of-experts models at lower precision, 128 GB runs them at Q4, 256 GB runs the 300-billion class, and 512 GB is where the 700-billion models start to fit. Re-check it whenever a model drops; the catalog updates nightly.</p>`,
+  },
+  {
+    id: 'reading',
+    q: 'Why is there a wait before the first word, and why does the Reading tab differ from Writing?',
+    html: `<p>Before it writes, the model reads your whole prompt: the system prompt, the document you pasted, the conversation so far. That read is compute-bound, so it scales with GPU cores and the chip generation, not with memory bandwidth or the file's bits; writing is the opposite. The M5 generation reads about 3.5 times faster per GPU core than the M4, which is why a 32K-token document that waits nine minutes on an M4 Pro waits under three on an M5 Pro. The Reading tab shows that wait for a prompt size you pick, and the sheet's "Reading speed" section shows how it is made. It is the cost of a prompt read in one go: in a chat, what the model has already read stays in memory and each turn waits only for its new text, so a session that grows to a long context pays that read in pieces, never all at once. The whole-context figure is what dropping a codebase or a book in at once costs, and on a 27B dense model at 256K that is over an hour on an M5 Max. Section 6.4 of the methodology has the fit and its sources.</p>`,
+  },
+  {
+    id: 'ssd-build',
+    q: 'Can I run Qwen 3.8 Flash Next on a 64 GB Mac?',
+    html: `<p>Yes, with a build that keeps its n-gram table on the SSD. Flash Next is a 125B mixture of experts plus a 51B-parameter lookup table that is read once per token at one address, so the table can stay on disk while the experts stay in memory. The community builds that do this need 46 to 56 GB of memory instead of 123 GB. Pick one in the column's build list ("Q4 · engram on SSD · 45.8 GB in memory"), or press "SSD build" on the Which machine? map; the memory bar shows the part on the SSD beside it. The tool does not estimate their speed: the only published figure is 36 tok/s on an M5 Max with 64 GB, and one run on one chip cannot be carried to the others. Section 5 of the methodology has the sizes and the runtime requirements.</p>`,
+  },
+  {
+    id: 'ring',
+    q: 'What is a ring?',
+    html: `<p><span class="lls-marker lls-legend inline-flex align-middle"><span class="lls-run"></span></span> A gold sphere means the model runs as asked with at least 10 % headroom. <span class="lls-marker lls-legend inline-flex align-middle"><span class="lls-ring"></span></span> A ring means it runs with a compromise the cell has already chosen for you: close your apps, lift the macOS memory limit, shorten the context, or drop to a smaller build, in that order of preference. A cell that fits with under 10 % headroom is also a ring ("tight"). <span class="lls-marker lls-legend inline-flex align-middle"><span class="lls-no"></span></span> A grey dash means nothing at or above the quality floor fits even with every concession. Tap any cell for the reason, the memory bar and the fix. See <a href="#${A.reading}">How to read the table</a>.</p>`,
+  },
+  {
+    id: '32gb',
+    q: "Why does it say my 32 GB Mac can't run a model I know fits?",
+    html: `<p>Two reserves are probably on. A 32 GB Mac has 34.4 GB in file-size units; with the work toggle on it offers min(34.4 × ⅔, 34.4 − 6 − 16) = 12.4 GB to the model, because macOS keeps 6 GB and your apps keep 16 GB. Turn the toggle off and the two-thirds limit still caps the GPU at 22.9 GB. A 27-billion model at Q4 with a 32K context needs about 20.7 GB, so it fits in the second case (tight, at 90 %) and not the first. Tap the cell: the bar shows exactly which reserve is in the way, and the fix ("close your apps", "lift the memory limit") applies with one tap. The rules are in <a href="#${A.available}">section 4</a>.</p>`,
+  },
+  {
+    id: 'mlx',
+    q: 'Why is MLX faster than GGUF?',
+    html: `<p>It is not always faster, and where it is, the gain is in the fixed cost per token rather than the read. Measured runs put MLX at ${pct(mlxGroups?.dense)} of the fixed cost on dense models (a wash), about ${pct(mlxGroups?.small_active_moe_m4plus)} on small mixtures of experts on the M4 generation and newer (one measurement: 71 to 130 tok/s), ${pct(mlxGroups?.moe_other)} on other mixtures, and ${pct(mlxGroups?.small_active_moe_pre_m4)} on small mixtures on the M1 to M3 chips, where it is slower. Part of the dense "MLX lead" people report is llama.cpp's K-quant files reading about 25 % slower than plain formats on Metal. MLX also pays a long-context cost on top of the cache re-read: about ${ms(sm?.mlx.attention_ms_per_32k.pre_m5)} per token per 32K of context on the M1 to M4 chips, which is why llama.cpp catches up there at very long context, and about ${ms(sm?.mlx.attention_ms_per_32k.m5plus)} on the M5 generation, whose GPU carries the neural accelerators (fitted on the M5 Max ladders; the M5 Ultra inherits it unmeasured). The switch is in the speed view; the factors and their sources are in <a href="#${A.runtime}">section 6.2</a>.</p>`,
+  },
+  {
+    id: 'estimate',
+    q: 'Why is the speed for the M5 Ultra (or the M6) an estimate?',
+    html: `<p>Every speed is an estimate; some rest on measurements of that exact chip and some do not. ${measuredChips} chips have measured rows in the benchmark data. The M5 Ultra has none yet, so its profile is an explicit assumption: ${m5UltraProfile}; the M6 uses the base-tier medians until someone measures one. The sheet says which case applies to your machine, and the <a href="#${A.efficiency}">profile table</a> below lists every chip with its origin. If you have measured your Mac, send the number through the Feedback button; accepted rows enter the calibration data with your handle as the source.</p>`,
+  },
+  {
+    id: 'open-source',
+    q: 'Is the code open?',
+    html: `<p>Yes, since 2026-09-15: the whole tool is at <a href="${SITE.repos.code}" rel="noopener">${SITE.repos.code.replace('https://', '')}</a> under the MIT license: the memory maths, the speed model with every fitted constant, the reading-speed and linked-machine terms, the compromise search, the React views, the nightly import of models from Hugging Face, the calibration script that turns measured rows into factors, and the tests that pin the TypeScript engine to its Python mirror. It runs on its own with <code>npm install</code> and <code>npm run dev</code>, reading a snapshot of the <a href="${SITE.repos.data}" rel="noopener">open data</a>; no database, no accounts. The site-only parts (the email card, the feedback inbox, analytics, the brand) stay here. A wrong number or a new machine is a pull request on the data repository; a formula change is a pull request on the code repository with a changelog entry on this page, which is the rule for every change.</p>`,
+  },
+  {
+    id: 'correct',
+    q: 'How do I correct a number?',
+    html: `<p>Use the Feedback button above the chart (it attaches your exact configuration) or open an issue on the <a href="${SITE.repos.data}" rel="noopener">open-data repository</a>, which holds the machine catalog, the benchmark rows and the factors. Say what you measured or which source you are citing. Accepted corrections change the data or the formula and get a line in the <a href="#${A.changelog}">changelog</a>. The file-by-file recipe is in <a href="#${A.correct}">section 11</a>.</p>`,
+  },
+];
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.html.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() } })),
+};
+
+const title = `How LLM Sizer computes its numbers${SITE.titleSuffix}`;
+const description = 'Every number in LLM Sizer, and where it comes from: the memory math, the speed estimate, the machine catalog, the benchmark rows and the factors, with a changelog.';
+---
+
+<BaseLayout icons={false} title={title} description={description} noindex={false} schema={[faqSchema]}>
+  <div class="min-h-screen flex flex-col relative lls-root">
+    <div class="bg-noise"></div>
+    <PublicHeader />
+    <main class="flex-1 relative z-10">
+      <section class="max-w-7xl mx-auto px-6 pt-14 pb-8 md:pt-20 md:pb-10">
+        <p class="font-body text-xs uppercase tracking-[0.25em] text-[var(--lls-gold-text)] mb-4 reveal">LLM Sizer · how the numbers are made</p>
+        <h1 class="font-heading text-4xl md:text-5xl lg:text-6xl mb-4 text-[var(--color-text)] tracking-tight reveal delay-100">Every number, and where it comes from</h1>
+        <p class="text-lg text-[var(--color-muted)] max-w-[640px] leading-relaxed reveal delay-200">
+          The tool is a calculator, not an oracle. This page has the questions people ask first, the full method with its constants, and the source behind every machine, benchmark row and factor.
+        </p>
+        <p class="mt-5 flex flex-wrap gap-2 reveal delay-300">
+          <a class="lls-chip !py-1.5 !px-3" href="/tools/llm-sizer">Open the tool</a>
+          <a class="lls-chip !py-1.5 !px-3" href={SITE.repos.code} rel="noopener">Source code (GitHub)</a>
+          <a class="lls-chip !py-1.5 !px-3" href={SITE.repos.data} rel="noopener">Open data (GitHub)</a>
+          <a class="lls-chip !py-1.5 !px-3" href="/tools/llm-sizer#lls-feedback">Report a wrong number</a>
+        </p>
+        <p class="mt-4 text-xs uppercase tracking-[0.2em] text-[var(--color-light)] reveal delay-300">
+          Models as of {modelsAsOf ?? '—'} · Machines {formatDate(machinesFile.data_as_of)} · Benchmarks {formatDate((benchmarksFile as { data_as_of: string }).data_as_of)} · Factors {formatDate(factors.data_as_of)} · Methodology {version ? `v${version.v} (${version.date})` : ''}
+        </p>
+      </section>
+
+      <section id="faq" class="max-w-7xl mx-auto px-6 pb-16 scroll-mt-24">
+        <h2 class="font-heading text-3xl mb-6">Before you post the objection</h2>
+        <div class="max-w-[800px]">
+          {faqs.map((f) => (
+            <details class="lls-faq" id={`faq-${f.id}`}>
+              <summary><h3>{f.q}</h3></summary>
+              <div class="lls-faq-body" set:html={f.html} />
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section id="methodology" class="max-w-7xl mx-auto px-6 pb-16 scroll-mt-24">
+        <h2 class="font-heading text-3xl mb-2">The method</h2>
+        <p class="text-sm text-[var(--color-muted)] mb-8">Rendered from the same file the open-data repository publishes as <code>FORMULAS.md</code>. Any change to a formula, constant or data source lands here first, with a changelog entry.</p>
+        <div class="lg:grid lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-12">
+          <nav aria-label="On this page" class="hidden lg:block sticky top-24 self-start">
+            <p class="text-[11px] uppercase tracking-[0.2em] text-[var(--color-light)] mb-3">Sections</p>
+            <ol class="space-y-1.5 text-sm">
+              {toc.map((h) => (
+                <li><a class="toc-link" href={`#${h.slug}`}>{h.text}</a></li>
+              ))}
+              <li class="pt-2 border-t border-[var(--color-border)] mt-2"><a class="toc-link" href="#sources">Sources</a></li>
+            </ol>
+          </nav>
+          <article class="lls-methodology chapter-content font-sans text-lg leading-reading">
+            <Content />
+          </article>
+        </div>
+      </section>
+
+      <section id="sources" class="max-w-7xl mx-auto px-6 pb-24 scroll-mt-24">
+        <h2 class="font-heading text-3xl mb-2">Sources</h2>
+        <p class="text-sm text-[var(--color-muted)] mb-8">The three hand-maintained data files, row by row. The model records themselves come from the Hugging Face API nightly; each cell links to the repository of the file it counted.</p>
+
+        <h3 id="sources-machines" class="font-heading text-2xl mb-3 scroll-mt-24">Machines</h3>
+        <p class="text-sm text-[var(--color-muted)] mb-4">One row per chip and bandwidth bin. Prices are Apple's and NVIDIA's list prices at the data date; unpriced sizes were not yet on sale.</p>
+        <div class="overflow-x-auto mb-12">
+          <table class="lls-sources text-sm">
+            <thead><tr><th>Machine</th><th>Memory</th><th>Bandwidth</th><th>Prices</th><th>Status</th><th>Sources</th><th>Notes</th></tr></thead>
+            <tbody>
+              {machines.map((m) => (
+                <tr id={machineAnchor(m.id)} class="scroll-mt-24">
+                  <td class="whitespace-nowrap font-medium">{m.family} · {m.chip}</td>
+                  <td class="whitespace-nowrap">{m.memory_options_gb.join(' / ')} GB</td>
+                  <td class="whitespace-nowrap">{formatBandwidth(m.bandwidth_gbs)}</td>
+                  <td class="whitespace-nowrap">{m.price_usd ? Object.entries(m.price_usd).map(([gb, usd]) => `${gb} GB ${usd === null ? '—' : formatPrice(usd)}`).join(' · ') : '—'}</td>
+                  <td>{m.status ?? 'current'}{m.year ? ` · ${m.year}` : ''}</td>
+                  <td>{(m.sources ?? []).map((u, i) => (<><a href={u} rel="noopener" target="_blank">{host(u)}</a>{i < (m.sources?.length ?? 0) - 1 ? ', ' : ''}</>))}</td>
+                  <td class="text-[var(--color-muted)]">{m.notes ?? ''}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="sources-benchmarks" class="font-heading text-2xl mb-3 scroll-mt-24">Benchmark rows</h3>
+        <p class="text-sm text-[var(--color-muted)] mb-4">Measured tokens per second the efficiency and acceleration factors are calibrated on. "Baseline" is the same setup without the acceleration.</p>
+        <div class="overflow-x-auto mb-12">
+          <table class="lls-sources text-sm">
+            <thead><tr><th>Chip</th><th>Model</th><th>Quant</th><th>Runtime</th><th>Acceleration</th><th>Writing tok/s</th><th>Prefill tok/s</th><th>Date</th><th>Source</th></tr></thead>
+            <tbody>
+              {benchmarks.map((b) => (
+                <tr>
+                  <td class="whitespace-nowrap">{b.chip}</td>
+                  <td>{b.model}</td>
+                  <td class="whitespace-nowrap">{b.quant}</td>
+                  <td>{b.runtime}</td>
+                  <td class="whitespace-nowrap">{b.accel ?? '—'}{b.baseline_tg ? ` (baseline ${b.baseline_tg})` : ''}</td>
+                  <td class="whitespace-nowrap">{b.tg ?? '—'}</td>
+                  <td class="whitespace-nowrap">{b.pp ?? '—'}</td>
+                  <td class="whitespace-nowrap">{b.date}</td>
+                  <td><a href={b.source} rel="noopener" target="_blank">{host(b.source)}</a>{b.build || b.note ? <span class="block text-[var(--color-muted)]">{[b.build, b.note].filter(Boolean).join(' · ')}</span> : null}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="sources-efficiency" class="font-heading text-2xl mb-3 scroll-mt-24">Speed profiles and other factors</h3>
+        <p class="text-sm text-[var(--color-muted)] mb-4">{sm?._formula ?? factors.efficiency._formula ?? 'ms per token = read + fixed cost + context cost; tok/s = 1000 ÷ ms'}. Generated from the benchmark and validation rows by the calibration script; never edited by hand.</p>
+        <div class="grid gap-10 lg:grid-cols-2 mb-12">
+          <div>
+            <h4 class="font-medium mb-2">Per chip</h4>
+            <div class="overflow-x-auto">
+              <table class="lls-sources text-sm">
+                <thead><tr><th>Chip</th><th>Effective bandwidth</th><th>Fixed cost</th><th>Rows</th><th>Origin</th></tr></thead>
+                <tbody>
+                  {chipRows.map((r) => (
+                    <tr>
+                      <td class="whitespace-nowrap">{r.chip}</td>
+                      <td class="whitespace-nowrap">{r.profile ? `${Math.round(r.profile.bEffGbs)} GB/s (${Math.round(r.profile.bEffRatio * 100)} % of ${Math.round(r.spec)})` : '—'}</td>
+                      <td class="whitespace-nowrap">{r.profile ? `${r.profile.t0Ms.toFixed(1)} ms` : '—'}</td>
+                      <td>{r.profile?.fitN ?? '—'}</td>
+                      <td>{r.text}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <h4 class="font-medium mt-8 mb-2">Tier medians (used when a chip has no row of its own)</h4>
+            <table class="lls-sources text-sm">
+              <thead><tr><th>Tier</th><th>Share of spec bandwidth</th><th>Fixed cost</th><th>Chips</th></tr></thead>
+              <tbody>
+                {Object.entries(factors.efficiency.by_tier).map(([tier, t]) => (
+                  <tr><td>{tier}</td><td>{t.b_eff_ratio !== undefined ? `${Math.round(t.b_eff_ratio * 100)} %` : 'n/a'}</td><td>{t.t0_ms !== undefined ? `${t.t0_ms.toFixed(1)} ms` : 'n/a'}</td><td>{t.n_chips}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <h4 class="font-medium mb-2">Architecture cost per token</h4>
+            <table class="lls-sources text-sm">
+              <thead><tr><th>Class</th><th>Cost</th><th>Rows</th><th>Source</th><th>Range</th></tr></thead>
+              <tbody>
+                {termRows(sm?.architecture_cost_ms, classNames, 'ms').map((r) => (
+                  <tr><td>{r.name}</td><td class="whitespace-nowrap">{r.value}</td><td>{r.n ?? '—'}</td><td>{r.source}</td><td class="whitespace-nowrap">{r.range}</td></tr>
+                ))}
+              </tbody>
+            </table>
+            <h4 class="font-medium mt-8 mb-2">MLX: factor on the fixed cost</h4>
+            <table class="lls-sources text-sm">
+              <thead><tr><th>Model group</th><th>Factor</th><th>Rows</th><th>Source</th><th>Range</th></tr></thead>
+              <tbody>
+                {termRows(mlxGroups, groupNames, 'x').map((r) => (
+                  <tr><td>{r.name}</td><td class="whitespace-nowrap">{r.value}</td><td>{r.n ?? '—'}</td><td>{r.source}</td><td class="whitespace-nowrap">{r.range}</td></tr>
+                ))}
+                {sm && <tr><td>MLX context cost per 32K, M1 to M4</td><td class="whitespace-nowrap">{ms(sm.mlx.attention_ms_per_32k.pre_m5)}</td><td>{sm.mlx.attention_ms_per_32k.pre_m5.n ?? '—'}</td><td>{sm.mlx.attention_ms_per_32k.pre_m5.source}</td><td class="whitespace-nowrap">{sm.mlx.attention_ms_per_32k.pre_m5.range ? `${sm.mlx.attention_ms_per_32k.pre_m5.range[0]} – ${sm.mlx.attention_ms_per_32k.pre_m5.range[1]}` : ''}</td></tr>}
+                {sm && <tr><td>MLX context cost per 32K, M5 and newer</td><td class="whitespace-nowrap">{ms(sm.mlx.attention_ms_per_32k.m5plus)}</td><td>{sm.mlx.attention_ms_per_32k.m5plus.n ?? '—'}</td><td>{sm.mlx.attention_ms_per_32k.m5plus.source}</td><td class="whitespace-nowrap">{sm.mlx.attention_ms_per_32k.m5plus.range ? `${sm.mlx.attention_ms_per_32k.m5plus.range[0]} – ${sm.mlx.attention_ms_per_32k.m5plus.range[1]}` : ''}</td></tr>}
+              </tbody>
+            </table>
+            <h4 class="font-medium mt-8 mb-2">Read factors and context cost</h4>
+            <table class="lls-sources text-sm">
+              <thead><tr><th>Term</th><th>Value</th><th>Rows</th><th>Source</th><th>Applies on</th></tr></thead>
+              <tbody>
+                {termRows(sm?.read_factor, familyNames, 'x').map((r) => (
+                  <tr><td>{r.name}</td><td class="whitespace-nowrap">{r.value}</td><td>{r.n ?? '—'}</td><td>{r.source}</td><td>{r.platforms || 'everywhere'}</td></tr>
+                ))}
+                {termRows(sm?.attention_ms_per_32k, { gqa: 'grouped-query attention, per 32K of context', mla: 'latent attention (MLA), per 32K', latent: 'latent attention (DeepSeek V4), per 32K' }, 'ms').map((r) => (
+                  <tr><td>{r.name}</td><td class="whitespace-nowrap">{r.value}</td><td>{r.n ?? '—'}</td><td>{r.source}</td><td>everywhere</td></tr>
+                ))}
+              </tbody>
+            </table>
+            <h4 class="font-medium mt-8 mb-2">Acceleration</h4>
+            <table class="lls-sources text-sm">
+              <thead><tr><th>Kind</th><th>Min</th><th>Median</th><th>Max</th><th>Rows</th></tr></thead>
+              <tbody>
+                {accelerations.map(([k, a]) => (
+                  <tr><td class="whitespace-nowrap">{k.replace(/_/g, ' ')}</td><td>{a.min.toFixed(2)}×</td><td>{a.median.toFixed(2)}×</td><td>{a.max.toFixed(2)}×</td><td>{a.n}</td></tr>
+                ))}
+              </tbody>
+            </table>
+            <ul class="text-sm text-[var(--color-muted)] mt-2 space-y-0.5">
+              {accelerations.flatMap(([, a]) => a.examples ?? []).map((e) => <li>· {e}</li>)}
+            </ul>
+            <h4 class="font-medium mt-8 mb-2">"Feels like" bands</h4>
+            <table class="lls-sources text-sm">
+              <thead><tr><th>Band</th><th>Up to</th><th>Meaning</th></tr></thead>
+              <tbody>
+                {bands.map((b) => (
+                  <tr><td>{b.label}</td><td>{b.max_tok_s === null ? 'and above' : `${b.max_tok_s} tok/s`}</td><td>{b.description ?? ''}</td></tr>
+                ))}
+              </tbody>
+            </table>
+            {factors.sources && (
+              <>
+                <h4 class="font-medium mt-8 mb-2">Sources for the factors</h4>
+                <ul class="text-sm space-y-2">
+                  {factors.sources.map((u) => <li><a class="inline-block py-1 break-all" href={u} rel="noopener" target="_blank">{u}</a></li>)}
+                </ul>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="py-12 border-t border-[var(--color-border)] relative z-10">
+      <div class="max-w-7xl mx-auto px-6 text-center text-sm text-[var(--color-light)]">
+        &copy; {new Date().getFullYear()} {SITE.footer.copyright}
+        {SITE.footer.links.map((l) => (<Fragment> &middot; <a href={l.href} class="underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">{l.label}</a></Fragment>))}
+        &middot; <a href="/tools/llm-sizer" class="underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">The tool</a>
+        &middot; <a href={SITE.repos.code} class="underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">Open source</a>
+        &middot; <a href={SITE.repos.data} class="underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">Open data</a>
+      </div>
+    </footer>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  .lls-methodology > h1 { display: none; }
+  .lls-methodology { max-width: 800px; }
+  .lls-faq { border-top: 1px solid var(--color-border); scroll-margin-top: 6rem; }
+  .lls-faq:last-child { border-bottom: 1px solid var(--color-border); }
+  .lls-faq > summary { list-style: none; cursor: pointer; padding: 14px 32px 14px 0; position: relative; }
+  .lls-faq > summary::-webkit-details-marker { display: none; }
+  .lls-faq > summary h3 { display: inline; font-family: var(--font-heading); font-size: 1.2rem; font-weight: 500; }
+  .lls-faq > summary::after { content: '+'; position: absolute; right: 4px; top: 12px; font-size: 20px; color: var(--color-light); }
+  .lls-faq[open] > summary::after { content: '−'; }
+  .lls-faq > summary:focus-visible { outline: 2px solid var(--lls-focus); outline-offset: 2px; }
+  .lls-faq-body { padding: 0 0 18px; color: var(--color-muted); line-height: 1.65; }
+  .lls-faq-body a { text-decoration: underline; text-underline-offset: 2px; }
+  .lls-faq-body .lls-marker { width: 22px; height: 22px; min-width: 0; margin: 0 2px; }
+  .lls-sources { border-collapse: collapse; width: 100%; }
+  .lls-sources th { text-align: left; font-weight: 500; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-light); padding: 6px 12px 6px 0; border-bottom: 2px solid var(--color-text); }
+  .lls-sources td { vertical-align: top; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--color-border); }
+  .lls-sources a { text-decoration: underline; text-underline-offset: 2px; display: inline-block; padding: 2px 0; }
+  .lls-sources tr:target td { background: var(--color-gold-tint); }
+</style>
+
+<script>
+  import { analytics } from '../../../lib/llm-sizer/app/analytics';
+  // deep links into a closed FAQ item open it (older Safari does not do this on its own)
+  function openTarget() {
+    const id = location.hash.slice(1);
+    if (!id) return;
+    const d = document.getElementById(id)?.closest('details');
+    if (d && !d.open) d.open = true;
+  }
+  openTarget();
+  window.addEventListener('hashchange', openTarget);
+  analytics.aboutView(location.hash.slice(1) || 'top');
+</script>

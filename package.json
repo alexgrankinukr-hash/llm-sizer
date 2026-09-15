@@ -1,0 +1,39 @@
+{
+  "name": "llm-sizer",
+  "version": "0.13.1",
+  "private": true,
+  "type": "module",
+  "description": "Which open AI models fit your machine, and how fast: the memory maths, the fitted speed model, and the nightly model catalog behind theaibridges.com/tools/llm-sizer",
+  "license": "MIT",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "start": "node ./dist/server/entry.mjs",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "vitest run",
+    "test:py": "python3 -m pytest scripts/llm-sizer/tests -q",
+    "boundary": "bash scripts/llm-sizer/check-boundary.sh",
+    "data:snapshot": "bash scripts/llm-sizer/snapshot-data.sh"
+  },
+  "dependencies": {
+    "@astrojs/node": "^9.4.0",
+    "@astrojs/react": "^4.4.2",
+    "@tailwindcss/vite": "^4.2.1",
+    "@vercel/og": "^0.11.1",
+    "astro": "^5.17.3",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tailwindcss": "^4.2.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

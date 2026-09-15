@@ -1,0 +1,74 @@
+---
+// The page shell this copy ships with. The upstream site has its own (analytics, structured data, its brand);
+// the tool's pages only need the props below.
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Path used for rel=canonical + og:url. Defaults to the current route path. */
+  canonicalPath?: string;
+  /** Full URL for og:url when it must differ from the canonical (a share link carrying state). */
+  ogUrl?: string;
+  /** URL of the social share image (absolute, or a site path made absolute here). 1200×630 PNG. */
+  ogImage?: string;
+  ogImageAlt?: string;
+  noindex?: boolean;
+  /** Extra page-specific JSON-LD blocks (FAQPage, ...). */
+  schema?: Record<string, unknown>[];
+  /** Kept for compatibility with the upstream layout; this copy loads no icon script. */
+  icons?: boolean;
+}
+
+const {
+  title = 'LLM Sizer: which AI models fit your machine, and how fast',
+  description = 'Pick your machine, add the open AI models you want to run, and see what fits, what barely fits, and how fast it will write, with the real memory math.',
+  canonicalPath,
+  ogUrl,
+  ogImage = '/og/default.png',
+  ogImageAlt,
+  noindex = false,
+  schema = [],
+} = Astro.props;
+
+const origin = Astro.site?.origin ?? 'http://localhost:4321';
+const canonicalUrl = new URL(canonicalPath ?? Astro.url.pathname, origin).href;
+const ogImageUrl = ogImage.startsWith('/') ? new URL(ogImage, origin).href : ogImage;
+const ogImageAltText = ogImageAlt ?? title;
+---
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    {noindex && <meta name="robots" content="noindex, nofollow">}
+    <link rel="canonical" href={canonicalUrl}>
+    <link rel="preload" href="/fonts/playfair-display-v40-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/inter-v20-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <slot name="head" />
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="LLM Sizer">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={ogUrl ?? canonicalUrl}>
+    <meta property="og:image" content={ogImageUrl}>
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:alt" content={ogImageAltText}>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={ogImageUrl}>
+    <meta name="twitter:image:alt" content={ogImageAltText}>
+    {schema.map((block) => (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(block)} />
+    ))}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body>
+    <slot />
+</body>
+</html>

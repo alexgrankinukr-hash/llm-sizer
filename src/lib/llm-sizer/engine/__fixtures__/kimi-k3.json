@@ -1,0 +1,210 @@
+{
+ "id": "kimi-k3",
+ "sha": "831f6287fa29f8ae",
+ "url": "https://huggingface.co/moonshotai/Kimi-K3",
+ "name": "Kimi K3",
+ "rank": 23,
+ "tags": [
+  "transformers",
+  "safetensors",
+  "kimi_k3",
+  "feature-extraction",
+  "compressed-tensors",
+  "conversational",
+  "image-text-to-text",
+  "custom_code",
+  "eval-results",
+  "8-bit"
+ ],
+ "tier": "frontier",
+ "gated": "false",
+ "notes": [
+  "Native MXFP4 (4-bit) release; no larger-precision weights exist.",
+  "104B activated parameters per the model card (the config-derived estimate was 165B: the experts work on a 3,584-wide latent, not the 7,168 hidden size)."
+ ],
+ "drafts": {
+  "dflash": "modal-labs/Kimi-K3-DFlash",
+  "dspark": "RadixArk/Kimi-K3-DSpark"
+ },
+ "quants": [
+  {
+   "qat": false,
+   "url": "https://huggingface.co/unsloth/Kimi-K3-GGUF",
+   "bits": 1.34,
+   "repo": "unsloth/Kimi-K3-GGUF",
+   "label": "UD-Q1_0",
+   "format": "gguf",
+   "size_gb": 466.37,
+   "quantizer": "unsloth",
+   "file_count": 11,
+   "first_seen": "2026-09-02",
+   "size_bytes": 466369456320
+  },
+  {
+   "qat": false,
+   "url": "https://huggingface.co/unsloth/Kimi-K3-GGUF",
+   "bits": 1.71,
+   "repo": "unsloth/Kimi-K3-GGUF",
+   "label": "UD-IQ1_S",
+   "format": "gguf",
+   "size_gb": 594.04,
+   "quantizer": "unsloth",
+   "file_count": 14,
+   "first_seen": "2026-09-02",
+   "size_bytes": 594040923616
+  },
+  {
+   "qat": false,
+   "url": "https://huggingface.co/unsloth/Kimi-K3-GGUF",
+   "bits": 1.87,
+   "repo": "unsloth/Kimi-K3-GGUF",
+   "label": "UD-IQ1_M",
+   "format": "gguf",
+   "size_gb": 648.87,
+   "quantizer": "unsloth",
+   "file_count": 15,
+   "first_seen": "2026-09-02",
+   "size_bytes": 648872012448
+  },
+  {
+   "qat": false,
+   "url": "https://huggingface.co/unsloth/Kimi-K3-GGUF",
+   "bits": 2.05,
+   "repo": "unsloth/Kimi-K3-GGUF",
+   "label": "UD-IQ2_XXS",
+   "format": "gguf",
+   "size_gb": 711.07,
+   "quantizer": "unsloth",
+   "file_count": 16,
+   "first_seen": "2026-09-02",
+   "size_bytes": 711067773664
+  },
+  {
+   "qat": false,
+   "url": "https://huggingface.co/unsloth/Kimi-K3-GGUF",
+   "bits": 2.48,
+   "repo": "unsloth/Kimi-K3-GGUF",
+   "label": "UD-Q2_K_XL",
+   "format": "gguf",
+   "size_gb": 861.28,
+   "quantizer": "unsloth",
+   "file_count": 19,
+   "first_seen": "2026-09-02",
+   "size_bytes": 861277858912
+  },
+  {
+   "qat": false,
+   "url": "https://huggingface.co/unsloth/Kimi-K3-GGUF",
+   "bits": 4.34,
+   "repo": "unsloth/Kimi-K3-GGUF",
+   "label": "UD-Q4_K_XL",
+   "format": "gguf",
+   "size_gb": 1508.67,
+   "quantizer": "unsloth",
+   "file_count": 32,
+   "first_seen": "2026-09-02",
+   "size_bytes": 1508668683104
+  },
+  {
+   "qat": false,
+   "url": "https://huggingface.co/moonshotai/Kimi-K3",
+   "bits": 4.49,
+   "repo": "moonshotai/Kimi-K3",
+   "label": "FP4",
+   "format": "safetensors",
+   "size_gb": 1560.94,
+   "quantizer": "official",
+   "file_count": 96,
+   "first_seen": "2026-09-02",
+   "size_bytes": 1560936091448
+  },
+  {
+   "qat": false,
+   "url": "https://huggingface.co/unsloth/Kimi-K3-GGUF",
+   "bits": 4.49,
+   "repo": "unsloth/Kimi-K3-GGUF",
+   "label": "UD-Q8_K_XL",
+   "format": "gguf",
+   "size_gb": 1561.16,
+   "quantizer": "unsloth",
+   "file_count": 34,
+   "first_seen": "2026-09-02",
+   "size_bytes": 1561157884384
+  }
+ ],
+ "schema": "llm-sizer/models v1",
+ "status": "active",
+ "hf_repo": "moonshotai/Kimi-K3",
+ "license": {
+  "url": null,
+  "name": "other",
+  "note": "Modified MIT: attribution required above $20M monthly revenue or 100M monthly users.",
+  "commercial": null
+ },
+ "variant": "instruct",
+ "featured": true,
+ "provider": "moonshotai",
+ "released": "2026-06-13",
+ "reference": {
+  "q4": {
+   "repo": "unsloth/Kimi-K3-GGUF",
+   "label": "UD-Q4_K_XL"
+  },
+  "q8": {
+   "repo": "unsloth/Kimi-K3-GGUF",
+   "label": "UD-Q8_K_XL"
+  },
+  "mlx4": null,
+  "native": {
+   "repo": "moonshotai/Kimi-K3",
+   "label": "FP4"
+  }
+ },
+ "timestamps": {
+  "first_seen": "2026-09-02T20:28:57.198926+00:00",
+  "last_changed": "2026-09-02T20:28:57.198926+00:00",
+  "last_checked": "2026-09-05T09:08:18.259189+00:00"
+ },
+ "context_max": 1048576,
+ "native_bits": 4.0,
+ "architecture": {
+  "notes": [
+   "experts work on a 3584-wide latent, not the 7168 hidden size"
+  ],
+  "k_eq_v": false,
+  "layers": 93,
+  "source": "config",
+  "head_dim": 74,
+  "kv_heads": 96,
+  "rope_dim": 64,
+  "accel_mtp": false,
+  "attention": "mla",
+  "kv_layers": 24,
+  "config_sha": "f10ab4a284cec0ae",
+  "model_type": "kimi_linear",
+  "moe_layers": 92,
+  "hidden_size": 7168,
+  "window_size": null,
+  "kv_lora_rank": 512,
+  "experts_total": 896,
+  "linear_layers": 69,
+  "experts_active": 16,
+  "experts_shared": 2,
+  "sliding_layers": 0,
+  "moe_intermediate": 3072,
+  "accel_dflash_repo": "modal-labs/Kimi-K3-DFlash",
+  "accel_dspark_repo": "RadixArk/Kimi-K3-DSpark",
+  "linear_state_bytes": 217055232,
+  "conventional_assumed": false,
+  "kv_cache_gb_at_128k_8bit": 2.03,
+  "full_bytes_per_token_8bit": 13824,
+  "sliding_bytes_per_token_8bit": 0
+ },
+ "generated_at": "2026-09-05T09:09:22+00:00",
+ "params_total": 2779931837184,
+ "params_active": 104000000000,
+ "superseded_by": null,
+ "special_builds": [],
+ "four_bit_native": true,
+ "params_active_source": "override"
+}

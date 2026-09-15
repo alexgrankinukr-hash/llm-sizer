@@ -1,0 +1,149 @@
+{
+ "id": "bartowski/Qwen3.8-27B-GGUF",
+ "sha": "f0eec4a4bb4975114a030d048952d83c0a53c034",
+ "gated": false,
+ "downloads": 368551,
+ "pipeline_tag": "image-text-to-text",
+ "last_modified": "2026-08-14 16:49:01+00:00",
+ "created_at": "2026-08-14 15:48:06+00:00",
+ "card_base_model": "Qwen/Qwen3.8-27B",
+ "safetensors": null,
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "size": 3439
+  },
+  {
+   "rfilename": "Qwen3.8-27B-IQ2_M.gguf",
+   "size": 10873357920
+  },
+  {
+   "rfilename": "Qwen3.8-27B-IQ2_S.gguf",
+   "size": 10295330400
+  },
+  {
+   "rfilename": "Qwen3.8-27B-IQ2_XS.gguf",
+   "size": 9986799200
+  },
+  {
+   "rfilename": "Qwen3.8-27B-IQ2_XXS.gguf",
+   "size": 9393043040
+  },
+  {
+   "rfilename": "Qwen3.8-27B-IQ3_M.gguf",
+   "size": 13903517280
+  },
+  {
+   "rfilename": "Qwen3.8-27B-IQ3_XS.gguf",
+   "size": 13330404960
+  },
+  {
+   "rfilename": "Qwen3.8-27B-IQ3_XXS.gguf",
+   "size": 12626773600
+  },
+  {
+   "rfilename": "Qwen3.8-27B-IQ4_NL.gguf",
+   "size": 16325830240
+  },
+  {
+   "rfilename": "Qwen3.8-27B-IQ4_XS.gguf",
+   "size": 15567824480
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q2_K.gguf",
+   "size": 11839440480
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q2_K_L.gguf",
+   "size": 13081040480
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q3_K_L.gguf",
+   "size": 15279445600
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q3_K_M.gguf",
+   "size": 14605735520
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q3_K_S.gguf",
+   "size": 13720344160
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q3_K_XL.gguf",
+   "size": 16391919200
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q4_0.gguf",
+   "size": 16348767840
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q4_1.gguf",
+   "size": 17825457760
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q4_K_L.gguf",
+   "size": 18716153440
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q4_K_M.gguf",
+   "size": 17772537440
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q4_K_S.gguf",
+   "size": 16713148000
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q5_K_L.gguf",
+   "size": 21537478240
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q5_K_M.gguf",
+   "size": 20752787040
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q5_K_S.gguf",
+   "size": 19680945760
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q6_K.gguf",
+   "size": 23463130720
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q6_K_L.gguf",
+   "size": 24078964320
+  },
+  {
+   "rfilename": "Qwen3.8-27B-Q8_0.gguf",
+   "size": 29116388960
+  },
+  {
+   "rfilename": "Qwen3.8-27B-bf16/Qwen3.8-27B-bf16-00001-of-00002.gguf",
+   "size": 39960209472
+  },
+  {
+   "rfilename": "Qwen3.8-27B-bf16/Qwen3.8-27B-bf16-00002-of-00002.gguf",
+   "size": 14697524672
+  },
+  {
+   "rfilename": "Qwen3.8-27B-calibration-v6.txt",
+   "size": 1258850
+  },
+  {
+   "rfilename": "Qwen3.8-27B-imatrix.gguf",
+   "size": 13642688
+  },
+  {
+   "rfilename": "README.md",
+   "size": 14768
+  },
+  {
+   "rfilename": "mmproj-Qwen3.8-27B-bf16.gguf",
+   "size": 931145952
+  },
+  {
+   "rfilename": "mmproj-Qwen3.8-27B-f16.gguf",
+   "size": 927607008
+  }
+ ]
+}

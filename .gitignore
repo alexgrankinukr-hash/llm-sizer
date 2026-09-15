@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+scripts/llm-sizer/.cache/
+scripts/llm-sizer/out/
+__pycache__/
+.pytest_cache/
+.DS_Store

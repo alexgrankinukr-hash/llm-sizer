@@ -1,0 +1,31 @@
+{
+ "id": "google/gemma-4-26B-A4B-it-qat-q4_0-gguf",
+ "sha": "d1c082be9cf3c8a514acf63b8761f4b41935842e",
+ "gated": false,
+ "downloads": 528711,
+ "pipeline_tag": "image-text-to-text",
+ "last_modified": "2026-07-17 21:25:44+00:00",
+ "created_at": "2026-05-01 04:26:14+00:00",
+ "card_base_model": [
+  "google/gemma-4-26B-A4B-it-qat-q4_0-unquantized"
+ ],
+ "safetensors": null,
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "size": 1767
+  },
+  {
+   "rfilename": "README.md",
+   "size": 29288
+  },
+  {
+   "rfilename": "gemma-4-26B-it-mmproj.gguf",
+   "size": 1194828160
+  },
+  {
+   "rfilename": "gemma-4-26B_q4_0-it.gguf",
+   "size": 14439363584
+  }
+ ]
+}

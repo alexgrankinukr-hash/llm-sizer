@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PublicHeader from '../../../components/PublicHeader.astro';
+import LlmSizer from '../../../components/llm-sizer/LlmSizer.tsx';
+import { formatDate } from '../../../lib/llm-sizer/engine/format';
+import type { Factors, Machine } from '../../../lib/llm-sizer/engine/types';
+import { defaultState } from '../../../lib/llm-sizer/app/defaults';
+import { machineGroups, slimFactors, slimMachine } from '../../../lib/llm-sizer/app/machines';
+import { decodeState } from '../../../lib/llm-sizer/app/url';
+import machinesFile from '../../../../public/data/llm-sizer/machines.json';
+import factorsFile from '../../../../public/data/llm-sizer/factors.json';
+import { getLiveExports } from '../../../lib/llm-sizer/adapters/db';
+import { SITE } from '../../../lib/llm-sizer/adapters/site';
+import type { ModelDetail } from '../../../lib/llm-sizer/engine/types';
+
+const machines = machinesFile.machines as unknown as Machine[];
+const factors = factorsFile as unknown as Factors;
+const params = Astro.url.searchParams;
+const shared = params.get('s');
+const present = params.get('present') === '1';
+const reveal = params.get('reveal') === '1';
+// views built but not offered yet show with ?tiles=all, so they can be checked on production before the flip
+const showHidden = params.get('tiles') === 'all';
+const decoded = decodeState(shared, defaultState(), { knownGroups: new Set(machineGroups(machines).map((g) => g.id)) });
+const notices = decoded.notices;
+const catalogDate = formatDate(machinesFile.data_as_of);
+const islandMachines = machines.map(slimMachine);
+const islandFactors = slimFactors(factors);
+const machineCount = machines.length;
+const shareUrl = shared && decoded.ok ? `${Astro.site?.origin ?? ''}${Astro.url.pathname}?s=${encodeURIComponent(shared)}` : undefined;
+const ogImage = shared && decoded.ok ? `/api/llm-sizer/image.png?s=${encodeURIComponent(shared)}&size=og` : undefined;
+// The records for the initial columns come with the page, so the first paint is the complete table (the island
+// fetches as before if the database is unavailable).
+const columnIds = [...new Set(decoded.state.columns.map((c) => c.id).filter((id) => !id.startsWith('custom-')))];
+let initialRecords: Record<string, ModelDetail> = {};
+try {
+  const live = await getLiveExports(columnIds.map((id) => `model:${id}`));
+  for (const id of columnIds) {
+    const row = live.get(`model:${id}`);
+    if (row) initialRecords[id] = JSON.parse(row.body) as ModelDetail;
+  }
+} catch (err) {
+  console.warn('[llm-sizer] initial records unavailable, the island will fetch them', err instanceof Error ? err.message : err);
+  initialRecords = {};
+}
+const modelNames = columnIds.map((id) => initialRecords[id]?.name ?? id);
+const machineNames = decoded.state.groups.map((g) => machineGroups(machines).find((x) => x.id === g)).filter(Boolean).map((g) => `${g!.family}${g!.chip !== g!.family ? ' ' + g!.chip : ''}`);
+const ogImageAlt = `LLM Sizer table: ${modelNames.join(', ')} on ${machineNames.join(', ')}`;
+const title = `LLM Sizer: which AI models fit your machine, and how fast${SITE.titleSuffix}`;
+const description = 'Pick your Mac, add the open AI models you want to run, and see what fits, what barely fits, and how fast it will write, with the real memory math.';
+---
+
+{present ? (
+  <BaseLayout icons={false} title={title} description={description} noindex={false}>
+    <LlmSizer client:load initial={decoded.state} machines={islandMachines} factors={islandFactors} initialRecords={initialRecords} present={true} reveal={reveal} />
+  </BaseLayout>
+) : (
+  <BaseLayout icons={false} title={title} description={description} noindex={false} ogImage={ogImage} ogImageAlt={ogImage ? ogImageAlt : undefined} ogUrl={shareUrl}>
+    <div class="min-h-screen flex flex-col relative lls-root">
+      <div class="bg-noise"></div>
+      <PublicHeader />
+      <main class="flex-1 relative z-10">
+        <section class="max-w-7xl mx-auto px-6 pt-14 pb-8 md:pt-20 md:pb-10">
+          <p class="font-body text-xs uppercase tracking-[0.25em] text-[var(--lls-gold-text)] mb-4 reveal">Free tool · early build</p>
+          <h1 class="font-heading text-4xl md:text-5xl lg:text-6xl mb-4 text-[var(--color-text)] tracking-tight reveal delay-100">Will it run on my Mac?</h1>
+          <p class="text-lg text-[var(--color-muted)] max-w-[640px] leading-relaxed reveal delay-200">
+            Add your machine and the open models you have in mind. Every cell is the real memory math: weights, context cache, what macOS keeps for itself. Every speed is an estimate with the formula in the open.
+          </p>
+          {SITE.author && (
+            <p class="mt-3 text-sm text-[var(--color-muted)] reveal delay-300">
+              Built by <a href={SITE.author.href} class="underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">{SITE.author.name}</a> &middot; the walkthrough is on <a href={SITE.author.href} class="underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">{SITE.author.channelLabel}</a> &middot; <a href={SITE.repos.code} class="underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">open source</a>
+            </p>
+          )}
+          <p class="mt-3 text-xs uppercase tracking-[0.2em] text-[var(--color-light)] reveal delay-300">Machine catalog: {machineCount} configurations · updated {catalogDate} · <a href="/tools/llm-sizer/about" class="underline underline-offset-2 hover:text-[var(--color-text)]">how the numbers are made</a></p>
+        </section>
+        <section class="max-w-7xl mx-auto px-6 pb-24">
+          <LlmSizer client:load initial={decoded.state} machines={islandMachines} factors={islandFactors} initialRecords={initialRecords} notices={notices} showHidden={showHidden} machinesAsOf={machinesFile.data_as_of} />
+        </section>
+      </main>
+      <footer class="py-12 border-t border-[var(--color-border)] relative z-10">
+        <div class="max-w-7xl mx-auto px-6 text-center text-sm text-[var(--color-light)]">
+          &copy; {new Date().getFullYear()} {SITE.footer.copyright}
+          {SITE.footer.links.map((l) => (<Fragment> &middot; <a href={l.href} class="underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">{l.label}</a></Fragment>))}
+          &middot; <a href="/tools/llm-sizer/about" class="underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">How the numbers are made</a>
+          &middot; <a href={SITE.repos.code} class="underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">Open source</a>
+          &middot; <a href={SITE.repos.data} class="underline underline-offset-2 hover:text-[var(--color-text)] transition-colors">Open data</a>
+        </div>
+      </footer>
+    </div>
+  </BaseLayout>
+)}

@@ -1,0 +1,155 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "deepseek-v4-pro",
+ "name": "DeepSeek-V4-Pro",
+ "provider": "deepseek-ai",
+ "hf_repo": "deepseek-ai/DeepSeek-V4-Pro",
+ "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro",
+ "variant": "instruct",
+ "released": "2026-04-22",
+ "params_total": 1598839674782,
+ "params_active": 67671425024,
+ "params_active_source": "estimated",
+ "context_max": 1048576,
+ "native_bits": 4.0,
+ "license": {
+  "name": "mit",
+  "url": null,
+  "commercial": true,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "deepseek_v4",
+  "text-generation",
+  "conversational",
+  "eval-results",
+  "endpoints_compatible",
+  "8-bit",
+  "fp8"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "superseded",
+ "superseded_by": "deepseek-v4-pro-0813",
+ "notes": [],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "deepseek_v4",
+  "attention": "latent",
+  "layers": 61,
+  "kv_layers": 61,
+  "sliding_layers": 0,
+  "linear_layers": 0,
+  "kv_heads": 1,
+  "head_dim": 512,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": 64,
+  "window_size": null,
+  "full_bytes_per_token_8bit": 35136,
+  "sliding_bytes_per_token_8bit": 0,
+  "linear_state_bytes": 0,
+  "hidden_size": 7168,
+  "experts_total": 384,
+  "experts_active": 6,
+  "experts_shared": 1,
+  "moe_intermediate": 3072,
+  "moe_layers": 61,
+  "accel_mtp": true,
+  "accel_dflash_repo": null,
+  "accel_dspark_repo": "deepseek-ai/DeepSeek-V4-Pro-DSpark",
+  "conventional_assumed": false,
+  "source": "config",
+  "config_sha": "24df66f879ffa0dc",
+  "notes": [],
+  "kv_cache_gb_at_128k_8bit": 4.61
+ },
+ "quants": [
+  {
+   "repo": "mlx-community/DeepSeek-V4-Pro-4bit",
+   "url": "https://huggingface.co/mlx-community/DeepSeek-V4-Pro-4bit",
+   "format": "mlx",
+   "label": "MLX-4bit",
+   "bits": 4.19,
+   "size_gb": 837.01,
+   "size_bytes": 837008912861,
+   "quantizer": "mlx-community",
+   "file_count": 183,
+   "qat": false,
+   "first_seen": "2026-09-02"
+  },
+  {
+   "repo": "mlx-community/DeepSeek-V4-Pro-8bit",
+   "url": "https://huggingface.co/mlx-community/DeepSeek-V4-Pro-8bit",
+   "format": "mlx",
+   "label": "MLX-8bit",
+   "bits": 4.25,
+   "size_gb": 849.68,
+   "size_bytes": 849681806995,
+   "quantizer": "mlx-community",
+   "file_count": 185,
+   "qat": false,
+   "first_seen": "2026-09-02"
+  },
+  {
+   "repo": "deepseek-ai/DeepSeek-V4-Pro",
+   "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro",
+   "format": "safetensors",
+   "label": "FP4",
+   "bits": 4.33,
+   "size_gb": 864.72,
+   "size_bytes": 864721029744,
+   "quantizer": "official",
+   "file_count": 64,
+   "qat": false,
+   "first_seen": "2026-09-02"
+  },
+  {
+   "repo": "mlx-community/DeepSeek-V4-Pro-bf16",
+   "url": "https://huggingface.co/mlx-community/DeepSeek-V4-Pro-bf16",
+   "format": "mlx",
+   "label": "MLX-BF16",
+   "bits": 4.37,
+   "size_gb": 873.44,
+   "size_bytes": 873443311207,
+   "quantizer": "mlx-community",
+   "file_count": 185,
+   "qat": false,
+   "first_seen": "2026-09-02"
+  }
+ ],
+ "reference": {
+  "q4": {
+   "repo": "mlx-community/DeepSeek-V4-Pro-4bit",
+   "label": "MLX-4bit"
+  },
+  "q8": {
+   "repo": "mlx-community/DeepSeek-V4-Pro-8bit",
+   "label": "MLX-8bit"
+  },
+  "mlx4": {
+   "repo": "mlx-community/DeepSeek-V4-Pro-4bit",
+   "label": "MLX-4bit"
+  },
+  "native": {
+   "repo": "deepseek-ai/DeepSeek-V4-Pro",
+   "label": "FP4"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": null,
+  "dspark": "deepseek-ai/DeepSeek-V4-Pro-DSpark"
+ },
+ "timestamps": {
+  "first_seen": "2026-09-02T20:30:34.968343+00:00",
+  "last_checked": "2026-09-15T08:35:13.411981+00:00",
+  "last_changed": "2026-09-02T20:30:34.968343+00:00"
+ },
+ "generated_at": "2026-09-15T08:35:16+00:00",
+ "sha": "1799f150fdc3cc44"
+}

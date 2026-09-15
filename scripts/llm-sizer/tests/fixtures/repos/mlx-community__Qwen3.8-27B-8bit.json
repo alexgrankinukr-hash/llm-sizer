@@ -1,0 +1,95 @@
+{
+ "id": "mlx-community/Qwen3.8-27B-8bit",
+ "sha": "815b83c0df8ffd1d1b5244cf75fd6ef14fca9ef9",
+ "gated": false,
+ "downloads": 51100,
+ "pipeline_tag": "image-text-to-text",
+ "last_modified": "2026-08-14 16:16:16+00:00",
+ "created_at": "2026-08-14 15:25:15+00:00",
+ "card_base_model": "Qwen/Qwen3.8-27B",
+ "safetensors": {
+  "total": 27356728560,
+  "parameters": {
+   "U32": 26893352960,
+   "BF16": 463375600
+  }
+ },
+ "siblings": [
+  {
+   "rfilename": ".gitattributes",
+   "size": 1570
+  },
+  {
+   "rfilename": "README.md",
+   "size": 632
+  },
+  {
+   "rfilename": "chat_template.jinja",
+   "size": 8952
+  },
+  {
+   "rfilename": "config.json",
+   "size": 4932
+  },
+  {
+   "rfilename": "generation_config.json",
+   "size": 202
+  },
+  {
+   "rfilename": "merges.txt",
+   "size": 3353259
+  },
+  {
+   "rfilename": "model-00001-of-00006.safetensors",
+   "size": 5317707581
+  },
+  {
+   "rfilename": "model-00002-of-00006.safetensors",
+   "size": 5354102610
+  },
+  {
+   "rfilename": "model-00003-of-00006.safetensors",
+   "size": 5354184694
+  },
+  {
+   "rfilename": "model-00004-of-00006.safetensors",
+   "size": 5337309653
+  },
+  {
+   "rfilename": "model-00005-of-00006.safetensors",
+   "size": 5292848464
+  },
+  {
+   "rfilename": "model-00006-of-00006.safetensors",
+   "size": 2845065477
+  },
+  {
+   "rfilename": "model.safetensors.index.json",
+   "size": 218281
+  },
+  {
+   "rfilename": "preprocessor_config.json",
+   "size": 390
+  },
+  {
+   "rfilename": "processor_config.json",
+   "size": 991
+  },
+  {
+   "rfilename": "tokenizer.json",
+   "size": 19989325
+  },
+  {
+   "rfilename": "tokenizer_config.json",
+   "size": 1165
+  },
+  {
+   "rfilename": "video_preprocessor_config.json",
+   "size": 385
+  },
+  {
+   "rfilename": "vocab.json",
+   "size": 6722759
+  }
+ ]
+}

@@ -1,0 +1,142 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "deepseek-v4-pro-0813",
+ "name": "DeepSeek V4 Pro (0813)",
+ "provider": "deepseek-ai",
+ "hf_repo": "deepseek-ai/DeepSeek-V4-Pro-0813",
+ "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813",
+ "variant": "instruct",
+ "released": "2026-08-13",
+ "params_total": 1650497936906,
+ "params_active": 67671425024,
+ "params_active_source": "estimated",
+ "context_max": 1048576,
+ "native_bits": 4.0,
+ "license": {
+  "name": "mit",
+  "url": null,
+  "commercial": true,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "deepseek_v4",
+  "text-generation",
+  "conversational",
+  "eval-results",
+  "endpoints_compatible",
+  "8-bit",
+  "fp8"
+ ],
+ "featured": true,
+ "tier": "frontier",
+ "rank": 22,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [
+  "Attention weights FP8, experts FP4 natively."
+ ],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "deepseek_v4",
+  "attention": "latent",
+  "layers": 61,
+  "kv_layers": 61,
+  "sliding_layers": 0,
+  "linear_layers": 0,
+  "kv_heads": 1,
+  "head_dim": 512,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": 64,
+  "window_size": null,
+  "full_bytes_per_token_8bit": 35136,
+  "sliding_bytes_per_token_8bit": 0,
+  "linear_state_bytes": 0,
+  "hidden_size": 7168,
+  "experts_total": 384,
+  "experts_active": 6,
+  "experts_shared": 1,
+  "moe_intermediate": 3072,
+  "moe_layers": 61,
+  "accel_mtp": true,
+  "accel_dflash_repo": null,
+  "accel_dspark_repo": null,
+  "conventional_assumed": false,
+  "source": "config",
+  "config_sha": "f4fcd46531916788",
+  "notes": [],
+  "kv_cache_gb_at_128k_8bit": 4.61,
+  "arch_cost_class": "deepseek_v4"
+ },
+ "quants": [
+  {
+   "repo": "unsloth/DeepSeek-V4-Pro-0813-GGUF",
+   "url": "https://huggingface.co/unsloth/DeepSeek-V4-Pro-0813-GGUF",
+   "format": "gguf",
+   "label": "UD-Q4_K_XL",
+   "bits": 4.12,
+   "size_gb": 849.68,
+   "size_bytes": 849683927055,
+   "quantizer": "unsloth",
+   "file_count": 20,
+   "qat": false,
+   "first_seen": "2026-09-02"
+  },
+  {
+   "repo": "unsloth/DeepSeek-V4-Pro-0813-GGUF",
+   "url": "https://huggingface.co/unsloth/DeepSeek-V4-Pro-0813-GGUF",
+   "format": "gguf",
+   "label": "UD-Q8_K_XL",
+   "bits": 4.23,
+   "size_gb": 873.45,
+   "size_bytes": 873445601295,
+   "quantizer": "unsloth",
+   "file_count": 20,
+   "qat": false,
+   "first_seen": "2026-09-02"
+  },
+  {
+   "repo": "deepseek-ai/DeepSeek-V4-Pro-0813",
+   "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813",
+   "format": "safetensors",
+   "label": "FP4",
+   "bits": 4.33,
+   "size_gb": 892.74,
+   "size_bytes": 892744322880,
+   "quantizer": "official",
+   "file_count": 66,
+   "qat": false,
+   "first_seen": "2026-09-02"
+  }
+ ],
+ "reference": {
+  "q4": {
+   "repo": "unsloth/DeepSeek-V4-Pro-0813-GGUF",
+   "label": "UD-Q4_K_XL"
+  },
+  "q8": {
+   "repo": "unsloth/DeepSeek-V4-Pro-0813-GGUF",
+   "label": "UD-Q8_K_XL"
+  },
+  "mlx4": null,
+  "native": {
+   "repo": "deepseek-ai/DeepSeek-V4-Pro-0813",
+   "label": "FP4"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": null,
+  "dspark": null
+ },
+ "timestamps": {
+  "first_seen": "2026-09-02T20:25:19.117449+00:00",
+  "last_checked": "2026-09-15T08:34:58.445756+00:00",
+  "last_changed": "2026-09-02T20:25:19.117449+00:00"
+ },
+ "generated_at": "2026-09-15T08:35:16+00:00",
+ "sha": "77f6fff37953e5e8"
+}

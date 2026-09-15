@@ -1,0 +1,897 @@
+/* Tool-local colour tokens (WCAG on the alabaster #F9F8F6 background): secondary text 4.87:1, gold text and focus 4.76:1,
+   the compromise ring 3.69:1, the dash 3.38:1. The gold sphere keeps the brand gold; presentation mode keeps the video's colours. */
+:root {
+  --lls-light: #6F6D68;
+  --lls-gold-text: #8A6A14;
+  --lls-focus: #8A6A14;
+  --lls-ring: #9E7C25;
+  --lls-no: #8A8780;
+}
+.lls-root {
+  --color-light: var(--lls-light);
+}
+
+/* LLM Sizer — the table's markers, sticky rail, sheet, controls and the presentation canvas.
+   Everything Tailwind utilities express poorly lives here; colors follow the video's graphics. */
+
+/* the scroller's gutter lives on the wrapper so the fade can sit on the true right edge */
+.lls-scrollwrap {
+  position: relative;
+  margin: 0 -1.5rem;
+}
+.lls-scrollwrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 8px;
+  width: 44px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  background: linear-gradient(to left, var(--color-bg) 14%, rgba(249, 248, 246, 0));
+}
+.lls-scrollwrap[data-more='1']::after {
+  opacity: 1;
+}
+@media (min-width: 768px) {
+  .lls-scrollwrap {
+    margin: 0;
+  }
+}
+
+.lls-scroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 1.5rem 0.5rem;
+  /* macOS hides overlay scrollbars until you scroll, so a table wider than its box looked
+     merely cut off. Styling the bar keeps it on screen and says: this scrolls. */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(26, 26, 26, 0.3) rgba(26, 26, 26, 0.06);
+}
+.lls-scroll::-webkit-scrollbar {
+  height: 10px;
+}
+.lls-scroll::-webkit-scrollbar-track {
+  background: rgba(26, 26, 26, 0.06);
+  border-radius: 999px;
+}
+.lls-scroll::-webkit-scrollbar-thumb {
+  background: rgba(26, 26, 26, 0.3);
+  border-radius: 999px;
+}
+.lls-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(26, 26, 26, 0.45);
+}
+@media (min-width: 768px) {
+  .lls-scroll {
+    padding: 0 0 0.5rem;
+  }
+}
+.lls-present .lls-scroll {
+  scrollbar-width: none;
+}
+.lls-present .lls-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.lls-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 100%;
+  width: max-content;
+  /* the frozen left block: machine rail + memory column. The memory column's sticky offset is
+     the rail's width, so the two travel as one and the size labels never slide under the rail.
+     On a phone the block is narrow enough to leave a whole model column beside it. */
+  --lls-rail-w: 144px;
+}
+@media (min-width: 768px) {
+  /* wide enough that the longest machine label ("MacBook Pro · M5 Max") stays on one line */
+  .lls-table {
+    --lls-rail-w: 204px;
+  }
+}
+.lls-present .lls-table {
+  --lls-rail-w: 260px;
+}
+
+.lls-rail {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: var(--color-bg);
+  /* pinned: a table wider than its content used to pour the slack in here, leaving a gap on the left
+     while the last column ran off the right edge. The model columns take the slack instead. */
+  width: var(--lls-rail-w);
+}
+.lls-mem {
+  position: sticky;
+  left: var(--lls-rail-w);
+  z-index: 2;
+  background: var(--color-bg);
+  box-shadow: 8px 0 12px -10px rgba(26, 26, 26, 0.3);
+}
+.lls-present .lls-mem {
+  box-shadow: none;
+}
+tr.lls-group-sep > th,
+tr.lls-group-sep > td {
+  border-top: 2px solid var(--color-text);
+}
+.lls-col-sep {
+  border-left: 1px solid rgba(26, 26, 26, 0.06);
+}
+
+/* ---- markers (the video's three states) ---- */
+.lls-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.lls-marker:hover {
+  transform: scale(1.08);
+}
+.lls-marker:focus-visible {
+  outline: 2px solid var(--lls-focus);
+  outline-offset: 2px;
+}
+.lls-marker > span {
+  display: block;
+}
+.lls-run {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #edce6b 0%, #d4af37 55%, #a9852b 100%);
+  box-shadow: 0 2px 10px rgba(169, 133, 43, 0.35);
+}
+.lls-ring {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2.5px solid var(--lls-ring);
+  box-sizing: border-box;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+.lls-ring::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--lls-ring) 65%, transparent);
+}
+.lls-no {
+  width: 18px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--lls-no);
+}
+.lls-loading {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px dashed var(--lls-no);
+  animation: lls-spin 1.6s linear infinite;
+}
+.lls-missing {
+  width: 18px;
+  height: 0;
+  border-top: 2px dotted var(--lls-no);
+}
+.lls-legend .lls-run,
+.lls-legend .lls-ring {
+  transform: scale(0.78);
+}
+@keyframes lls-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- reveal (presentation mode) ---- */
+.lls-reveal .lls-marker > span {
+  opacity: 0;
+  transform: scale(0.25);
+  animation: lls-pop 0.34s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 45ms + 300ms);
+}
+@keyframes lls-pop {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ---- the explanation sheet ---- */
+dialog.lls-sheet {
+  border: 0;
+  padding: 0;
+  margin: auto;
+  background: #fff;
+  color: var(--color-text);
+  border-radius: 16px;
+  width: min(92vw, 540px);
+  max-height: 88vh;
+  overflow: auto;
+  box-shadow: 0 24px 60px rgba(26, 26, 26, 0.25);
+}
+dialog.lls-sheet::backdrop {
+  background: rgba(26, 26, 26, 0.28);
+}
+@media (max-width: 767px) {
+  dialog.lls-sheet {
+    position: fixed;
+    inset: auto 0 0 0;
+    margin: 0;
+    width: 100vw;
+    max-width: 100vw;
+    border-radius: 20px 20px 0 0;
+    max-height: 85vh;
+    animation: lls-up 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+}
+@keyframes lls-up {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+}
+html:has(dialog.lls-sheet[open]) {
+  overflow: hidden;
+}
+/* the sheet's sections: one eyebrow each, the price big, the estimate detail on hover and on demand */
+.lls-sheet-section {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+}
+.lls-sheet-eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin-bottom: 8px;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-light);
+}
+.lls-sheet-aside {
+  letter-spacing: normal;
+  text-transform: none;
+  font-size: 12px;
+}
+.lls-sheet-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin-top: 12px;
+}
+.lls-sheet-price-big {
+  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-size: 26px;
+  line-height: 1;
+  color: var(--lls-gold-text);
+}
+.lls-sheet-estimate {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px;
+  color: var(--color-light);
+  cursor: help;
+}
+
+/* ---- stacked memory bar ---- */
+.lls-bar {
+  display: flex;
+  height: 14px;
+  border-radius: 7px;
+  overflow: hidden;
+  background: #efede8;
+}
+.lls-bar > span {
+  display: block;
+  height: 100%;
+}
+.lls-bar .os {
+  background: #6e6d69;
+}
+.lls-bar .apps {
+  background: #9a9893;
+}
+.lls-bar .cap {
+  background: #d9d7d1;
+}
+.lls-bar .weights {
+  background: #d4af37;
+}
+.lls-bar .cache {
+  background: #edce6b;
+}
+.lls-bar .buffers {
+  background: #f3e3a4;
+}
+.lls-bar .scratch {
+  background: #f8efcc;
+}
+.lls-bar .cluster {
+  background: repeating-linear-gradient(135deg, #9a9893 0 3px, #d9d7d1 3px 6px);
+}
+.lls-bar .ssd {
+  background: repeating-linear-gradient(135deg, #b8912b 0 3px, #f3e3a4 3px 6px);
+}
+.lls-bar .over {
+  background: repeating-linear-gradient(45deg, #c0392b 0 4px, #e5a099 4px 8px);
+}
+
+/* ---- controls ---- */
+.lls-seg {
+  display: inline-flex;
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+  padding: 2px;
+  background: #fff;
+  gap: 2px;
+}
+.lls-seg > button {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  line-height: 1.2;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+.lls-seg > button[aria-pressed='true'] {
+  background: #1a1a1a;
+  color: #fff;
+}
+.lls-seg > button:focus-visible {
+  outline: 2px solid var(--lls-focus);
+}
+
+.lls-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.lls-switch > span.track {
+  position: relative;
+  width: 38px;
+  height: 22px;
+  border-radius: 11px;
+  background: #d9d7d1;
+  transition: background 0.2s ease;
+  flex: none;
+}
+.lls-switch > span.track::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.lls-switch[aria-checked='true'] > span.track {
+  background: #d4af37;
+}
+.lls-switch[aria-checked='true'] > span.track::after {
+  transform: translateX(16px);
+}
+.lls-switch:focus-visible {
+  outline: 2px solid var(--lls-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.lls-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  font-size: 12px;
+  color: var(--color-text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+/* every chip is a comfortable target (WCAG 2.5.8 wants 24 px; 26 keeps sub-pixel rounding on the right side), including the icon-only ones in the table headers and rails */
+.lls-chip {
+  min-height: 26px;
+}
+.lls-chip:has(> svg:only-child) {
+  min-width: 26px;
+  justify-content: center;
+}
+.lls-chip:focus-visible {
+  outline: 2px solid var(--lls-focus);
+  outline-offset: 2px;
+}
+.lls-chip:hover {
+  border-color: #1a1a1a;
+}
+.lls-chip[aria-pressed='true'] {
+  background: var(--color-gold-tint);
+  border-color: #d4af37;
+}
+
+.lls-list {
+  margin-top: 6px;
+  max-height: 20rem;
+  overflow: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: #fff;
+  padding: 8px;
+}
+.lls-list button.item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 12px;
+  margin-bottom: 6px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: #F2F0EB;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+.lls-list button.item[disabled] {
+  opacity: 0.55;
+  cursor: default;
+}
+.lls-list button.item:not([disabled]):hover,
+.lls-list button.item:focus-visible {
+  background: var(--color-gold-tint);
+  border-color: var(--lls-gold-text);
+}
+.lls-list button.item:focus-visible {
+  outline: 2px solid var(--lls-focus);
+  outline-offset: -2px;
+}
+.lls-list .head {
+  padding: 10px 4px 6px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-light);
+}
+.lls-platform {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-muted);
+  flex: none;
+}
+
+input[type='range'].lls-range {
+  width: 100%;
+  accent-color: #d4af37;
+}
+
+/* ---- presentation canvas ---- */
+.lls-present {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: #fafafc;
+  color: #1a1a1a;
+  padding: 42px 56px 36px;
+  box-sizing: border-box;
+  font-size: 18px;
+}
+.lls-present .lls-table {
+  width: 100%;
+}
+.lls-present .lls-marker {
+  width: 40px;
+  height: 40px;
+  cursor: default;
+}
+.lls-present .lls-run,
+.lls-present .lls-ring {
+  width: 30px;
+  height: 30px;
+  border-color: #c09a2c; /* the video's colours on the filming canvas */
+}
+.lls-present .lls-no {
+  width: 22px;
+  background: #c9c7c1;
+}
+.lls-watermark {
+  position: absolute;
+  right: 28px;
+  bottom: 18px;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: #98968f;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lls-reveal .lls-marker > span,
+  .lls-loading,
+  dialog.lls-sheet {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+  .lls-marker,
+  .lls-switch > span.track,
+  .lls-switch > span.track::after {
+    transition: none;
+  }
+}
+
+/* ---- the simple layout: tiles, actions, chart, panel */
+.lls-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  grid-template-areas: 'tiles' 'actions' 'panel' 'chart' 'legend';
+}
+.lls-area-tiles { grid-area: tiles; }
+.lls-area-actions { grid-area: actions; }
+.lls-area-panel { grid-area: panel; }
+.lls-area-chart { grid-area: chart; min-width: 0; }
+.lls-area-legend { grid-area: legend; }
+/* the panel opens above the chart at every width, so the chart is never squeezed */
+.lls-panel {
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 1rem 1.125rem;
+}
+.lls-panel-grid { display: grid; gap: 1.25rem; }
+@media (min-width: 768px) {
+  .lls-panel-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 2rem; }
+  .lls-panel-wide { grid-column: 1 / -1; }
+}
+@media (min-width: 1280px) {
+  .lls-panel-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lls-panel-assumptions { grid-column: auto; }
+}
+.lls-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-light);
+  font-weight: 500;
+}
+.lls-item {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: #fff;
+  padding: 8px 8px 8px 6px;
+}
+.lls-handle { cursor: grab; touch-action: none; }
+.lls-handle:active { cursor: grabbing; }
+.lls-dragging { opacity: 0.55; }
+.lls-drop { box-shadow: 0 -2px 0 0 #d4af37; }
+.lls-size[aria-pressed='false'] { opacity: 0.45; text-decoration: line-through; }
+.lls-details > summary { list-style: none; }
+.lls-details > summary::-webkit-details-marker { display: none; }
+.lls-details > summary::before { content: '▸'; display: inline-block; margin-right: 6px; transition: transform 0.15s; }
+.lls-details[open] > summary::before { transform: rotate(90deg); }
+.lls-details > summary:focus-visible { outline: 2px solid var(--lls-focus); outline-offset: 2px; }
+
+.lls-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+@media (min-width: 768px) {
+  .lls-tiles { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+}
+/* five tiles two per row leave one alone: it takes the whole last row */
+@media (max-width: 767px) {
+  .lls-tiles > .lls-tile:nth-child(5):last-child { grid-column: 1 / -1; }
+}
+.lls-tile {
+  text-align: left;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.lls-tile:hover { border-color: var(--color-text); }
+.lls-tile[aria-selected='true'] { border-color: var(--color-text); box-shadow: inset 0 0 0 1px var(--color-text); }
+.lls-tile:focus-visible { outline: 2px solid var(--lls-focus); outline-offset: 2px; }
+.lls-tile-icon { display: inline-flex; color: var(--color-light); margin-bottom: 6px; }
+.lls-tile[aria-selected='true'] .lls-tile-icon { color: var(--lls-gold-text); }
+
+.lls-fit-card {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: #fff;
+  padding: 8px 12px;
+}
+.lls-fit-card + .lls-fit-card { margin-top: 8px; }
+/* "What can it run?": marker · model · parameters · memory needed · the best it can do · the longest context, one line per model */
+.lls-fit-cols,
+.lls-fit-summary {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1.1fr) 150px 130px minmax(0, 1fr) 170px;
+  gap: 4px 28px;
+  align-items: center;
+}
+.lls-fit-summary[data-clickable='true'] { cursor: pointer; }
+.lls-fit-card:has(> .lls-fit-summary[data-clickable='true']:hover) { border-color: var(--color-text); }
+.lls-fit-band {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+.lls-fit-band > span { font-weight: 400; color: var(--color-muted); }
+.lls-fit-cols {
+  padding: 0 12px 8px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-light);
+}
+@media (max-width: 767px) {
+  .lls-fit-cols { display: none; }
+  .lls-fit-summary { grid-template-columns: 44px minmax(0, 1fr); row-gap: 2px; }
+  .lls-fit-summary > .lls-fit-col { grid-column: 2; }
+  .lls-fit-summary > [data-label]::before { content: attr(data-label) ': '; color: var(--color-light); }
+}
+/* expanded: the summary becomes a tinted header band over a full-width table (rows = builds, columns = context) */
+.lls-fit-card.is-open { padding: 0; overflow: hidden; border-color: #d4af37; }
+.lls-fit-card.is-open > .lls-fit-summary { padding: 10px 12px; background: var(--color-gold-tint); border-bottom: 1px solid #e6d28a; }
+.lls-fit-card.is-open > .lls-scroll { padding: 6px 12px 12px; }
+.lls-fit-grid { width: 100%; min-width: 320px; table-layout: fixed; border-collapse: collapse; }
+.lls-fit-grid th,
+.lls-fit-grid td { padding: 8px 6px; text-align: center; vertical-align: middle; }
+.lls-fit-grid th:first-child,
+.lls-fit-grid td:first-child { width: 120px; text-align: left; }
+.lls-fit-grid thead th { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-light); }
+.lls-fit-grid thead tr:first-child th { padding-bottom: 2px; color: var(--color-muted); }
+.lls-fit-grid thead tr:last-child th { border-bottom: 2px solid var(--color-text); }
+.lls-fit-grid thead th[rowspan] { vertical-align: bottom; border-bottom: 2px solid var(--color-text); }
+.lls-fit-grid tbody th { font-weight: 600; white-space: nowrap; line-height: 1.25; }
+.lls-fit-grid tbody tr + tr > * { border-top: 1px solid var(--color-border); }
+.lls-fit-grid td > .lls-marker { margin: 0 auto; }
+.lls-fit-tok { display: block; font-size: 11px; line-height: 1.15; color: var(--color-muted); min-height: 12px; }
+.lls-fit-legend { font-size: 12px; color: var(--color-muted); margin-bottom: 10px; }
+.lls-chip-soon { border-style: dashed; color: var(--color-light); }
+.lls-chip-soon:hover { color: var(--color-text); }
+
+.lls-notify {
+  position: fixed;
+  z-index: 70;
+  left: 1.5rem;
+  bottom: 1.5rem;
+  width: min(360px, calc(100vw - 2rem));
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(26, 26, 26, 0.25);
+  padding: 1rem 1.25rem;
+}
+@media (max-width: 767px) {
+  .lls-notify {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    border-radius: 20px 20px 0 0;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* footnote markers: a fixed size and offset, so they never ride up into the line above */
+sup.lls-note {
+  margin-left: 3px;
+  font-size: 9.5px;
+  line-height: 1;
+  vertical-align: super;
+  color: var(--color-light);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* the machine a one-machine chart is showing: a card whose whole surface opens the native menu */
+.lls-machine-pick {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--color-muted);
+}
+.lls-machine-pick:hover {
+  border-color: var(--color-text);
+}
+.lls-machine-pick:focus-within {
+  outline: 2px solid var(--lls-focus);
+  outline-offset: 2px;
+}
+.lls-machine-name {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+.lls-machine-size {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--lls-gold-text);
+}
+.lls-machine-pick > select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* the feels-like bands, named outside the plot so nothing collides inside it */
+.lls-bands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.lls-band {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  font-size: 11.5px;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+.lls-band > b {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* "Which machine do I need": the answer first, then the rows grouped by what they do */
+.lls-answer {
+  border: 1px solid var(--color-text);
+  border-radius: 14px;
+  background: #fff;
+  padding: 14px 16px;
+  margin-bottom: 1.25rem;
+}
+/* the second pick in the card: the same box, one rule between the two answers */
+.lls-answer-split {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+}
+.lls-mm th,
+.lls-mm td {
+  padding: 9px 16px 9px 0;
+}
+.lls-mm thead th {
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--color-text);
+}
+.lls-mm tbody tr:not(.lls-mm-head) > td {
+  border-bottom: 1px solid var(--color-border);
+}
+.lls-mm tr.lls-mm-head > th {
+  padding-top: 22px;
+  padding-bottom: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--color-text);
+}
+.lls-mm tbody:first-of-type tr.lls-mm-head > th {
+  padding-top: 14px;
+}
+.lls-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.lls-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+.lls-hit {
+  cursor: pointer;
+}
+.lls-hit:focus-visible {
+  outline: 2px solid var(--lls-focus);
+  outline-offset: 1px;
+}
+
+/* "Which machine": the buying map's list and the settings it reads */
+.lls-map-rowbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.lls-map-rowbtn:hover > .font-semibold {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.lls-map-rowbtn:focus-visible {
+  outline: 2px solid var(--lls-focus);
+  outline-offset: 2px;
+}
+.lls-map-badge {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lls-gold-text);
+  border: 1px solid #e6d28a;
+  border-radius: 9999px;
+  padding: 0 6px;
+  line-height: 16px;
+}
+.lls-budget {
+  width: 7.5rem;
+  padding: 3px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+}
+.lls-budget:focus-visible {
+  outline: 2px solid var(--lls-focus);
+}
+
+.lls-band-help {
+  cursor: help;
+  color: var(--color-muted);
+}
+.lls-band-help > svg {
+  color: var(--color-light);
+}

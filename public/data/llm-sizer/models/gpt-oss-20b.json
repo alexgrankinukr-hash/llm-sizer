@@ -184,7 +184,7 @@
    "repo": "bartowski/openai_gpt-oss-20b-GGUF",
    "url": "https://huggingface.co/bartowski/openai_gpt-oss-20b-GGUF",
    "format": "gguf",
-   "label": "IQ2_S",
+   "label": "IQ2_M",
    "bits": 4.42,
    "size_gb": 11.55,
    "size_bytes": 11545731136,
@@ -197,7 +197,7 @@
    "repo": "bartowski/openai_gpt-oss-20b-GGUF",
    "url": "https://huggingface.co/bartowski/openai_gpt-oss-20b-GGUF",
    "format": "gguf",
-   "label": "IQ2_M",
+   "label": "IQ2_S",
    "bits": 4.42,
    "size_gb": 11.55,
    "size_bytes": 11545731136,
@@ -223,6 +223,19 @@
    "repo": "bartowski/openai_gpt-oss-20b-GGUF",
    "url": "https://huggingface.co/bartowski/openai_gpt-oss-20b-GGUF",
    "format": "gguf",
+   "label": "IQ3_XXS",
+   "bits": 4.42,
+   "size_gb": 11.56,
+   "size_bytes": 11559002176,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-02"
+  },
+  {
+   "repo": "bartowski/openai_gpt-oss-20b-GGUF",
+   "url": "https://huggingface.co/bartowski/openai_gpt-oss-20b-GGUF",
+   "format": "gguf",
    "label": "IQ3_M",
    "bits": 4.42,
    "size_gb": 11.56,
@@ -237,19 +250,6 @@
    "url": "https://huggingface.co/bartowski/openai_gpt-oss-20b-GGUF",
    "format": "gguf",
    "label": "Q2_K",
-   "bits": 4.42,
-   "size_gb": 11.56,
-   "size_bytes": 11559002176,
-   "quantizer": "bartowski",
-   "file_count": 1,
-   "qat": false,
-   "first_seen": "2026-09-02"
-  },
-  {
-   "repo": "bartowski/openai_gpt-oss-20b-GGUF",
-   "url": "https://huggingface.co/bartowski/openai_gpt-oss-20b-GGUF",
-   "format": "gguf",
-   "label": "IQ3_XXS",
    "bits": 4.42,
    "size_gb": 11.56,
    "size_bytes": 11559002176,
@@ -736,9 +736,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:29:30.926829+00:00",
-  "last_checked": "2026-09-15T08:35:08.850436+00:00",
+  "last_checked": "2026-09-17T08:34:38.016165+00:00",
   "last_changed": "2026-09-02T20:29:30.926829+00:00"
  },
- "generated_at": "2026-09-15T08:35:16+00:00",
- "sha": "2e4f66076e3e2dc0"
+ "generated_at": "2026-09-17T08:35:00+00:00",
+ "sha": "a8e82eff0e60c471"
 }

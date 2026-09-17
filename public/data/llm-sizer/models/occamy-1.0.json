@@ -2,9 +2,9 @@
  "schema": "llm-sizer/models v1",
  "id": "occamy-1.0",
  "name": "occamy-1.0",
- "provider": "occamy-ai",
- "hf_repo": "occamy-ai/occamy-1.0",
- "url": "https://huggingface.co/occamy-ai/occamy-1.0",
+ "provider": "Accio-Lab",
+ "hf_repo": "Accio-Lab/occamy-1.0",
+ "url": "https://huggingface.co/Accio-Lab/occamy-1.0",
  "variant": "instruct",
  "released": "2026-08-13",
  "params_total": 35107181936,
@@ -13,9 +13,9 @@
  "context_max": 262144,
  "native_bits": 16.0,
  "license": {
-  "name": null,
+  "name": "apache-2.0",
   "url": null,
-  "commercial": null,
+  "commercial": true,
   "note": null
  },
  "tags": [
@@ -23,13 +23,14 @@
   "safetensors",
   "qwen3_5_moe",
   "image-text-to-text",
+  "agent",
   "agentic",
+  "co-work",
   "tool-use",
-  "coding",
   "long-context",
-  "text-generation",
+  "mixture-of-experts",
+  "coding",
   "conversational",
-  "en",
   "endpoints_compatible"
  ],
  "featured": false,
@@ -67,7 +68,7 @@
   "accel_dspark_repo": null,
   "conventional_assumed": false,
   "source": "config",
-  "config_sha": "c1b089c6a91ab8bf",
+  "config_sha": "513e7ab380a2e458",
   "notes": [],
   "kv_cache_gb_at_128k_8bit": 1.37
  },
@@ -84,6 +85,19 @@
    "file_count": 1,
    "qat": false,
    "first_seen": "2026-09-03"
+  },
+  {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "IQ2_XXS",
+   "bits": 2.46,
+   "size_gb": 10.79,
+   "size_bytes": 10793196128,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
   },
   {
    "repo": "bartowski/occamy-ai_occamy-1.0-GGUF",
@@ -110,6 +124,32 @@
    "file_count": 1,
    "qat": false,
    "first_seen": "2026-09-03"
+  },
+  {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "IQ2_XS",
+   "bits": 2.57,
+   "size_gb": 11.27,
+   "size_bytes": 11265260128,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "IQ2_S",
+   "bits": 2.73,
+   "size_gb": 11.98,
+   "size_bytes": 11979545184,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
   },
   {
    "repo": "bartowski/occamy-ai_occamy-1.0-GGUF",
@@ -151,6 +191,32 @@
    "first_seen": "2026-09-03"
   },
   {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "IQ2_M",
+   "bits": 3.02,
+   "size_gb": 13.23,
+   "size_bytes": 13233805920,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "Q2_K",
+   "bits": 3.15,
+   "size_gb": 13.84,
+   "size_bytes": 13839333984,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
    "repo": "bartowski/occamy-ai_occamy-1.0-GGUF",
    "url": "https://huggingface.co/bartowski/occamy-ai_occamy-1.0-GGUF",
    "format": "gguf",
@@ -177,6 +243,19 @@
    "first_seen": "2026-09-03"
   },
   {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "IQ3_XXS",
+   "bits": 3.55,
+   "size_gb": 15.58,
+   "size_bytes": 15581674080,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
    "repo": "bartowski/occamy-ai_occamy-1.0-GGUF",
    "url": "https://huggingface.co/bartowski/occamy-ai_occamy-1.0-GGUF",
    "format": "gguf",
@@ -201,6 +280,32 @@
    "file_count": 1,
    "qat": false,
    "first_seen": "2026-09-03"
+  },
+  {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "Q3_K_S",
+   "bits": 3.72,
+   "size_gb": 16.32,
+   "size_bytes": 16318691936,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "IQ3_XS",
+   "bits": 3.72,
+   "size_gb": 16.32,
+   "size_bytes": 16318691936,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
   },
   {
    "repo": "bartowski/occamy-ai_occamy-1.0-GGUF",
@@ -242,6 +347,32 @@
    "first_seen": "2026-09-03"
   },
   {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "Q3_K_M",
+   "bits": 3.95,
+   "size_gb": 17.34,
+   "size_bytes": 17344330336,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "Q3_K_L",
+   "bits": 4.16,
+   "size_gb": 18.27,
+   "size_bytes": 18267077216,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
    "repo": "bartowski/occamy-ai_occamy-1.0-GGUF",
    "url": "https://huggingface.co/bartowski/occamy-ai_occamy-1.0-GGUF",
    "format": "gguf",
@@ -253,6 +384,19 @@
    "file_count": 1,
    "qat": false,
    "first_seen": "2026-09-03"
+  },
+  {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "IQ3_M",
+   "bits": 4.32,
+   "size_gb": 18.96,
+   "size_bytes": 18958219872,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
   },
   {
    "repo": "bartowski/occamy-ai_occamy-1.0-GGUF",
@@ -268,6 +412,19 @@
    "first_seen": "2026-09-03"
   },
   {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "IQ4_XS",
+   "bits": 4.53,
+   "size_gb": 19.89,
+   "size_bytes": 19886930528,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
    "repo": "bartowski/occamy-ai_occamy-1.0-GGUF",
    "url": "https://huggingface.co/bartowski/occamy-ai_occamy-1.0-GGUF",
    "format": "gguf",
@@ -281,6 +438,19 @@
    "first_seen": "2026-09-03"
   },
   {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "Q4_0",
+   "bits": 4.54,
+   "size_gb": 19.94,
+   "size_bytes": 19942611552,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
    "repo": "bartowski/occamy-ai_occamy-1.0-GGUF",
    "url": "https://huggingface.co/bartowski/occamy-ai_occamy-1.0-GGUF",
    "format": "gguf",
@@ -292,6 +462,19 @@
    "file_count": 1,
    "qat": false,
    "first_seen": "2026-09-03"
+  },
+  {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_S",
+   "bits": 4.77,
+   "size_gb": 20.95,
+   "size_bytes": 20946975328,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
   },
   {
    "repo": "bartowski/occamy-ai_occamy-1.0-GGUF",
@@ -333,6 +516,58 @@
    "first_seen": "2026-09-03"
   },
   {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "Q4_1",
+   "bits": 5.01,
+   "size_gb": 21.97,
+   "size_bytes": 21973768800,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_M",
+   "bits": 5.09,
+   "size_gb": 22.32,
+   "size_bytes": 22318512736,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "IQ4_NL",
+   "bits": 5.09,
+   "size_gb": 22.32,
+   "size_bytes": 22318512736,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_L",
+   "bits": 5.49,
+   "size_gb": 24.11,
+   "size_bytes": 24113674848,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
    "repo": "bartowski/occamy-ai_occamy-1.0-GGUF",
    "url": "https://huggingface.co/bartowski/occamy-ai_occamy-1.0-GGUF",
    "format": "gguf",
@@ -359,6 +594,19 @@
    "first_seen": "2026-09-03"
   },
   {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "Q5_K_S",
+   "bits": 5.73,
+   "size_gb": 25.14,
+   "size_bytes": 25137085024,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
    "repo": "bartowski/occamy-ai_occamy-1.0-GGUF",
    "url": "https://huggingface.co/bartowski/occamy-ai_occamy-1.0-GGUF",
    "format": "gguf",
@@ -370,6 +618,32 @@
    "file_count": 1,
    "qat": false,
    "first_seen": "2026-09-03"
+  },
+  {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "Q5_K_M",
+   "bits": 6.15,
+   "size_gb": 26.98,
+   "size_bytes": 26984675936,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "Q6_K_S",
+   "bits": 6.69,
+   "size_gb": 29.37,
+   "size_bytes": 29373332064,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
   },
   {
    "repo": "bartowski/occamy-ai_occamy-1.0-GGUF",
@@ -398,6 +672,32 @@
    "first_seen": "2026-09-03"
   },
   {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "Q6_K",
+   "bits": 7.0,
+   "size_gb": 30.74,
+   "size_bytes": 30738578016,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "Q6_K_L",
+   "bits": 7.36,
+   "size_gb": 32.3,
+   "size_bytes": 32298859104,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
    "repo": "bartowski/occamy-ai_occamy-1.0-GGUF",
    "url": "https://huggingface.co/bartowski/occamy-ai_occamy-1.0-GGUF",
    "format": "gguf",
@@ -409,6 +709,19 @@
    "file_count": 1,
    "qat": false,
    "first_seen": "2026-09-03"
+  },
+  {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 8.41,
+   "size_gb": 36.91,
+   "size_bytes": 36914690656,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-17"
   },
   {
    "repo": "bartowski/occamy-ai_occamy-1.0-GGUF",
@@ -424,6 +737,19 @@
    "first_seen": "2026-09-03"
   },
   {
+   "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
+   "format": "gguf",
+   "label": "BF16",
+   "bits": 15.81,
+   "size_gb": 69.38,
+   "size_bytes": 69376637408,
+   "quantizer": "bartowski",
+   "file_count": 2,
+   "qat": false,
+   "first_seen": "2026-09-17"
+  },
+  {
    "repo": "occamy-ai/occamy-1.0",
    "url": "https://huggingface.co/occamy-ai/occamy-1.0",
    "format": "safetensors",
@@ -435,6 +761,19 @@
    "file_count": 15,
    "qat": false,
    "first_seen": "2026-09-03"
+  },
+  {
+   "repo": "Accio-Lab/occamy-1.0",
+   "url": "https://huggingface.co/Accio-Lab/occamy-1.0",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.0,
+   "size_gb": 70.22,
+   "size_bytes": 70218761392,
+   "quantizer": "official",
+   "file_count": 14,
+   "qat": false,
+   "first_seen": "2026-09-17"
   }
  ],
  "reference": {
@@ -448,7 +787,7 @@
   },
   "mlx4": null,
   "native": {
-   "repo": "occamy-ai/occamy-1.0",
+   "repo": "Accio-Lab/occamy-1.0",
    "label": "BF16"
   }
  },
@@ -459,9 +798,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-03T07:56:41.283605+00:00",
-  "last_checked": "2026-09-03T07:56:41.283605+00:00",
+  "last_checked": "2026-09-17T08:34:43.241198+00:00",
   "last_changed": "2026-09-03T07:56:41.283605+00:00"
  },
- "generated_at": "2026-09-15T08:35:16+00:00",
- "sha": "8629373784814851"
+ "generated_at": "2026-09-17T08:35:00+00:00",
+ "sha": "248c44b28fe5ce98"
 }

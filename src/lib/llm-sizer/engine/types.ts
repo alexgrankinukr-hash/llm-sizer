@@ -23,6 +23,10 @@ export interface Machine {
   memory_kind?: 'unified' | 'vram';
   bandwidth_gbs: number;
   gpu_cores?: number[];
+  /** the GPU bin the list price buys at a memory size, where it is not the smallest (a size that comes only with the larger bin) */
+  gpu_cores_by_gb?: Record<string, number>;
+  /** Apple's price for the largest GPU bin over the list price, by memory size, where both bins are sold */
+  gpu_upgrade_usd?: Record<string, number>;
   platform: Platform;
   interconnect?: string;
   status?: 'current' | 'discontinued';
@@ -513,5 +517,7 @@ export interface Prefill {
   atContext: { tokens: number; seconds: number; rateTokS: number } | null;
   source: 'measured' | 'generation' | 'assumed' | 'none';
   parts: { k: number; cores: number | null; perCore: number | null; generation: string | null; kquant: number; cls: string; classFactor: number; mlx: number; activeB: number; cluster: number } | null;
+  /** the same chip's larger GPU bin, when this row reads on a smaller one: its rate, its waits and Apple's price for it where known */
+  upgrade: { cores: number; ratio: number; usd: number | null; tokS: number; waits: { tokens: number; seconds: number }[] } | null;
   notes: string[];
 }

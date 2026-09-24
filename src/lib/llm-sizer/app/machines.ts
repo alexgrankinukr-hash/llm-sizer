@@ -186,7 +186,7 @@ export function groupTensorCapable(group: Pick<MachineGroup, 'rows'>): boolean {
 }
 
 /** The machine fields the island reads. `notes`, `sources` and the rest stay on the server (the About page shows them). */
-export const ISLAND_MACHINE_FIELDS = ['id', 'kind', 'family', 'chip', 'year', 'status', 'platform', 'memory_options_gb', 'bandwidth_gbs', 'price_usd', 'gpu_cores', 'interconnect'] as const;
+export const ISLAND_MACHINE_FIELDS = ['id', 'kind', 'family', 'chip', 'year', 'status', 'platform', 'memory_options_gb', 'bandwidth_gbs', 'price_usd', 'gpu_cores', 'gpu_cores_by_gb', 'gpu_upgrade_usd', 'interconnect'] as const;
 
 export function slimMachine(m: Machine): Machine {
   const out: Record<string, unknown> = {};

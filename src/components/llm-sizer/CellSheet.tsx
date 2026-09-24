@@ -10,6 +10,7 @@ import { ABOUT_PATH, cellSources, efficiencyProvenance, type SourceLink } from '
 import { InfoIcon, XIcon } from './icons';
 import { MemoryBar } from './MemoryBar';
 import { cheapestSingleForColumn, type EvalMark } from '../../lib/llm-sizer/app/buying';
+import { prefillCoresOf } from '../../lib/llm-sizer/engine/prefill';
 
 
 /** How a pool's speed was made from one machine's, for the sheet's "how this number is made" line. */
@@ -143,6 +144,10 @@ export function CellSheet(props: CellSheetProps) {
   const fittingQuant = result.fix ? result.fix.changes.reduce<Quant | SpecialBuild | null>((q, c) => (c.kind === 'quant' ? c.quant : c.kind === 'ssdPaged' ? c.build : q), result.quant) : result.quant;
   const src = model ? cellSources({ model, quant: fittingQuant, machine: row.row.machine, factors: props.factors }) : null;
   const eff = efficiencyProvenance(row.row.machine, props.factors);
+  // a row that merges two GPU bins: the price and the reading speed both describe the bin the price buys at this size
+  const pricedCores = (row.row.machine.gpu_cores?.length ?? 0) > 1 ? prefillCoresOf(row.row.machine, row.row.gb) : null;
+  const upgrade = result.prefill?.upgrade ?? null;
+  const upgradeWait = upgrade?.waits.find((w) => w.tokens === 32768) ?? upgrade?.waits[upgrade.waits.length - 1] ?? null;
   const canApply = (fix: Fix) => (props.scope ?? 'table') === 'table' || fix.changes.every((c) => c.kind === 'closeApps' || c.kind === 'override');
 
   return (
@@ -195,7 +200,7 @@ export function CellSheet(props: CellSheetProps) {
               <>
                 <span className="lls-sheet-price-big">{formatPrice(poolPrice)}</span>
                 <span className="text-[12px] text-[var(--color-muted)]">
-                  {row.linked ? `${row.linked.count} × ${formatPrice(row.row.priceUsd)} · ` : ''}list price ({row.row.machine.kind === 'mac' ? 'Apple' : row.row.machine.family.split(' ')[0]}{props.machinesAsOf ? `, as of ${formatDate(props.machinesAsOf)}` : ''})
+                  {row.linked ? `${row.linked.count} × ${formatPrice(row.row.priceUsd)} · ` : ''}list price{pricedCores ? ` for the ${pricedCores}-core GPU` : ''} ({row.row.machine.kind === 'mac' ? 'Apple' : row.row.machine.family.split(' ')[0]}{props.machinesAsOf ? `, as of ${formatDate(props.machinesAsOf)}` : ''})
                   {src?.machine && (
                     <>
                       {' · '}
@@ -265,13 +270,18 @@ export function CellSheet(props: CellSheetProps) {
               <div className="text-[13px]">
                 <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                   <span className="font-heading text-[22px] leading-none">{formatTokS(result.prefill.tokS)}</span>
-                  <span className="text-[var(--color-muted)]">reading a short prompt{result.prefill.source !== 'measured' ? ' ~' : ''}</span>
+                  <span className="text-[var(--color-muted)]">reading a short prompt{result.prefill.parts?.cores ? ` on the ${result.prefill.parts.cores}-core GPU${row.linked ? 's' : ''}` : ''}{result.prefill.source !== 'measured' ? ' ~' : ''}</span>
                 </div>
                 <p className="mt-1 text-[var(--color-muted)]">
                   wait before the first word: {result.prefill.waits.map((w) => `${formatContext(w.tokens)} prompt ${formatWait(w.seconds)}`).join(' · ')}
                   {result.prefill.atContext && !result.prefill.waits.some((w) => w.tokens === result.prefill!.atContext!.tokens) ? ` · ${formatContext(result.prefill.atContext.tokens)} (this column, pasted in one go) ${formatWait(result.prefill.atContext.seconds)}` : ''}
                   {'. In a chat each turn waits only for its new text; what the model has already read stays in memory.'}
                 </p>
+                {upgrade && (
+                  <p className="mt-1 text-[var(--color-muted)]">
+                    The {upgrade.cores}-core GPU{upgrade.usd !== null ? ` (${formatPrice(upgrade.usd)} more${row.linked ? ' per machine' : ''} at Apple)` : ''} reads {Math.round((upgrade.ratio - 1) * 100)} % faster: {formatTokS(upgrade.tokS)}{upgradeWait ? `, a ${formatContext(upgradeWait.tokens)} prompt waits ${formatWait(upgradeWait.seconds)}` : ''}. Writing speed is the same on both.
+                  </p>
+                )}
                 <details className="mt-1.5 text-[12px] text-[var(--color-light)]">
                   <summary className="cursor-pointer select-none">how this number is made</summary>
                   <p className="mt-1">

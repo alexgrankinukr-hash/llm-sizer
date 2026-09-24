@@ -26,7 +26,8 @@
   "conversational",
   "eval-results",
   "endpoints_compatible",
-  "deploy:sagemaker"
+  "deploy:sagemaker",
+  "deploy:azure"
  ],
  "featured": true,
  "tier": "laptop",
@@ -798,9 +799,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:27:49.678978+00:00",
-  "last_checked": "2026-09-17T08:34:22.745115+00:00",
+  "last_checked": "2026-09-24T08:21:19.077711+00:00",
   "last_changed": "2026-09-02T20:27:49.678978+00:00"
  },
- "generated_at": "2026-09-17T08:35:00+00:00",
- "sha": "f031218222c37699"
+ "generated_at": "2026-09-24T08:21:51+00:00",
+ "sha": "53fe2e4b998cccd5"
 }

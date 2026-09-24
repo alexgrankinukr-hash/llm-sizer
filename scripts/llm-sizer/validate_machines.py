@@ -2,7 +2,8 @@
 """Validate public/data/llm-sizer/machines.json (or a file given as the first argument).
 
 Checks: unique ids, required fields, bandwidth > 0, at least one memory option, sources present,
-prices only on current rows and monotonic in memory, tier/bandwidth consistency, sensible enums.
+prices only on current rows and monotonic in memory, tier/bandwidth consistency, sensible enums, and the GPU-bin
+fields (gpu_cores_by_gb, gpu_upgrade_usd) consistent with gpu_cores and the memory options.
 Exit 1 with a list of problems; exit 0 when clean.
 """
 from __future__ import annotations
@@ -84,6 +85,45 @@ def validate(doc: dict) -> list[str]:
                     problems.append(f"{tag}: prices must rise with memory ({seq})")
         elif price not in (None, {}):
             problems.append(f"{tag}: discontinued rows must have price_usd null")
+        problems.extend(validate_gpu_bins(m, tag))
+    return problems
+
+
+def validate_gpu_bins(m: dict, tag: str) -> list[str]:
+    """A row that merges two GPU bins reads on the one its price buys at each size: the smallest, unless
+    gpu_cores_by_gb names the larger for a size that comes only with it. gpu_upgrade_usd is Apple's price for the
+    largest bin at a size where the row reads on a smaller one (current rows only)."""
+    problems: list[str] = []
+    cores = m.get("gpu_cores") or []
+    mem = m["memory_options_gb"]
+    by_gb = m.get("gpu_cores_by_gb")
+    upgrade = m.get("gpu_upgrade_usd")
+    if by_gb is not None:
+        if not (isinstance(by_gb, dict) and by_gb):
+            problems.append(f"{tag}: gpu_cores_by_gb must be a non-empty object")
+            by_gb = {}
+        for k, v in by_gb.items():
+            if not k.isdigit() or int(k) not in mem:
+                problems.append(f"{tag}: gpu_cores_by_gb key {k} is not a memory option")
+            if v not in cores:
+                problems.append(f"{tag}: gpu_cores_by_gb {k}: {v} is not one of gpu_cores {cores}")
+            elif cores and v == min(cores):
+                problems.append(f"{tag}: gpu_cores_by_gb {k}: {v} is the smallest bin, the default; drop it")
+    if upgrade is not None:
+        if m["status"] != "current":
+            problems.append(f"{tag}: gpu_upgrade_usd only on current rows")
+        if not (isinstance(upgrade, dict) and upgrade):
+            problems.append(f"{tag}: gpu_upgrade_usd must be a non-empty object")
+            upgrade = {}
+        for k, v in upgrade.items():
+            if not k.isdigit() or int(k) not in mem:
+                problems.append(f"{tag}: gpu_upgrade_usd key {k} is not a memory option")
+                continue
+            priced = (by_gb or {}).get(k, min(cores) if cores else None)
+            if not cores or priced == max(cores):
+                problems.append(f"{tag}: gpu_upgrade_usd {k}: the row already reads on the largest GPU bin at this size")
+            if not (isinstance(v, int) and v > 0):
+                problems.append(f"{tag}: gpu_upgrade_usd {k} must be a positive whole number of dollars")
     return problems
 
 

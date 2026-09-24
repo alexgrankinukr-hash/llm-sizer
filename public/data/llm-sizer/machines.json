@@ -130,6 +130,13 @@
         8,
         10
       ],
+      "gpu_cores_by_gb": {
+        "24": 10,
+        "32": 10
+      },
+      "gpu_upgrade_usd": {
+        "16": 100
+      },
       "platform": "apple",
       "interconnect": "thunderbolt4",
       "status": "current",
@@ -138,12 +145,13 @@
         "24": 1499,
         "32": 1699
       },
-      "notes": "Announced 2026-03-03, available 2026-03-11. Prices reflect Apple's 2026-06-25 US price increase (13-inch base rose from $1,099 to $1,299; base storage 512GB). 8-core GPU bin is sold with 16GB only in the US store; 24/32GB require the 10-core GPU bin. 15-inch is 10-core GPU only, from $1,499.",
+      "notes": "Announced 2026-03-03, available 2026-03-11. Prices reflect Apple's 2026-06-25 US price increase (13-inch base rose from $1,099 to $1,299; base storage 512GB). 8-core GPU bin is sold with 16GB only in the US store; 24/32GB require the 10-core GPU bin. 15-inch is 10-core GPU only, from $1,499. The 13-inch 10-core GPU bin with 16GB is $1,399, +$100 (Apple's configurator, 2026-09-24).",
       "sources": [
         "https://support.apple.com/en-us/126320",
         "https://support.apple.com/en-us/126321",
         "https://www.apple.com/newsroom/2026/03/apple-introduces-the-new-macbook-air-with-m5/",
-        "https://www.apple.com/shop/buy-mac/macbook-air/13-inch"
+        "https://www.apple.com/shop/buy-mac/macbook-air/13-inch",
+        "https://www.apple.com/shop/buy-mac/macbook-air"
       ]
     },
     {
@@ -297,6 +305,9 @@
         30,
         38
       ],
+      "gpu_cores_by_gb": {
+        "96": 38
+      },
       "platform": "apple",
       "interconnect": "thunderbolt4",
       "status": "discontinued",
@@ -350,6 +361,9 @@
         14,
         18
       ],
+      "gpu_cores_by_gb": {
+        "36": 18
+      },
       "platform": "apple",
       "interconnect": "thunderbolt4",
       "status": "discontinued",
@@ -568,6 +582,13 @@
         16,
         20
       ],
+      "gpu_cores_by_gb": {
+        "64": 20
+      },
+      "gpu_upgrade_usd": {
+        "24": 200,
+        "48": 200
+      },
       "platform": "apple",
       "interconnect": "thunderbolt5",
       "status": "current",
@@ -576,12 +597,13 @@
         "48": 3099,
         "64": 3699
       },
-      "notes": "Announced 2026-03-03. 64GB requires the 18-core CPU / 20-core GPU bin (cheapest 64GB = 14-inch 20-core, 1TB, $3,699). 16-inch is 20-core GPU only, from $2,999. Post-June-2026 prices from Apple's US configurator.",
+      "notes": "Announced 2026-03-03. 64GB requires the 18-core CPU / 20-core GPU bin (cheapest 64GB = 14-inch 20-core, 1TB, $3,699). 16-inch is 20-core GPU only, from $2,999. Post-June-2026 prices from Apple's US configurator. The 18-core CPU / 20-core GPU bin is +$200 on the 14-inch at 24GB and 48GB (Apple's configurator, 2026-09-24).",
       "sources": [
         "https://support.apple.com/en-us/126318",
         "https://support.apple.com/en-us/126319",
         "https://www.apple.com/newsroom/2026/03/apple-introduces-macbook-pro-with-all-new-m5-pro-and-m5-max/",
-        "https://www.apple.com/shop/buy-mac/macbook-pro/14-inch"
+        "https://www.apple.com/shop/buy-mac/macbook-pro/14-inch",
+        "https://www.apple.com/shop/buy-mac/macbook-pro"
       ]
     },
     {
@@ -852,6 +874,11 @@
         16,
         20
       ],
+      "gpu_upgrade_usd": {
+        "24": 200,
+        "48": 200,
+        "64": 200
+      },
       "platform": "apple",
       "interconnect": "thunderbolt5",
       "status": "current",
@@ -860,7 +887,7 @@
         "48": 2299,
         "64": 2699
       },
-      "notes": "Announced 2026-08-25; ships 2026-09-22. 48GB +$600 and 64GB +$1,000 over the $1,699 base (available on both the 16-core and 20-core GPU bins in the Mac mini).",
+      "notes": "Announced 2026-08-25; ships 2026-09-22. Prices are for the 15-core CPU / 16-core GPU bin: 48GB +$600 and 64GB +$1,000 over the $1,699 base. The 18-core CPU / 20-core GPU bin is +$200 at every size (Apple's configurator, 2026-09-24).",
       "sources": [
         "https://www.apple.com/newsroom/2026/08/apple-unveils-a-more-powerful-mac-mini-featuring-the-all-new-m6-and-m5-pro/",
         "https://www.apple.com/mac-mini/specs/",
@@ -937,6 +964,9 @@
         30,
         38
       ],
+      "gpu_cores_by_gb": {
+        "96": 38
+      },
       "platform": "apple",
       "interconnect": "thunderbolt4",
       "status": "discontinued",
@@ -1041,6 +1071,9 @@
         60,
         80
       ],
+      "gpu_cores_by_gb": {
+        "512": 80
+      },
       "platform": "apple",
       "interconnect": "thunderbolt5",
       "status": "discontinued",
@@ -1128,6 +1161,13 @@
         64,
         80
       ],
+      "gpu_cores_by_gb": {
+        "512": 80
+      },
+      "gpu_upgrade_usd": {
+        "96": 1300,
+        "256": 1300
+      },
       "platform": "apple",
       "interconnect": "thunderbolt5",
       "status": "current",
@@ -1136,7 +1176,7 @@
         "256": 9499,
         "512": null
       },
-      "notes": "Announced 2026-08-25; ships 2026-09-22. Apple states 1.2TB/s for both the 64-core and 80-core GPU bins (Wikipedia: 1228.8GB/s theoretical). 256GB is +$4,000 on either bin; 80-core GPU bin is +$1,300. 512GB requires the 36-core CPU / 80-core GPU bin, ships late October 2026 and is unpriced as of 2026-09-02.",
+      "notes": "Announced 2026-08-25; ships 2026-09-22. Apple states 1.2TB/s for both the 64-core and 80-core GPU bins (Wikipedia: 1228.8GB/s theoretical). 256GB is +$4,000 on either bin; 80-core GPU bin is +$1,300. 512GB requires the 36-core CPU / 80-core GPU bin, ships late October 2026 and is unpriced as of 2026-09-02. The +$1,300 for the 80-core GPU bin was re-checked on Apple's configurator on 2026-09-24.",
       "sources": [
         "https://www.apple.com/newsroom/2026/08/apple-introduces-new-mac-studio-with-m5-max-and-m5-ultra/",
         "https://www.apple.com/newsroom/2026/08/apple-introduces-m6-and-m5-ultra-for-a-big-leap-in-performance-and-ai-compute/",
@@ -1217,6 +1257,13 @@
         8,
         10
       ],
+      "gpu_cores_by_gb": {
+        "32": 10
+      },
+      "gpu_upgrade_usd": {
+        "16": 200,
+        "24": 200
+      },
       "platform": "apple",
       "interconnect": "thunderbolt4",
       "status": "current",
@@ -1225,7 +1272,7 @@
         "24": 1699,
         "32": 2099
       },
-      "notes": "24-inch. Still Apple's current iMac on 2026-09-02 (no M5/M6 iMac shipped yet). Prices reflect the 2026-06-25 US increase (base from $1,299 to $1,499). 32GB requires the 10-core GPU model ($1,699 + $400) and showed as 'currently unavailable' in the US configurator on 2026-09-02; 24GB is +$200 on the 8-core model.",
+      "notes": "24-inch. Still Apple's current iMac on 2026-09-02 (no M5/M6 iMac shipped yet). Prices reflect the 2026-06-25 US increase (base from $1,299 to $1,499). 32GB requires the 10-core GPU model ($1,699 + $400) and showed as 'currently unavailable' in the US configurator on 2026-09-02; 24GB is +$200 on the 8-core model. The 10-core GPU model (four Thunderbolt ports) is +$200 at 16GB and 24GB (Apple's configurator, 2026-09-24).",
       "sources": [
         "https://support.apple.com/en-us/121557",
         "https://www.apple.com/imac/specs/",

@@ -413,19 +413,6 @@
    "first_seen": "2026-09-02"
   },
   {
-   "repo": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
-   "url": "https://huggingface.co/meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
-   "format": "safetensors",
-   "label": "FP8",
-   "bits": 8.3,
-   "size_gb": 416.76,
-   "size_bytes": 416755504016,
-   "quantizer": "official",
-   "file_count": 84,
-   "qat": false,
-   "first_seen": "2026-09-02"
-  },
-  {
    "repo": "unsloth/Llama-4-Maverick-17B-128E-Instruct-FP8",
    "url": "https://huggingface.co/unsloth/Llama-4-Maverick-17B-128E-Instruct-FP8",
    "format": "safetensors",
@@ -434,6 +421,19 @@
    "size_gb": 416.76,
    "size_bytes": 416755504016,
    "quantizer": "unsloth",
+   "file_count": 84,
+   "qat": false,
+   "first_seen": "2026-09-02"
+  },
+  {
+   "repo": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+   "url": "https://huggingface.co/meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+   "format": "safetensors",
+   "label": "FP8",
+   "bits": 8.3,
+   "size_gb": 416.76,
+   "size_bytes": 416755504016,
+   "quantizer": "official",
    "file_count": 84,
    "qat": false,
    "first_seen": "2026-09-02"
@@ -516,9 +516,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:30:43.803720+00:00",
-  "last_checked": "2026-09-17T08:34:52.622786+00:00",
+  "last_checked": "2026-09-24T08:21:46.051539+00:00",
   "last_changed": "2026-09-02T20:30:43.803720+00:00"
  },
- "generated_at": "2026-09-17T08:35:00+00:00",
- "sha": "bc07dd4b85a368ad"
+ "generated_at": "2026-09-24T08:21:51+00:00",
+ "sha": "64919e49db01046d"
 }

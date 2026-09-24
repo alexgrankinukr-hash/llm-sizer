@@ -16,17 +16,32 @@ function bareChip(chip: string): string {
   return chip.replace(/\s*\(.*\)\s*$/, '').trim();
 }
 
-/** The GPU cores a machine row runs prefill on: the larger bin when the catalog merges two on one bandwidth. */
-export function prefillCoresOf(machine: Pick<Machine, 'gpu_cores'>): number | null {
+/**
+ * The GPU cores a machine row runs prefill on at a memory size: the bin its list price buys there. Where the catalog
+ * merges two bins on one bandwidth, that is the smaller one unless `gpu_cores_by_gb` says the size comes only with
+ * the larger (a 64 GB MacBook Pro M5 Pro is 20-core); without a size, the smaller bin.
+ */
+export function prefillCoresOf(machine: Pick<Machine, 'gpu_cores' | 'gpu_cores_by_gb'>, memoryGb?: number): number | null {
   const cores = machine.gpu_cores ?? [];
-  return cores.length ? Math.max(...cores) : null;
+  if (!cores.length) return null;
+  const priced = memoryGb === undefined ? undefined : machine.gpu_cores_by_gb?.[String(memoryGb)];
+  return priced ?? Math.min(...cores);
+}
+
+/** The larger GPU bin of the same chip, when the row reads on a smaller one: its cores, how much faster it reads, and Apple's price for it at this size where known. */
+export function gpuUpgradeOf(machine: Pick<Machine, 'gpu_cores' | 'gpu_cores_by_gb' | 'gpu_upgrade_usd'>, memoryGb?: number): { cores: number; ratio: number; usd: number | null } | null {
+  const cores = prefillCoresOf(machine, memoryGb);
+  const largest = machine.gpu_cores?.length ? Math.max(...machine.gpu_cores) : null;
+  if (!cores || !largest || largest <= cores) return null;
+  const usd = memoryGb === undefined ? undefined : machine.gpu_upgrade_usd?.[String(memoryGb)];
+  return { cores: largest, ratio: largest / cores, usd: usd ?? null };
 }
 
 /** K and where it comes from (speed_model.py:prefill_constant). */
-export function prefillConstant(pf: PrefillFactors, machine: Pick<Machine, 'chip' | 'gpu_cores' | 'platform' | 'family'>): { k: number | null; source: Prefill['source']; cores: number | null; perCore: number | null; generation: string | null } {
+export function prefillConstant(pf: PrefillFactors, machine: Pick<Machine, 'chip' | 'gpu_cores' | 'gpu_cores_by_gb' | 'platform' | 'family'>, memoryGb?: number): { k: number | null; source: Prefill['source']; cores: number | null; perCore: number | null; generation: string | null } {
   if (machine.platform === 'apple') {
     const gen = generationNumberOf(machine.chip);
-    const cores = prefillCoresOf(machine);
+    const cores = prefillCoresOf(machine, memoryGb);
     if (gen === null || !cores) return { k: null, source: 'none', cores, perCore: null, generation: null };
     const key = `M${gen}`;
     const row = pf.per_core[key];
@@ -79,6 +94,8 @@ export interface PrefillInput {
   model: ModelDetail;
   quant: Quant | SpecialBuild;
   machine: Machine;
+  /** the machine's memory size (per machine in a pool): picks the GPU bin the list price buys */
+  memoryGb?: number;
   runtime: Runtime;
   /** the context the column runs at: the wait for a prompt that fills it is one of the numbers shown */
   contextTokens: number;
@@ -87,15 +104,15 @@ export interface PrefillInput {
   cluster?: Cluster | null;
 }
 
-export function estimatePrefill({ model, quant, machine, runtime, contextTokens, factors, cluster = null }: PrefillInput): Prefill {
+export function estimatePrefill({ model, quant, machine, memoryGb, runtime, contextTokens, factors, cluster = null }: PrefillInput): Prefill {
   const pf = factors.prefill;
   const notes: string[] = [];
-  const empty: Prefill = { tokS: null, d0: null, waits: [], atContext: null, source: 'none', parts: null, notes };
+  const empty: Prefill = { tokS: null, d0: null, waits: [], atContext: null, source: 'none', parts: null, upgrade: null, notes };
   if (!pf) return { ...empty, notes: ['no prefill factors in this data set'] };
   const active = (model.params_active ?? model.params_total ?? 0) / 1e9;
   if (!active) return { ...empty, notes: ['no parameter count for this model'] };
   if (isSpecialBuild(quant)) return { ...empty, notes: ['no prefill estimate for a build that streams from the SSD'] };
-  const c = prefillConstant(pf, machine);
+  const c = prefillConstant(pf, machine, memoryGb);
   if (c.k === null) return { ...empty, notes: [machine.platform === 'apple' ? 'no prefill rate for this chip yet' : 'no prefill rate for this platform yet'] };
   const family = quantFamilyOf(quant);
   const kquant = runtime !== 'mlx' && family !== 'mlx' && !PLAIN_QUANTS.has(quant.label.toUpperCase()) ? pf.kquant.factor : 1;
@@ -111,6 +128,9 @@ export function estimatePrefill({ model, quant, machine, runtime, contextTokens,
   const { d0, assumed: d0Assumed } = prefillD0(pf, model);
   const waits = pf.waits_tokens.map((tokens) => ({ tokens, seconds: firstWordWaitS(tokS, d0, tokens), feelsLike: feelsLikeWait(pf, firstWordWaitS(tokS, d0, tokens)) }));
   const atContext = { tokens: contextTokens, seconds: firstWordWaitS(tokS, d0, contextTokens), rateTokS: prefillRateAt(tokS, d0, contextTokens) };
+  // the larger GPU bin of the same chip reads in proportion to its cores (the constant is per core)
+  const bin = machine.platform === 'apple' ? gpuUpgradeOf(machine, memoryGb) : null;
+  const upgrade = bin ? { ...bin, tokS: tokS * bin.ratio, waits: pf.waits_tokens.map((tokens) => ({ tokens, seconds: firstWordWaitS(tokS * bin.ratio, d0, tokens) })) } : null;
   if (c.source === 'generation') notes.push(`no measured prefill row for the ${machine.chip}: its generation's rate per GPU core on ${c.cores} cores`);
   if (c.source === 'assumed') notes.push(`no measured prefill row for the ${machine.chip} or its generation: the ${c.generation} rate per GPU core on ${c.cores} cores`);
   const clsRow = pf.class[cls];
@@ -129,6 +149,7 @@ export function estimatePrefill({ model, quant, machine, runtime, contextTokens,
     atContext,
     source: c.source,
     parts: { k: c.k, cores: c.cores, perCore: c.perCore, generation: c.generation, kquant, cls, classFactor, mlx, activeB: active, cluster: clusterFactor },
+    upgrade,
     notes,
   };
 }

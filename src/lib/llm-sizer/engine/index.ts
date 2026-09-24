@@ -102,7 +102,7 @@ export function evaluateCell(model: ModelDetail, machine: Machine, settings: Set
   const v = verdictFor(need);
   if (v !== 'no') {
     const speed = estimateSpeed({ model, quant, machine, contextTokens: ctx, kvBits: settings.kvBits, factors, cluster });
-    const prefill = estimatePrefill({ model, quant, machine, runtime: settings.runtime, contextTokens: ctx, factors, cluster });
+    const prefill = estimatePrefill({ model, quant, machine, memoryGb: settings.memoryGb, runtime: settings.runtime, contextTokens: ctx, factors, cluster });
     return { verdict: v, availability, need, quant, fix: null, alternatives: [], belowFloor: null, nearestMiss: null, speed, prefill, breakdown: breakdown(settings.memoryGb, availability, need), flags, contextTokens: ctx };
   }
 
@@ -111,7 +111,7 @@ export function evaluateCell(model: ModelDetail, machine: Machine, settings: Set
     const fixQuant = found.fix.changes.reduce<Quant | SpecialBuild>((q, c) => (c.kind === 'quant' ? c.quant : c.kind === 'ssdPaged' ? c.build : q), quant);
     const speed = estimateSpeed({ model, quant: fixQuant, machine, contextTokens: found.fix.contextTokens, kvBits: settings.kvBits, factors, cluster });
     if (speed.tokS !== null) speed.notes.unshift('speed shown for the configuration that fits'); // a build with no number keeps its own note first
-    const prefill = estimatePrefill({ model, quant: fixQuant, machine, runtime: settings.runtime, contextTokens: found.fix.contextTokens, factors, cluster });
+    const prefill = estimatePrefill({ model, quant: fixQuant, machine, memoryGb: settings.memoryGb, runtime: settings.runtime, contextTokens: found.fix.contextTokens, factors, cluster });
     return {
       verdict: 'compromise',
       availability: found.fix.availability,

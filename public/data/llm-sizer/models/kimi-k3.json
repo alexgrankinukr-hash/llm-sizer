@@ -28,7 +28,8 @@
   "image-text-to-text",
   "custom_code",
   "eval-results",
-  "8-bit"
+  "8-bit",
+  "deploy:sagemaker"
  ],
  "featured": true,
  "tier": "frontier",
@@ -64,7 +65,7 @@
   "moe_intermediate": 3072,
   "moe_layers": 92,
   "accel_mtp": false,
-  "accel_dflash_repo": "modal-labs/Kimi-K3-DFlash",
+  "accel_dflash_repo": "lightseekorg/kimi-k3-dflash2",
   "accel_dspark_repo": "RadixArk/Kimi-K3-DSpark",
   "conventional_assumed": false,
   "source": "config",
@@ -197,14 +198,14 @@
  },
  "special_builds": [],
  "drafts": {
-  "dflash": "modal-labs/Kimi-K3-DFlash",
+  "dflash": "lightseekorg/kimi-k3-dflash2",
   "dspark": "RadixArk/Kimi-K3-DSpark"
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:28:57.198926+00:00",
-  "last_checked": "2026-09-17T08:34:30.228319+00:00",
+  "last_checked": "2026-09-24T08:21:26.815078+00:00",
   "last_changed": "2026-09-02T20:28:57.198926+00:00"
  },
- "generated_at": "2026-09-17T08:35:00+00:00",
- "sha": "7da68f4f7149bff7"
+ "generated_at": "2026-09-24T08:21:51+00:00",
+ "sha": "82eb156f422d8ea1"
 }

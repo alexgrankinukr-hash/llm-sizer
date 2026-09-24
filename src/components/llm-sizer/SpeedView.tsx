@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import type { Factors, Quant, SpecialBuild } from '../../lib/llm-sizer/engine/types';
 import { isSpecialBuild } from '../../lib/llm-sizer/engine/memory';
-import { formatContext, formatTokS, formatWait } from '../../lib/llm-sizer/engine/format';
-import { firstWordWaitS } from '../../lib/llm-sizer/engine/prefill';
+import { formatContext, formatPrice, formatTokS, formatWait } from '../../lib/llm-sizer/engine/format';
+import { firstWordWaitS, gpuUpgradeOf, prefillCoresOf } from '../../lib/llm-sizer/engine/prefill';
 import { runningConfig } from '../../lib/llm-sizer/app/layout';
 import { rowLabel } from '../../lib/llm-sizer/app/machines';
 import type { Matrix, MatrixRow } from '../../lib/llm-sizer/app/matrix';
@@ -238,14 +238,16 @@ function ReadingBars({ cells, row, state, factors, prompt }: { cells: { column: 
   const barH = 18;
   const H = 40 + cells.length * rowH + 28;
   const lx = (sec: number) => LABEL_W + (Math.log(Math.min(Math.max(sec, READ_MIN_S), READ_MAX_S) / READ_MIN_S) / Math.log(READ_MAX_S / READ_MIN_S)) * (W - LABEL_W - 20);
-  const cores = row.row.machine.gpu_cores?.length ? Math.max(...row.row.machine.gpu_cores) : null;
+  // the bin the list price buys at this size; the chip's larger bin, if any, is named beside it
+  const cores = prefillCoresOf(row.row.machine, row.row.gb);
+  const bigger = gpuUpgradeOf(row.row.machine, row.row.gb);
   const bands = pf.feels_like;
   // band edges on the axis, so the shading says what a wait feels like
   const edges = bands.map((b) => b.max_s ?? READ_MAX_S);
   return (
     <>
       <p className="text-sm text-[var(--color-muted)] mb-2">
-        Reading speed on {rowLabel(row.group, row.row, row.linked)}{cores ? ` · ${cores} GPU cores${row.linked ? ' each' : ''}` : ''} · {state.runtime === 'mlx' ? 'MLX' : 'GGUF'}{row.linked ? ` · ${row.linked.split === 'tensor' ? 'tensor parallel' : 'layer split'}` : ''}: the wait before the first word, {prompt === 'column' ? "for a prompt that fills each column's whole context, pasted in one go" : `for ${promptPhrase(prompt)}`}
+        Reading speed on {rowLabel(row.group, row.row, row.linked)}{cores ? ` · ${cores} GPU cores${row.linked ? ' each' : ''}` : ''}{bigger ? ` (the ${bigger.cores}-core GPU reads ${Math.round((bigger.ratio - 1) * 100)} % faster${bigger.usd !== null ? `, ${formatPrice(bigger.usd)} more${row.linked ? ' each' : ''}` : ''})` : ''} · {state.runtime === 'mlx' ? 'MLX' : 'GGUF'}{row.linked ? ` · ${row.linked.split === 'tensor' ? 'tensor parallel' : 'layer split'}` : ''}: the wait before the first word, {prompt === 'column' ? "for a prompt that fills each column's whole context, pasted in one go" : `for ${promptPhrase(prompt)}`}
       </p>
       <ul className="lls-bands mb-3" aria-label="How the waits feel, in seconds">
         {bands.map((b, i) => (

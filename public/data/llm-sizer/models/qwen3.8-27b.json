@@ -598,7 +598,7 @@
    "label": "Q4_K_M",
    "bits": 5.46,
    "size_gb": 18.97,
-   "size_bytes": 18973870432,
+   "size_bytes": 18973870528,
    "quantizer": "ggml-org",
    "file_count": 1,
    "qat": false,
@@ -832,7 +832,7 @@
    "label": "Q8_0",
    "bits": 8.23,
    "size_gb": 28.6,
-   "size_bytes": 28595763552,
+   "size_bytes": 28595763648,
    "quantizer": "ggml-org",
    "file_count": 1,
    "qat": false,
@@ -917,19 +917,6 @@
    "first_seen": "2026-09-02"
   },
   {
-   "repo": "unsloth/Qwen3.8-27B-FP8",
-   "url": "https://huggingface.co/unsloth/Qwen3.8-27B-FP8",
-   "format": "safetensors",
-   "label": "FP8",
-   "bits": 8.89,
-   "size_gb": 30.87,
-   "size_bytes": 30866866928,
-   "quantizer": "unsloth",
-   "file_count": 66,
-   "qat": false,
-   "first_seen": "2026-09-02"
-  },
-  {
    "repo": "Qwen/Qwen3.8-27B-FP8",
    "url": "https://huggingface.co/Qwen/Qwen3.8-27B-FP8",
    "format": "safetensors",
@@ -938,6 +925,19 @@
    "size_gb": 30.87,
    "size_bytes": 30866866928,
    "quantizer": "official",
+   "file_count": 66,
+   "qat": false,
+   "first_seen": "2026-09-02"
+  },
+  {
+   "repo": "unsloth/Qwen3.8-27B-FP8",
+   "url": "https://huggingface.co/unsloth/Qwen3.8-27B-FP8",
+   "format": "safetensors",
+   "label": "FP8",
+   "bits": 8.89,
+   "size_gb": 30.87,
+   "size_bytes": 30866866928,
+   "quantizer": "unsloth",
    "file_count": 66,
    "qat": false,
    "first_seen": "2026-09-02"
@@ -962,7 +962,7 @@
    "label": "BF16",
    "bits": 15.49,
    "size_gb": 53.81,
-   "size_bytes": 53808281952,
+   "size_bytes": 53808282048,
    "quantizer": "ggml-org",
    "file_count": 1,
    "qat": false,
@@ -1046,9 +1046,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:18:39.014131+00:00",
-  "last_checked": "2026-09-17T08:34:07.230179+00:00",
+  "last_checked": "2026-09-24T08:21:03.449944+00:00",
   "last_changed": "2026-09-02T20:18:39.014131+00:00"
  },
- "generated_at": "2026-09-17T08:35:00+00:00",
- "sha": "7a8e3d51c98f3822"
+ "generated_at": "2026-09-24T08:21:51+00:00",
+ "sha": "5cff670379f1f438"
 }

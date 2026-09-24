@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { loadFactors, loadMachines, loadModel, machineById } from './__fixtures__/load';
 import { evaluateCell } from './index';
 import { customMachine } from './custom';
-import { estimatePrefill, feelsLikeWait, firstWordWaitS, prefillConstant, prefillD0, prefillRateAt, prefillTokS } from './prefill';
+import { estimatePrefill, feelsLikeWait, firstWordWaitS, prefillConstant, prefillCoresOf, prefillD0, prefillRateAt, prefillTokS } from './prefill';
 import type { Settings } from './types';
 
 const factors = loadFactors();
@@ -96,6 +96,36 @@ describe('the prefill estimate on real cells', () => {
     const rocm = evaluateCell(loadModel('qwen3.8-27b'), box, s(128), factors).prefill!;
     expect(rocm.tokS).toBeNull();
     expect(rocm.source).toBe('none');
+  });
+  it('a row with two GPU bins reads on the one its price buys at that size, and names the larger with its price', () => {
+    const q = loadModel('qwen3.8-27b');
+    // the 48 GB Mac mini M5 Pro is $2,299 with the 16-core GPU; the 20-core is +$200 (the reader's report, 2026-09-24)
+    const mini = evaluateCell(q, machineById('mac-mini-m5-pro'), s(48), factors).prefill!;
+    expect(mini.parts?.cores).toBe(16);
+    expect(mini.upgrade).toMatchObject({ cores: 20, ratio: 1.25, usd: 200 });
+    expect(mini.upgrade!.tokS).toBeCloseTo(mini.tokS! * 1.25, 6);
+    expect(mini.upgrade!.waits.map((w) => w.tokens)).toEqual(mini.waits.map((w) => w.tokens));
+    expect(mini.upgrade!.waits[1].seconds).toBeCloseTo(mini.waits[1].seconds / 1.25, 6);
+    // 64 GB on the MacBook Pro M5 Pro comes only with the 20-core GPU: that is what it reads on, nothing to upgrade
+    const mbp64 = evaluateCell(q, machineById('macbook-pro-m5-pro'), s(64), factors).prefill!;
+    expect(mbp64.parts?.cores).toBe(20);
+    expect(mbp64.upgrade).toBeNull();
+    expect(evaluateCell(q, machineById('macbook-pro-m5-pro'), s(48), factors).prefill!.upgrade).toMatchObject({ cores: 20, usd: 200 });
+    // the M5 Ultra: 64 cores at 96 and 256 GB (+$1,300 for 80), 80 at 512 GB
+    const ultra96 = evaluateCell(q, machineById('mac-studio-m5-ultra'), s(96), factors).prefill!;
+    expect(ultra96.parts?.cores).toBe(64);
+    expect(ultra96.upgrade).toMatchObject({ cores: 80, usd: 1300 });
+    // an older machine follows the same rule, without a price for the larger bin
+    const m1max = evaluateCell(q, machineById('macbook-pro-m1-max'), s(64), factors).prefill!;
+    expect(m1max.parts?.cores).toBe(24);
+    expect(m1max.upgrade).toMatchObject({ cores: 32, usd: null });
+    // one bin per row: nothing to name
+    expect(evaluateCell(q, mbp, s(128), factors).prefill!.upgrade).toBeNull();
+  });
+  it('without a memory size a two-bin row takes its smaller bin', () => {
+    expect(prefillCoresOf(machineById('mac-mini-m5-pro'))).toBe(16);
+    expect(prefillCoresOf(machineById('mac-studio-m5-ultra'), 512)).toBe(80);
+    expect(prefillCoresOf(machineById('nvidia-dgx-spark'), 128)).toBeNull();
   });
   it('feels-like bands for the wait', () => {
     expect(feelsLikeWait(pf, 2)).toBe('instant');

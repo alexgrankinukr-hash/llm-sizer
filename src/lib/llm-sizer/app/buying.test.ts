@@ -23,16 +23,18 @@ function atlasFor(id: string, state: AppState = base, quant: MatrixColumn['colum
 const keys = (marks: BuyingMark[]) => marks.map((m) => m.key);
 
 describe('the machine set', () => {
-  it('is every row of every current machine, 30 configurations on 10 memory sizes, 29 of them priced', () => {
+  it('is every row of every current machine, 31 configurations on 10 memory sizes, 29 of them priced', () => {
     const atlas = atlasFor('qwen3.8-27b');
     const marks = atlas.builds.get('Q4')!.marks;
-    expect(marks).toHaveLength(30);
-    expect(new Set(keys(marks as BuyingMark[])).size).toBe(30);
+    expect(marks).toHaveLength(31);
+    expect(new Set(keys(marks as BuyingMark[])).size).toBe(31);
     expect(atlas.rows).toEqual([16, 24, 32, 36, 48, 64, 96, 128, 256, 512]);
     expect(marks.filter((m) => m.priceUsd !== null)).toHaveLength(29);
     expect(marks.find((m) => m.key === 'mac-studio-m5-ultra:512')).toMatchObject({ priceUsd: null, priceSource: 'Apple', formFactor: 'desktop' });
     expect(marks.find((m) => m.key === 'macbook-pro-m5-max:36')).toMatchObject({ label: 'MacBook Pro · M5 Max · 32-core GPU · 36 GB', short: 'MacBook Pro M5 Max 32-core', formFactor: 'laptop', priceUsd: 4099 });
-    expect(marks.find((m) => m.key === 'nvidia-dgx-spark:128')).toMatchObject({ label: 'NVIDIA DGX Spark · 128 GB', short: 'NVIDIA DGX Spark', priceSource: 'NVIDIA', aboutHref: '/tools/llm-sizer/about#machine-nvidia-dgx-spark' });
+    expect(marks.find((m) => m.key === 'nvidia-dgx-spark:128')).toMatchObject({ label: 'NVIDIA DGX Spark · 128 GB', short: 'NVIDIA DGX Spark', priceUsd: 6950, priceSource: 'NVIDIA', aboutHref: '/tools/llm-sizer/about#machine-nvidia-dgx-spark' });
+    // the 64 GB Spark is on sale only from 2026-10-23, through partners: listed, unpriced
+    expect(marks.find((m) => m.key === 'nvidia-dgx-spark:64')).toMatchObject({ label: 'NVIDIA DGX Spark · 64 GB', priceUsd: null, priceSource: 'NVIDIA', formFactor: 'desktop' });
     expect(marks.find((m) => m.key === 'mac-mini-m6:16')?.label).toBe('Mac mini · M6 · 16 GB');
     expect(marks.every((m) => !m.discontinued && !m.custom)).toBe(true);
     expect(atlas.hasOwnMachines).toBe(false);
@@ -40,7 +42,7 @@ describe('the machine set', () => {
   it('adds the visitor\'s own machines: a custom box has no price, no form factor and no speed estimate', () => {
     const state: AppState = { ...base, customMachines: [{ name: 'Halo box', memoryGb: 128, bandwidthGbs: 256, platform: 'rocm' }] };
     const map = buyingMap(atlasFor('qwen3.8-27b', state), 'column', ANY, toggles);
-    expect(map.marks).toHaveLength(31);
+    expect(map.marks).toHaveLength(32);
     const halo = map.marks.find((m) => m.custom)!;
     // no speed figure is fine when any speed will do; a minimum it cannot be checked against is a miss
     expect(halo).toMatchObject({ key: 'custom-halo-box:128', formFactor: 'any', priceUsd: null, priceSource: null, tokS: null, status: 'fits', aboutHref: null, misses: [], qualifies: true });
@@ -54,7 +56,7 @@ describe('the machine set', () => {
   it('adds the older catalog machines the visitor put in the table, every size of them, after the current ones', () => {
     const state: AppState = { ...base, groups: [...base.groups, 'macbook-pro-m4-max'] };
     const map = buyingMap(atlasFor('qwen3.8-27b', state), 'column', ANY, toggles);
-    expect(map.marks).toHaveLength(34);
+    expect(map.marks).toHaveLength(35);
     const older = map.marks.filter((m) => m.discontinued);
     expect(keys(older)).toEqual(['macbook-pro-m4-max:36', 'macbook-pro-m4-max:48', 'macbook-pro-m4-max:64', 'macbook-pro-m4-max:128']);
     expect(older[3]).toMatchObject({ priceUsd: null, status: 'fits', qualifies: true, formFactor: 'laptop' });
@@ -108,12 +110,12 @@ describe('Qwen 3.8 27B at Q4 · 32K', () => {
     expect(byKey.get('mac-studio-m5-ultra:96')).toMatchObject({ status: 'fits', band: 'fast', approx: true });
     expect(map.recommendation.pick?.key).toBe('mac-mini-m6:32');
     expect(map.recommendation.alternative).toMatchObject({ mark: { key: 'macbook-air-m5:32' }, why: ['form'] });
-    expect(keys(map.recommendation.unpricedQualifying)).toEqual(['mac-studio-m5-ultra:512']);
+    expect(keys(map.recommendation.unpricedQualifying)).toEqual(['mac-studio-m5-ultra:512', 'nvidia-dgx-spark:64']);
     expect(map.recommendation.nearest).toEqual([]);
     // cheapest first, the unpriced last, and the card agrees with the list
     const prices = map.qualifying.map((m) => m.priceUsd);
-    expect(prices.slice(0, -1).every((p) => p !== null)).toBe(true);
-    expect(prices.at(-1)).toBeNull();
+    expect(prices.slice(0, -2).every((p) => p !== null)).toBe(true);
+    expect(prices.slice(-2)).toEqual([null, null]);
     expect(map.qualifying[0].key).toBe(map.recommendation.pick!.key);
     expect(markDetail(byKey.get('mac-mini-m6:32')!, ANY)).toMatch(/^\d+\.\d GB of \d+\.\d GB used · tight · \d\.\d GB to spare$/);
     expect(map.captionParts.slice(0, 3)).toEqual(['Qwen 3.8 27B at Q4 (Q4_K_M) · 32K', 'GGUF', 'cache FP16']);
@@ -165,7 +167,7 @@ describe('Qwen 3.8 27B at Q4 · 32K', () => {
     expect(map.recommendation.pick).toBeNull();
     const open = buyingMap(atlasFor('qwen3.8-27b', state), 'column', ANY, toggles);
     // unpriced marks sort fastest first, then more memory first
-    expect(keys(open.recommendation.unpricedQualifying)).toEqual(['mac-studio-m5-ultra:512', 'macbook-pro-m4-max:128', 'macbook-pro-m4-max:64', 'macbook-pro-m4-max:48', 'macbook-pro-m4-max:36']);
+    expect(keys(open.recommendation.unpricedQualifying)).toEqual(['mac-studio-m5-ultra:512', 'macbook-pro-m4-max:128', 'macbook-pro-m4-max:64', 'macbook-pro-m4-max:48', 'macbook-pro-m4-max:36', 'nvidia-dgx-spark:64']);
     expect(open.recommendation.pick?.key).toBe('mac-mini-m6:32');
   });
 });
@@ -179,7 +181,8 @@ describe('GLM-5.3 Flash at Q4 · 32K and a model nothing runs', () => {
     expect(map.recommendation.pick!.tokS!).toBeGreaterThan(29);
     expect(map.recommendation.pick!.tokS!).toBeLessThan(34);
     expect(keys(map.recommendation.unpricedQualifying)).toEqual(['mac-studio-m5-ultra:512']);
-    expect(keys(map.withChange)).toEqual(['nvidia-dgx-spark:128', 'mac-studio-m5-max:128', 'macbook-pro-m5-max:128']);
+    expect(keys(map.withChange)).toEqual(['mac-studio-m5-max:128', 'macbook-pro-m5-max:128', 'nvidia-dgx-spark:128']);
+    expect(map.marks.find((m) => m.key === 'nvidia-dgx-spark:64')).toMatchObject({ status: 'no-fit', misses: ['no-fit'] });
     for (const m of map.withChange) {
       expect(m.tokS).not.toBeNull();
       expect(m.qualifies).toBe(false);
@@ -189,7 +192,8 @@ describe('GLM-5.3 Flash at Q4 · 32K and a model nothing runs', () => {
     expect(under.qualifying).toEqual([]);
     expect(under.recommendation.nearest.map((n) => n.kind)).toEqual(['price', 'change']);
     expect(under.recommendation.nearest[0].detail).toBe('$9,499 · $3,499 over your budget');
-    expect(under.recommendation.nearest[1].mark.key).toBe('nvidia-dgx-spark:128');
+    // the Spark at $6,950 is over the budget too, so the change that fits under it is the $5,099 Studio's
+    expect(under.recommendation.nearest[1].mark.key).toBe('mac-studio-m5-max:128');
   });
   it('Kimi K3 fits nowhere: every mark a dash, nothing qualifies, nothing is near', () => {
     const map = buyingMap(atlasFor('kimi-k3'), 'column', ANY, toggles);
@@ -303,16 +307,17 @@ describe('label placement', () => {
 describe('linked pools on the map', () => {
   const linkedState: AppState = { ...base, linked: { 'nvidia-dgx-spark': { count: 2, split: 'layer' } } };
 
-  it('a linked Spark adds one pooled mark on the 256 GB row at the summed price, beside the single one', () => {
+  it('a linked Spark adds a pooled mark per size (128 and 256 GB rows) at the summed price, beside the single ones', () => {
     const plain = atlasFor('glm-5.3-flash');
-    expect(plain.builds.get('Q4')!.marks).toHaveLength(30);
+    expect(plain.builds.get('Q4')!.marks).toHaveLength(31);
     const atlas = atlasFor('glm-5.3-flash', linkedState);
     const marks = atlas.builds.get('Q4')!.marks;
-    expect(marks).toHaveLength(31);
+    expect(marks).toHaveLength(33);
     const pair = marks.find((m) => m.key === 'nvidia-dgx-spark:128:x2')!;
-    expect(pair).toMatchObject({ gb: 256, priceUsd: 9398, label: '2 × NVIDIA DGX Spark · 128 GB each · 256 GB pooled', short: '2 × NVIDIA DGX Spark', status: 'fits', linked: { count: 2, split: 'layer' } });
+    expect(pair).toMatchObject({ gb: 256, priceUsd: 13900, label: '2 × NVIDIA DGX Spark · 128 GB each · 256 GB pooled', short: '2 × NVIDIA DGX Spark', status: 'fits', linked: { count: 2, split: 'layer' } });
     expect(pair.tokS).toBeGreaterThan(10);
-    expect(marks.find((m) => m.key === 'nvidia-dgx-spark:128')).toMatchObject({ gb: 128, priceUsd: 4699, status: 'compromise' });
+    expect(marks.find((m) => m.key === 'nvidia-dgx-spark:128')).toMatchObject({ gb: 128, priceUsd: 6950, status: 'compromise' });
+    expect(marks.find((m) => m.key === 'nvidia-dgx-spark:64:x2')).toMatchObject({ gb: 128, priceUsd: null, label: '2 × NVIDIA DGX Spark · 64 GB each · 128 GB pooled' });
     expect(atlas.rows).toEqual([16, 24, 32, 36, 48, 64, 96, 128, 256, 512]);
     expect(atlas.hasOwnMachines).toBe(true);
     const map = buyingMap(atlas, 'Q4', ANY, toggles);

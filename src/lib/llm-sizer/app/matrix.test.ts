@@ -17,8 +17,8 @@ describe('the first screen', () => {
   const layout = tableLayout(state, matrix);
   const marker = (row: string, col: number) => layout.rows.find((r) => r.key === row)!.cells[col].marker;
 
-  it('has 7 rows × 4 columns and the video chart\'s verdicts at Q4 / 32K', () => {
-    expect(matrix.rows.map((r) => r.key)).toEqual(['mac-mini-m6:16', 'mac-mini-m6:24', 'mac-mini-m6:32', 'mac-studio-m5-ultra:96', 'mac-studio-m5-ultra:256', 'mac-studio-m5-ultra:512', 'nvidia-dgx-spark:128']);
+  it('has 8 rows × 4 columns and the video chart\'s verdicts at Q4 / 32K', () => {
+    expect(matrix.rows.map((r) => r.key)).toEqual(['mac-mini-m6:16', 'mac-mini-m6:24', 'mac-mini-m6:32', 'mac-studio-m5-ultra:96', 'mac-studio-m5-ultra:256', 'mac-studio-m5-ultra:512', 'nvidia-dgx-spark:64', 'nvidia-dgx-spark:128']);
     expect(matrix.columns.map((c) => c.quant?.label)).toEqual(['Q4_K_M', 'Q4_K_M', 'UD-Q4_K_XL', 'UD-Q4_K_XL']);
     // Qwen 27B: 16 GB → ring (a 2-bit build fits), 24 GB → ring, 32 GB → ring (tight at 90 % once buffers are 1.5 GB + 1 %)
     expect(marker('mac-mini-m6:32', 0)).toBe('ring');
@@ -28,6 +28,11 @@ describe('the first screen', () => {
     expect(marker('mac-studio-m5-ultra:256', 1)).toBe('run');
     expect(marker('nvidia-dgx-spark:128', 1)).toBe('ring');
     expect(marker('mac-mini-m6:32', 1)).toBe('no');
+    // the 64 GB Spark (60.7 GB available): Qwen 27B runs, Flash Next only with the engram-on-SSD build, GLM-5.3 Flash never
+    expect(marker('nvidia-dgx-spark:64', 0)).toBe('run');
+    expect(marker('nvidia-dgx-spark:64', 1)).toBe('ring');
+    expect(matrix.cells.get('nvidia-dgx-spark:64|1')!.result!.fix!.changes[0].kind).toBe('ssdPaged');
+    expect(marker('nvidia-dgx-spark:64', 2)).toBe('no');
     // GLM-5.3 Flash 200 GB: 256 needs the override (ring), 512 runs, Spark = 2-bit ring
     expect(marker('mac-studio-m5-ultra:256', 2)).toBe('ring');
     expect(marker('mac-studio-m5-ultra:512', 2)).toBe('run');
@@ -44,7 +49,9 @@ describe('the first screen', () => {
     expect(layout.rails.map((r) => r.label)).toEqual(['Mac mini · M6', 'Mac Studio · M5 Ultra', 'NVIDIA DGX Spark']);
     expect(layout.rails[0].price).toBe('from $899');
     expect(layout.rows[2].cells[0].ariaLabel).toBe('Qwen 3.8 27B on Mac mini · M6 32 GB: runs with a compromise (tight)');
-    expect(layout.rows[6].price).toBe('$4,699');
+    expect(layout.rows.find((r) => r.key === 'nvidia-dgx-spark:128')!.price).toBe('$6,950');
+    expect(layout.rows.find((r) => r.key === 'nvidia-dgx-spark:64')!.price).toBeNull(); // not on sale until 2026-10-23
+    expect(layout.rails[2].price).toBe('from $6,950');
     expect(layout.toggles.work).toBe('nothing else running');
     expect(layout.footnotes.length).toBeGreaterThanOrEqual(0);
   });
@@ -95,10 +102,10 @@ describe('a linked pool in the table', () => {
     expect(matrix.rows.find((r) => r.key === 'nvidia-dgx-spark:128:x2')?.linked).toEqual({ count: 2, split: 'layer' });
     const rail = layout.rails.find((r) => r.groupId === 'nvidia-dgx-spark')!;
     expect(rail.label).toBe('2 × NVIDIA DGX Spark');
-    expect(rail.price).toBe('from $9,398');
+    expect(rail.price).toBe('from $13,900');
     const row = layout.rows.find((r) => r.key === 'nvidia-dgx-spark:128:x2')!;
     expect(row.sizeLabel).toBe('128 GB each · 256 GB pooled');
-    expect(row.price).toBe('$9,398');
+    expect(row.price).toBe('$13,900');
     expect(row.cells[2].marker).toBe('run');
     expect(row.cells[2].ariaLabel).toBe('GLM-5.3 Flash on 2 × NVIDIA DGX Spark · 128 GB each · 256 GB pooled: runs');
     const cell = matrix.cells.get('nvidia-dgx-spark:128:x2|2')!.result!;

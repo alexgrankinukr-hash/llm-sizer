@@ -138,6 +138,19 @@
    "first_seen": "2026-09-02"
   },
   {
+   "repo": "ggml-org/GLM-5.3-Flash-GGUF",
+   "url": "https://huggingface.co/ggml-org/GLM-5.3-Flash-GGUF",
+   "format": "gguf",
+   "label": "Q2_K",
+   "bits": 3.33,
+   "size_gb": 133.81,
+   "size_bytes": 133809056384,
+   "quantizer": "ggml-org",
+   "file_count": 2,
+   "qat": false,
+   "first_seen": "2026-10-04"
+  },
+  {
    "repo": "unsloth/GLM-5.3-Flash-GGUF",
    "url": "https://huggingface.co/unsloth/GLM-5.3-Flash-GGUF",
    "format": "gguf",
@@ -164,6 +177,19 @@
    "first_seen": "2026-09-02"
   },
   {
+   "repo": "ggml-org/GLM-5.3-Flash-GGUF",
+   "url": "https://huggingface.co/ggml-org/GLM-5.3-Flash-GGUF",
+   "format": "gguf",
+   "label": "Q4_K",
+   "bits": 4.52,
+   "size_gb": 181.37,
+   "size_bytes": 181372463744,
+   "quantizer": "ggml-org",
+   "file_count": 2,
+   "qat": false,
+   "first_seen": "2026-10-04"
+  },
+  {
    "repo": "unsloth/GLM-5.3-Flash-GGUF",
    "url": "https://huggingface.co/unsloth/GLM-5.3-Flash-GGUF",
    "format": "gguf",
@@ -175,6 +201,19 @@
    "file_count": 6,
    "qat": false,
    "first_seen": "2026-09-02"
+  },
+  {
+   "repo": "mlx-community/GLM-5.3-Flash-4bit",
+   "url": "https://huggingface.co/mlx-community/GLM-5.3-Flash-4bit",
+   "format": "mlx",
+   "label": "MLX-4bit",
+   "bits": 5.08,
+   "size_gb": 203.99,
+   "size_bytes": 203992076296,
+   "quantizer": "mlx-community",
+   "file_count": 62,
+   "qat": false,
+   "first_seen": "2026-09-26"
   },
   {
    "repo": "unsloth/GLM-5.3-Flash-GGUF",
@@ -203,19 +242,6 @@
    "first_seen": "2026-09-02"
   },
   {
-   "repo": "zai-org/GLM-5.3-Flash",
-   "url": "https://huggingface.co/zai-org/GLM-5.3-Flash",
-   "format": "safetensors",
-   "label": "FP8",
-   "bits": 8.17,
-   "size_gb": 328.34,
-   "size_bytes": 328337455672,
-   "quantizer": "official",
-   "file_count": 62,
-   "qat": false,
-   "first_seen": "2026-09-02"
-  },
-  {
    "repo": "unsloth/GLM-5.3-Flash-FP8",
    "url": "https://huggingface.co/unsloth/GLM-5.3-Flash-FP8",
    "format": "safetensors",
@@ -224,6 +250,19 @@
    "size_gb": 328.34,
    "size_bytes": 328337455672,
    "quantizer": "unsloth",
+   "file_count": 62,
+   "qat": false,
+   "first_seen": "2026-09-02"
+  },
+  {
+   "repo": "zai-org/GLM-5.3-Flash",
+   "url": "https://huggingface.co/zai-org/GLM-5.3-Flash",
+   "format": "safetensors",
+   "label": "FP8",
+   "bits": 8.17,
+   "size_gb": 328.34,
+   "size_bytes": 328337455672,
+   "quantizer": "official",
    "file_count": 62,
    "qat": false,
    "first_seen": "2026-09-02"
@@ -277,7 +316,10 @@
    "repo": "unsloth/GLM-5.3-Flash-GGUF",
    "label": "Q8_0"
   },
-  "mlx4": null,
+  "mlx4": {
+   "repo": "mlx-community/GLM-5.3-Flash-4bit",
+   "label": "MLX-4bit"
+  },
   "native": {
    "repo": "zai-org/GLM-5.3-Flash",
    "label": "FP8"
@@ -290,9 +332,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:30:03.811239+00:00",
-  "last_checked": "2026-09-24T08:21:38.948045+00:00",
+  "last_checked": "2026-10-05T10:17:25.211383+00:00",
   "last_changed": "2026-09-02T20:30:03.811239+00:00"
  },
- "generated_at": "2026-09-24T08:21:51+00:00",
- "sha": "d32ea0ba357b73d0"
+ "generated_at": "2026-10-05T10:17:43+00:00",
+ "sha": "eee7699f15e639f9"
 }

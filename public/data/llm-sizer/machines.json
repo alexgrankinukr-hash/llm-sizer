@@ -1314,6 +1314,7 @@
       "generation": "GB10",
       "year": 2025,
       "memory_options_gb": [
+        64,
         128
       ],
       "memory_kind": "unified",
@@ -1323,12 +1324,15 @@
       "interconnect": "connectx7-200gbe",
       "status": "current",
       "price_usd": {
-        "128": 4699
+        "64": null,
+        "128": 6950
       },
-      "notes": "128GB LPDDR5x coherent unified memory, 273GB/s. gpu_cores is CUDA cores (6,144), not Apple-style GPU cores. ConnectX-7 200Gb/s lets two units pair. Launched 2025-10-15 at $3,999; NVIDIA raised the price to $4,699 on 2026-02-23. Partner variants (ASUS, Dell, HP, Lenovo etc.) are priced separately. GB10 GPU has 6,144 CUDA cores (not comparable to Apple GPU core counts).",
+      "notes": "64GB or 128GB LPDDR5x coherent unified memory on a 256-bit bus, 273GB/s at both sizes (NVIDIA's specifications). gpu_cores is empty: the GB10 GPU has 6,144 CUDA cores, not comparable to Apple GPU core counts. ConnectX-7 200Gb/s lets two units pair. 128GB: launched 2025-10-15 at $3,999; NVIDIA raised it to $4,699 on 2026-02-23; NVIDIA's store lists it at $6,950 on 2026-10-05 (out of stock that day; the rise was reported on 2026-10-02). 64GB: announced by NVIDIA on 2026-10-02, sold only by partners (Acer, ASUS, Dell, Gigabyte, HP, MSI) from 2026-10-23, starting at $4,999; unpriced here until it is on sale. Partner-branded 128GB GB10 boxes (ASUS, Dell, HP, Lenovo etc.) are priced separately and are not this row.",
       "sources": [
         "https://www.nvidia.com/en-us/products/workstations/dgx-spark/",
-        "https://marketplace.nvidia.com/en-us/enterprise/personal-ai-supercomputers/dgx-spark/"
+        "https://marketplace.nvidia.com/en-us/enterprise/personal-ai-supercomputers/dgx-spark/",
+        "https://blogs.nvidia.com/blog/local-ai-dgx-spark-64gb-sync/",
+        "https://www.xda-developers.com/nvidias-dgx-spark-is-getting-a-64gb-ram-variant-to-make-running-local-models-better-than-ever/"
       ]
     }
   ]

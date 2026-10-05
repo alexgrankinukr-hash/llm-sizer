@@ -356,6 +356,19 @@
    "first_seen": "2026-09-02"
   },
   {
+   "repo": "ggml-org/Qwen3.8-Flash-Next-GGUF",
+   "url": "https://huggingface.co/ggml-org/Qwen3.8-Flash-Next-GGUF",
+   "format": "gguf",
+   "label": "IQ4_NL",
+   "bits": 4.54,
+   "size_gb": 102.05,
+   "size_bytes": 102048918944,
+   "quantizer": "ggml-org",
+   "file_count": 2,
+   "qat": false,
+   "first_seen": "2026-10-01"
+  },
+  {
    "repo": "bartowski/Qwen3.8-Flash-Next-GGUF",
    "url": "https://huggingface.co/bartowski/Qwen3.8-Flash-Next-GGUF",
    "format": "gguf",
@@ -531,7 +544,7 @@
    "label": "Q8_0",
    "bits": 7.23,
    "size_gb": 162.62,
-   "size_bytes": 162624826656,
+   "size_bytes": 162624826784,
    "quantizer": "ggml-org",
    "file_count": 2,
    "qat": false,
@@ -740,9 +753,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:24:51.887134+00:00",
-  "last_checked": "2026-09-24T08:21:05.521404+00:00",
+  "last_checked": "2026-10-05T10:17:04.487487+00:00",
   "last_changed": "2026-09-02T20:24:51.887134+00:00"
  },
- "generated_at": "2026-09-24T08:21:51+00:00",
- "sha": "cbbbc63c29a4c6c5"
+ "generated_at": "2026-10-05T10:17:43+00:00",
+ "sha": "93877aac9b80ffd1"
 }

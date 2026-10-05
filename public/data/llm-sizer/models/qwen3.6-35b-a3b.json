@@ -889,19 +889,6 @@
    "first_seen": "2026-09-02"
   },
   {
-   "repo": "lmstudio-community/Qwen3.6-35B-A3B-MLX-8bit",
-   "url": "https://huggingface.co/lmstudio-community/Qwen3.6-35B-A3B-MLX-8bit",
-   "format": "mlx",
-   "label": "MLX-8bit",
-   "bits": 8.39,
-   "size_gb": 37.72,
-   "size_bytes": 37721403002,
-   "quantizer": "lmstudio-community",
-   "file_count": 8,
-   "qat": false,
-   "first_seen": "2026-09-02"
-  },
-  {
    "repo": "mlx-community/Qwen3.6-35B-A3B-8bit",
    "url": "https://huggingface.co/mlx-community/Qwen3.6-35B-A3B-8bit",
    "format": "mlx",
@@ -910,6 +897,19 @@
    "size_gb": 37.72,
    "size_bytes": 37721403002,
    "quantizer": "mlx-community",
+   "file_count": 8,
+   "qat": false,
+   "first_seen": "2026-09-02"
+  },
+  {
+   "repo": "lmstudio-community/Qwen3.6-35B-A3B-MLX-8bit",
+   "url": "https://huggingface.co/lmstudio-community/Qwen3.6-35B-A3B-MLX-8bit",
+   "format": "mlx",
+   "label": "MLX-8bit",
+   "bits": 8.39,
+   "size_gb": 37.72,
+   "size_bytes": 37721403002,
+   "quantizer": "lmstudio-community",
    "file_count": 8,
    "qat": false,
    "first_seen": "2026-09-02"
@@ -1031,9 +1031,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:23:54.503541+00:00",
-  "last_checked": "2026-09-24T08:21:01.377934+00:00",
+  "last_checked": "2026-10-05T10:17:02.215809+00:00",
   "last_changed": "2026-09-02T20:23:54.503541+00:00"
  },
- "generated_at": "2026-09-24T08:21:51+00:00",
- "sha": "66fba23c21a51115"
+ "generated_at": "2026-10-05T10:17:43+00:00",
+ "sha": "e85fbff74cf5dc0d"
 }

@@ -17,9 +17,9 @@ describe('machine groups', () => {
     expect(max.rows.every((r) => !r.binLabel)).toBe(true);
   });
 
-  it('keeps one-row groups for the Spark, sets status from the rows, and preserves catalog order', () => {
+  it('gives the Spark both sizes (64 GB unpriced until it is on sale), sets status from the rows, and preserves catalog order', () => {
     const spark = groups.find((g) => g.id === 'nvidia-dgx-spark')!;
-    expect(spark.rows).toHaveLength(1);
+    expect(spark.rows.map((r) => [r.gb, r.machineId, r.bandwidthGbs, r.priceUsd])).toEqual([[64, 'nvidia-dgx-spark', 273, null], [128, 'nvidia-dgx-spark', 273, 6950]]);
     expect(spark.silhouette).toBe('spark');
     expect(spark.status).toBe('current');
     expect(groups.find((g) => g.id === 'macbook-air-m1')?.status).toBe('discontinued');
@@ -103,11 +103,11 @@ describe('linked pools in keys and labels (METHODOLOGY §4)', () => {
   it('pooled size and price, and the labels a viewer reads', () => {
     expect(pooledGb(128, two)).toBe(256);
     expect(pooledGb(128, null)).toBe(128);
-    expect(pooledPrice(4699, two)).toBe(9398);
+    expect(pooledPrice(6950, two)).toBe(13900);
     expect(pooledPrice(null, two)).toBeNull();
     expect(linkedLabel(spark, two)).toBe('2 × NVIDIA DGX Spark');
     expect(linkedLabel(spark, null)).toBe('NVIDIA DGX Spark');
-    expect(rowLabel(spark, spark.rows[0], two)).toBe('2 × NVIDIA DGX Spark · 128 GB each · 256 GB pooled');
+    expect(rowLabel(spark, spark.rows.find((r) => r.gb === 128)!, two)).toBe('2 × NVIDIA DGX Spark · 128 GB each · 256 GB pooled');
     expect(rowLabel(studio, studio.rows.find((r) => r.gb === 128)!, null)).toBe('Mac Studio · M5 Max 128 GB');
   });
 

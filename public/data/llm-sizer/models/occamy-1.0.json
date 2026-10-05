@@ -285,7 +285,7 @@
    "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
    "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
    "format": "gguf",
-   "label": "Q3_K_S",
+   "label": "IQ3_XS",
    "bits": 3.72,
    "size_gb": 16.32,
    "size_bytes": 16318691936,
@@ -298,7 +298,7 @@
    "repo": "bartowski/Accio-Lab_occamy-1.0-GGUF",
    "url": "https://huggingface.co/bartowski/Accio-Lab_occamy-1.0-GGUF",
    "format": "gguf",
-   "label": "IQ3_XS",
+   "label": "Q3_K_S",
    "bits": 3.72,
    "size_gb": 16.32,
    "size_bytes": 16318691936,
@@ -801,6 +801,6 @@
   "last_checked": "2026-09-17T08:34:43.241198+00:00",
   "last_changed": "2026-09-03T07:56:41.283605+00:00"
  },
- "generated_at": "2026-09-24T08:21:51+00:00",
- "sha": "7e03bda4cafa7787"
+ "generated_at": "2026-10-05T10:17:43+00:00",
+ "sha": "45a3ac435e6de8d7"
 }

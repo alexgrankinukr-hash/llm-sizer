@@ -1,0 +1,149 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "mimo-v2.6-pro-rl",
+ "name": "MiMo-V2.6-Pro-RL",
+ "provider": "XiaomiMiMo",
+ "hf_repo": "XiaomiMiMo/MiMo-V2.6-Pro-RL",
+ "url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL",
+ "variant": "instruct",
+ "released": "2026-09-21",
+ "params_total": 1024216603392,
+ "params_active": 44863396608,
+ "params_active_source": "estimated",
+ "context_max": 1048576,
+ "native_bits": 8.0,
+ "license": {
+  "name": "mit",
+  "url": null,
+  "commercial": true,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "mimo_v2",
+  "text-generation",
+  "multimodal",
+  "vision-language",
+  "audio",
+  "agent",
+  "video-understanding",
+  "long-context",
+  "conversational",
+  "custom_code",
+  "en",
+  "zh",
+  "eval-results",
+  "8-bit",
+  "fp8"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [
+  "architecture read from config, but the model family is unfamiliar — treat cache math as approximate"
+ ],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "mimo_v2",
+  "attention": "gqa",
+  "layers": 70,
+  "kv_layers": 70,
+  "sliding_layers": 0,
+  "linear_layers": 0,
+  "kv_heads": 8,
+  "head_dim": 192,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": null,
+  "window_size": null,
+  "full_bytes_per_token_8bit": 215040,
+  "sliding_bytes_per_token_8bit": 0,
+  "linear_state_bytes": 0,
+  "hidden_size": 6144,
+  "experts_total": 384,
+  "experts_active": 8,
+  "experts_shared": 0,
+  "moe_intermediate": 2048,
+  "moe_layers": 69,
+  "accel_mtp": false,
+  "accel_dflash_repo": null,
+  "accel_dspark_repo": null,
+  "conventional_assumed": true,
+  "source": "config",
+  "config_sha": "b542649122cf1480",
+  "notes": [],
+  "kv_cache_gb_at_128k_8bit": 28.19
+ },
+ "quants": [
+  {
+   "repo": "ggml-org/MiMo-V2.6-Pro-RL-GGUF",
+   "url": "https://huggingface.co/ggml-org/MiMo-V2.6-Pro-RL-GGUF",
+   "format": "gguf",
+   "label": "Q2_K",
+   "bits": 3.27,
+   "size_gb": 418.77,
+   "size_bytes": 418769299904,
+   "quantizer": "ggml-org",
+   "file_count": 7,
+   "qat": false,
+   "first_seen": "2026-10-03"
+  },
+  {
+   "repo": "ggml-org/MiMo-V2.6-Pro-RL-GGUF",
+   "url": "https://huggingface.co/ggml-org/MiMo-V2.6-Pro-RL-GGUF",
+   "format": "gguf",
+   "label": "MXFP4",
+   "bits": 4.33,
+   "size_gb": 554.21,
+   "size_bytes": 554211764672,
+   "quantizer": "ggml-org",
+   "file_count": 7,
+   "qat": false,
+   "first_seen": "2026-10-03"
+  },
+  {
+   "repo": "XiaomiMiMo/MiMo-V2.6-Pro-RL",
+   "url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL",
+   "format": "safetensors",
+   "label": "FP8",
+   "bits": 4.44,
+   "size_gb": 567.92,
+   "size_bytes": 567920722280,
+   "quantizer": "official",
+   "file_count": 131,
+   "qat": false,
+   "first_seen": "2026-10-03"
+  }
+ ],
+ "reference": {
+  "q4": {
+   "repo": "ggml-org/MiMo-V2.6-Pro-RL-GGUF",
+   "label": "MXFP4"
+  },
+  "q8": {
+   "repo": "XiaomiMiMo/MiMo-V2.6-Pro-RL",
+   "label": "FP8"
+  },
+  "mlx4": null,
+  "native": {
+   "repo": "XiaomiMiMo/MiMo-V2.6-Pro-RL",
+   "label": "FP8"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": null,
+  "dspark": null
+ },
+ "timestamps": {
+  "first_seen": "2026-10-03T09:03:19.315999+00:00",
+  "last_checked": "2026-10-03T09:03:19.315999+00:00",
+  "last_changed": "2026-10-03T09:03:19.315999+00:00"
+ },
+ "generated_at": "2026-10-05T10:17:43+00:00",
+ "sha": "174f22c6aea0cd18"
+}

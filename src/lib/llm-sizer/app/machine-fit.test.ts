@@ -248,7 +248,7 @@ describe('linked pools in the machine view', () => {
   it('the picker gains a "Linked in your table" section and a pooled key resolves with its pool', () => {
     const sections = pickSections(groups, linkedState);
     const linked = sections.find((s) => s.label === 'Linked in your table')!;
-    expect(linked.rows.map((r) => r.key)).toEqual(['nvidia-dgx-spark:128:x2']);
+    expect(linked.rows.map((r) => r.key)).toEqual(['nvidia-dgx-spark:64:x2', 'nvidia-dgx-spark:128:x2']);
     expect(linked.rows[0].linked).toEqual({ count: 2, split: 'layer' });
     expect(pickSections(groups, base).some((s) => s.label === 'Linked in your table')).toBe(false);
     const resolved = resolvePick('nvidia-dgx-spark:128:x2', groups, linkedState, [])!;

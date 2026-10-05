@@ -1,0 +1,163 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "k2-horizon-mova-36b-a4b",
+ "name": "K2-Horizon-MoVA-36B-A4B",
+ "provider": "IFM",
+ "hf_repo": "IFM/K2-Horizon-MoVA-36B-A4B",
+ "url": "https://huggingface.co/IFM/K2-Horizon-MoVA-36B-A4B",
+ "variant": "instruct",
+ "released": "2026-09-01",
+ "params_total": 37444792020,
+ "params_active": 4000000000,
+ "params_active_source": "name",
+ "context_max": 524288,
+ "native_bits": 16.0,
+ "license": {
+  "name": "apache-2.0",
+  "url": null,
+  "commercial": true,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "k2_horizon",
+  "text-generation",
+  "k2-horizon",
+  "36b",
+  "mova",
+  "moe",
+  "open-weights",
+  "ifm",
+  "conversational",
+  "custom_code",
+  "en",
+  "dataset:IFM/K2-Horizon-Pretrain-Data",
+  "dataset:IFM/K2-Horizon-Midtrain-Data"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [
+  "architecture read from config, but the model family is unfamiliar — treat cache math as approximate"
+ ],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "k2_horizon",
+  "attention": "gqa",
+  "layers": 48,
+  "kv_layers": 48,
+  "sliding_layers": 0,
+  "linear_layers": 0,
+  "kv_heads": 8,
+  "head_dim": 128,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": null,
+  "window_size": null,
+  "full_bytes_per_token_8bit": 98304,
+  "sliding_bytes_per_token_8bit": 0,
+  "linear_state_bytes": 0,
+  "hidden_size": 2560,
+  "experts_total": 100,
+  "experts_active": 8,
+  "experts_shared": 1,
+  "moe_intermediate": 768,
+  "moe_layers": 48,
+  "accel_mtp": false,
+  "accel_dflash_repo": null,
+  "accel_dspark_repo": null,
+  "conventional_assumed": true,
+  "source": "config",
+  "config_sha": "97db49606587b441",
+  "notes": [],
+  "kv_cache_gb_at_128k_8bit": 12.88
+ },
+ "quants": [
+  {
+   "repo": "mlx-community/K2-Horizon-MoVA-36B-A4B-4bit",
+   "url": "https://huggingface.co/mlx-community/K2-Horizon-MoVA-36B-A4B-4bit",
+   "format": "mlx",
+   "label": "MLX-4bit",
+   "bits": 5.64,
+   "size_gb": 26.4,
+   "size_bytes": 26399514492,
+   "quantizer": "mlx-community",
+   "file_count": 5,
+   "qat": false,
+   "first_seen": "2026-09-29"
+  },
+  {
+   "repo": "mlx-community/K2-Horizon-MoVA-36B-A4B-8bit",
+   "url": "https://huggingface.co/mlx-community/K2-Horizon-MoVA-36B-A4B-8bit",
+   "format": "mlx",
+   "label": "MLX-8bit",
+   "bits": 8.5,
+   "size_gb": 39.8,
+   "size_bytes": 39803265096,
+   "quantizer": "mlx-community",
+   "file_count": 8,
+   "qat": false,
+   "first_seen": "2026-09-29"
+  },
+  {
+   "repo": "mlx-community/K2-Horizon-MoVA-36B-A4B-bf16",
+   "url": "https://huggingface.co/mlx-community/K2-Horizon-MoVA-36B-A4B-bf16",
+   "format": "mlx",
+   "label": "MLX-BF16",
+   "bits": 16.0,
+   "size_gb": 74.89,
+   "size_bytes": 74889679733,
+   "quantizer": "mlx-community",
+   "file_count": 15,
+   "qat": false,
+   "first_seen": "2026-09-29"
+  },
+  {
+   "repo": "IFM/K2-Horizon-MoVA-36B-A4B",
+   "url": "https://huggingface.co/IFM/K2-Horizon-MoVA-36B-A4B",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.0,
+   "size_gb": 74.89,
+   "size_bytes": 74891674376,
+   "quantizer": "official",
+   "file_count": 48,
+   "qat": false,
+   "first_seen": "2026-09-29"
+  }
+ ],
+ "reference": {
+  "q4": {
+   "repo": "mlx-community/K2-Horizon-MoVA-36B-A4B-4bit",
+   "label": "MLX-4bit"
+  },
+  "q8": {
+   "repo": "mlx-community/K2-Horizon-MoVA-36B-A4B-8bit",
+   "label": "MLX-8bit"
+  },
+  "mlx4": {
+   "repo": "mlx-community/K2-Horizon-MoVA-36B-A4B-4bit",
+   "label": "MLX-4bit"
+  },
+  "native": {
+   "repo": "IFM/K2-Horizon-MoVA-36B-A4B",
+   "label": "BF16"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": null,
+  "dspark": null
+ },
+ "timestamps": {
+  "first_seen": "2026-09-29T09:42:37.100237+00:00",
+  "last_checked": "2026-09-29T09:42:37.100237+00:00",
+  "last_changed": "2026-09-29T09:42:37.100237+00:00"
+ },
+ "generated_at": "2026-10-05T10:17:43+00:00",
+ "sha": "dd18ed22727415c3"
+}

@@ -1,0 +1,162 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "k2-horizon-0.9b",
+ "name": "K2-Horizon-0.9B",
+ "provider": "IFM",
+ "hf_repo": "IFM/K2-Horizon-0.9B",
+ "url": "https://huggingface.co/IFM/K2-Horizon-0.9B",
+ "variant": "instruct",
+ "released": "2026-09-01",
+ "params_total": 1078285824,
+ "params_active": 1078285824,
+ "params_active_source": "dense",
+ "context_max": 131072,
+ "native_bits": 32.0,
+ "license": {
+  "name": "apache-2.0",
+  "url": null,
+  "commercial": true,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "k2_horizon",
+  "text-generation",
+  "k2-horizon",
+  "0.9b",
+  "dense",
+  "reasoning",
+  "knowledge-distillation",
+  "ifm",
+  "conversational",
+  "custom_code",
+  "en",
+  "zh"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [
+  "architecture read from config, but the model family is unfamiliar — treat cache math as approximate"
+ ],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "k2_horizon",
+  "attention": "gqa",
+  "layers": 28,
+  "kv_layers": 28,
+  "sliding_layers": 0,
+  "linear_layers": 0,
+  "kv_heads": 8,
+  "head_dim": 64,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": null,
+  "window_size": null,
+  "full_bytes_per_token_8bit": 28672,
+  "sliding_bytes_per_token_8bit": 0,
+  "linear_state_bytes": 0,
+  "hidden_size": 1536,
+  "experts_total": null,
+  "experts_active": null,
+  "experts_shared": null,
+  "moe_intermediate": null,
+  "moe_layers": null,
+  "accel_mtp": false,
+  "accel_dflash_repo": null,
+  "accel_dspark_repo": null,
+  "conventional_assumed": true,
+  "source": "config",
+  "config_sha": "64f7a8a90e7fcf1d",
+  "notes": [],
+  "kv_cache_gb_at_128k_8bit": 3.76
+ },
+ "quants": [
+  {
+   "repo": "mlx-community/K2-Horizon-0.9B-4bit",
+   "url": "https://huggingface.co/mlx-community/K2-Horizon-0.9B-4bit",
+   "format": "mlx",
+   "label": "MLX-4bit",
+   "bits": 6.36,
+   "size_gb": 0.86,
+   "size_bytes": 856819751,
+   "quantizer": "mlx-community",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-01"
+  },
+  {
+   "repo": "mlx-community/K2-Horizon-0.9B-8bit",
+   "url": "https://huggingface.co/mlx-community/K2-Horizon-0.9B-8bit",
+   "format": "mlx",
+   "label": "MLX-8bit",
+   "bits": 8.5,
+   "size_gb": 1.15,
+   "size_bytes": 1145833554,
+   "quantizer": "mlx-community",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-01"
+  },
+  {
+   "repo": "mlx-community/K2-Horizon-0.9B-bf16",
+   "url": "https://huggingface.co/mlx-community/K2-Horizon-0.9B-bf16",
+   "format": "mlx",
+   "label": "MLX-BF16",
+   "bits": 16.0,
+   "size_gb": 2.16,
+   "size_bytes": 2156600856,
+   "quantizer": "mlx-community",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-01"
+  },
+  {
+   "repo": "IFM/K2-Horizon-0.9B",
+   "url": "https://huggingface.co/IFM/K2-Horizon-0.9B",
+   "format": "safetensors",
+   "label": "F32",
+   "bits": 16.0,
+   "size_gb": 2.16,
+   "size_bytes": 2156600968,
+   "quantizer": "official",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-01"
+  }
+ ],
+ "reference": {
+  "q4": {
+   "repo": "mlx-community/K2-Horizon-0.9B-4bit",
+   "label": "MLX-4bit"
+  },
+  "q8": {
+   "repo": "mlx-community/K2-Horizon-0.9B-8bit",
+   "label": "MLX-8bit"
+  },
+  "mlx4": {
+   "repo": "mlx-community/K2-Horizon-0.9B-4bit",
+   "label": "MLX-4bit"
+  },
+  "native": {
+   "repo": "IFM/K2-Horizon-0.9B",
+   "label": "F32"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": null,
+  "dspark": null
+ },
+ "timestamps": {
+  "first_seen": "2026-10-01T10:00:51.219327+00:00",
+  "last_checked": "2026-10-01T10:00:51.219327+00:00",
+  "last_changed": "2026-10-01T10:00:51.219327+00:00"
+ },
+ "generated_at": "2026-10-05T10:17:43+00:00",
+ "sha": "91285979006ed6ad"
+}

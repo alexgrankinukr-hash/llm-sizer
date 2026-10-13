@@ -82,10 +82,23 @@
    "repo": "ggml-org/MiMo-V2.6-Flash-MOPD-GGUF",
    "url": "https://huggingface.co/ggml-org/MiMo-V2.6-Flash-MOPD-GGUF",
    "format": "gguf",
+   "label": "Q2_K_S",
+   "bits": 2.73,
+   "size_gb": 105.86,
+   "size_bytes": 105864191584,
+   "quantizer": "ggml-org",
+   "file_count": 2,
+   "qat": false,
+   "first_seen": "2026-10-11"
+  },
+  {
+   "repo": "ggml-org/MiMo-V2.6-Flash-MOPD-GGUF",
+   "url": "https://huggingface.co/ggml-org/MiMo-V2.6-Flash-MOPD-GGUF",
+   "format": "gguf",
    "label": "Q2_K",
    "bits": 3.25,
-   "size_gb": 126.21,
-   "size_bytes": 126214594144,
+   "size_gb": 126.37,
+   "size_bytes": 126365949536,
    "quantizer": "ggml-org",
    "file_count": 2,
    "qat": false,
@@ -140,9 +153,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-30T09:34:11.699990+00:00",
-  "last_checked": "2026-10-01T10:00:54.238830+00:00",
+  "last_checked": "2026-10-11T09:53:52.153134+00:00",
   "last_changed": "2026-09-30T09:34:11.699990+00:00"
  },
- "generated_at": "2026-10-05T10:17:43+00:00",
- "sha": "ce542dbce1dc4e4d"
+ "generated_at": "2026-10-13T10:24:06+00:00",
+ "sha": "b94a19e10d526bf4"
 }

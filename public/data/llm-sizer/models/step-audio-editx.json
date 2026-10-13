@@ -1,0 +1,135 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "step-audio-editx",
+ "name": "Step-Audio-EditX",
+ "provider": "stepfun-ai",
+ "hf_repo": "stepfun-ai/Step-Audio-EditX",
+ "url": "https://huggingface.co/stepfun-ai/Step-Audio-EditX",
+ "variant": "instruct",
+ "released": "2025-10-29",
+ "params_total": 3529706496,
+ "params_active": 3529706496,
+ "params_active_source": "dense",
+ "context_max": null,
+ "native_bits": 16.0,
+ "license": {
+  "name": null,
+  "url": null,
+  "commercial": null,
+  "note": null
+ },
+ "tags": [
+  "onnx",
+  "safetensors",
+  "step1",
+  "custom_code"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [
+  "architecture read from config, but the model family is unfamiliar — treat cache math as approximate"
+ ],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "step1",
+  "attention": "gqa",
+  "layers": 32,
+  "kv_layers": 32,
+  "sliding_layers": 0,
+  "linear_layers": 0,
+  "kv_heads": 48,
+  "head_dim": 64,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": null,
+  "window_size": null,
+  "full_bytes_per_token_8bit": 196608,
+  "sliding_bytes_per_token_8bit": 0,
+  "linear_state_bytes": 0,
+  "hidden_size": 3072,
+  "experts_total": null,
+  "experts_active": null,
+  "experts_shared": null,
+  "moe_intermediate": null,
+  "moe_layers": null,
+  "accel_mtp": false,
+  "accel_dflash_repo": null,
+  "accel_dspark_repo": null,
+  "conventional_assumed": true,
+  "source": "config",
+  "config_sha": "d785f71454bc9819",
+  "notes": [
+   "num_key_value_heads missing; assumed multi-head (no GQA)"
+  ],
+  "kv_cache_gb_at_128k_8bit": 25.77
+ },
+ "quants": [
+  {
+   "repo": "mlx-community/Step-Audio-EditX-8bit",
+   "url": "https://huggingface.co/mlx-community/Step-Audio-EditX-8bit",
+   "format": "mlx",
+   "label": "MLX-8bit",
+   "bits": 10.61,
+   "size_gb": 4.68,
+   "size_bytes": 4681847788,
+   "quantizer": "mlx-community",
+   "file_count": 7,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "stepfun-ai/Step-Audio-EditX",
+   "url": "https://huggingface.co/stepfun-ai/Step-Audio-EditX",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.0,
+   "size_gb": 7.06,
+   "size_bytes": 7059446656,
+   "quantizer": "official",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "mlx-community/Step-Audio-EditX-bf16",
+   "url": "https://huggingface.co/mlx-community/Step-Audio-EditX-bf16",
+   "format": "mlx",
+   "label": "MLX-BF16",
+   "bits": 18.14,
+   "size_gb": 8.0,
+   "size_bytes": 8004591312,
+   "quantizer": "mlx-community",
+   "file_count": 8,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  }
+ ],
+ "reference": {
+  "q4": null,
+  "q8": {
+   "repo": "mlx-community/Step-Audio-EditX-8bit",
+   "label": "MLX-8bit"
+  },
+  "mlx4": null,
+  "native": {
+   "repo": "stepfun-ai/Step-Audio-EditX",
+   "label": "BF16"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": null,
+  "dspark": null
+ },
+ "timestamps": {
+  "first_seen": "2026-10-08T10:22:10.449049+00:00",
+  "last_checked": "2026-10-08T10:22:10.449049+00:00",
+  "last_changed": "2026-10-08T10:22:10.449049+00:00"
+ },
+ "generated_at": "2026-10-13T10:24:06+00:00",
+ "sha": "5e26b3fdf449a018"
+}

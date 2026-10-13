@@ -77,6 +77,227 @@
  },
  "quants": [
   {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "IQ2_M",
+   "bits": 3.12,
+   "size_gb": 0.42,
+   "size_bytes": 420520032,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "Q2_K",
+   "bits": 3.2,
+   "size_gb": 0.43,
+   "size_bytes": 431265888,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "IQ3_XXS",
+   "bits": 3.68,
+   "size_gb": 0.5,
+   "size_bytes": 496260192,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "Q3_K_S",
+   "bits": 3.74,
+   "size_gb": 0.5,
+   "size_bytes": 503762016,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "IQ3_XS",
+   "bits": 3.76,
+   "size_gb": 0.51,
+   "size_bytes": 506422368,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "Q3_K_M",
+   "bits": 4.01,
+   "size_gb": 0.54,
+   "size_bytes": 540116064,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "Q3_K_L",
+   "bits": 4.2,
+   "size_gb": 0.57,
+   "size_bytes": 565705824,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "IQ3_M",
+   "bits": 4.42,
+   "size_gb": 0.6,
+   "size_bytes": 595424352,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "IQ4_XS",
+   "bits": 4.62,
+   "size_gb": 0.62,
+   "size_bytes": 622903392,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "Q4_0",
+   "bits": 4.81,
+   "size_gb": 0.65,
+   "size_bytes": 647798880,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_S",
+   "bits": 4.85,
+   "size_gb": 0.65,
+   "size_bytes": 653113440,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "IQ4_NL",
+   "bits": 5.11,
+   "size_gb": 0.69,
+   "size_bytes": 688552032,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_M",
+   "bits": 5.12,
+   "size_gb": 0.69,
+   "size_bytes": 689934432,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "Q4_1",
+   "bits": 5.23,
+   "size_gb": 0.7,
+   "size_bytes": 704790624,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_L",
+   "bits": 5.5,
+   "size_gb": 0.74,
+   "size_bytes": 741132384,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "Q5_K_S",
+   "bits": 5.77,
+   "size_gb": 0.78,
+   "size_bytes": 777744480,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "Q5_K_M",
+   "bits": 6.14,
+   "size_gb": 0.83,
+   "size_bytes": 827566176,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
    "repo": "mlx-community/K2-Horizon-0.9B-4bit",
    "url": "https://huggingface.co/mlx-community/K2-Horizon-0.9B-4bit",
    "format": "mlx",
@@ -90,6 +311,45 @@
    "first_seen": "2026-10-01"
   },
   {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "Q6_K_S",
+   "bits": 6.71,
+   "size_gb": 0.9,
+   "size_bytes": 904258656,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "Q6_K",
+   "bits": 6.98,
+   "size_gb": 0.94,
+   "size_bytes": 940446816,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "Q6_K_L",
+   "bits": 7.27,
+   "size_gb": 0.98,
+   "size_bytes": 980063328,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
+  },
+  {
    "repo": "mlx-community/K2-Horizon-0.9B-8bit",
    "url": "https://huggingface.co/mlx-community/K2-Horizon-0.9B-8bit",
    "format": "mlx",
@@ -101,6 +361,19 @@
    "file_count": 1,
    "qat": false,
    "first_seen": "2026-10-01"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 8.52,
+   "size_gb": 1.15,
+   "size_bytes": 1148623968,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
   },
   {
    "repo": "mlx-community/K2-Horizon-0.9B-bf16",
@@ -127,16 +400,29 @@
    "file_count": 1,
    "qat": false,
    "first_seen": "2026-10-01"
+  },
+  {
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "url": "https://huggingface.co/bartowski/K2-Horizon-0.9B-GGUF",
+   "format": "gguf",
+   "label": "BF16",
+   "bits": 16.02,
+   "size_gb": 2.16,
+   "size_bytes": 2159434560,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-08"
   }
  ],
  "reference": {
   "q4": {
-   "repo": "mlx-community/K2-Horizon-0.9B-4bit",
-   "label": "MLX-4bit"
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "label": "Q4_K_M"
   },
   "q8": {
-   "repo": "mlx-community/K2-Horizon-0.9B-8bit",
-   "label": "MLX-8bit"
+   "repo": "bartowski/K2-Horizon-0.9B-GGUF",
+   "label": "Q8_0"
   },
   "mlx4": {
    "repo": "mlx-community/K2-Horizon-0.9B-4bit",
@@ -154,9 +440,9 @@
  },
  "timestamps": {
   "first_seen": "2026-10-01T10:00:51.219327+00:00",
-  "last_checked": "2026-10-01T10:00:51.219327+00:00",
+  "last_checked": "2026-10-08T10:21:57.610025+00:00",
   "last_changed": "2026-10-01T10:00:51.219327+00:00"
  },
- "generated_at": "2026-10-05T10:17:43+00:00",
- "sha": "91285979006ed6ad"
+ "generated_at": "2026-10-13T10:24:06+00:00",
+ "sha": "c46513922f5b01c4"
 }

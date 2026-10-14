@@ -6,7 +6,7 @@
 import React from 'react';
 import type { AppState } from '../../../lib/llm-sizer/app/state';
 import { cellKey, type Matrix } from '../../../lib/llm-sizer/app/matrix';
-import type { Marker, TableLayout } from '../../../lib/llm-sizer/app/layout';
+import { DEFAULT_LIMIT_LABEL, type Marker, type TableLayout } from '../../../lib/llm-sizer/app/layout';
 import { buyingMap, evaluateBuilds, type BuyingMap, type BuyingMark } from '../../../lib/llm-sizer/app/buying';
 import type { MachineGroup } from '../../../lib/llm-sizer/app/machines';
 import { formatContext, formatPrice, formatTokS } from '../../../lib/llm-sizer/engine/format';
@@ -59,7 +59,7 @@ export function buyingImageMap(state: AppState, matrix: Matrix, groups: MachineG
   const atlas = evaluateBuilds(column.model, column, groups, state, factors, machinesAsOf);
   const build = view.kind === 'model' ? view.build : 'column';
   const minTokS = view.kind === 'model' ? view.minTokS : 0;
-  const limitPct = state.cap !== null ? `${Math.round(state.cap * 100)} % (override)` : '67 % / 75 %';
+  const limitPct = state.cap !== null ? `${Math.round(state.cap * 100)} % (override)` : DEFAULT_LIMIT_LABEL;
   const toggles = { work: state.work > 0 ? `apps open (${state.work} GB reserved)` : 'nothing else running', limit: `macOS memory limit ${limitPct}` };
   return buyingMap(atlas, build, { minTokS, budgetUsd: state.budgetUsd, formFactor: state.formFactor }, toggles);
 }

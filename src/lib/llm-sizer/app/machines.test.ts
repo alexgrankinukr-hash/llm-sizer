@@ -80,6 +80,13 @@ describe('slim island props', () => {
       const noExamples = (x: unknown) => JSON.parse(JSON.stringify(x, (k, v) => (k === 'examples' ? undefined : v)));
       expect(noExamples(b)).toEqual(noExamples(a));
     }
+    // reading speed keeps its runtime-specific terms through the slimming: the MLX factor groups, MLX's D0, a model's own D0
+    const studio = (list: typeof full) => list.find((m) => m.id === 'mac-studio-m5-max-40c')!;
+    const qwen = loadModel('qwen3.8-27b');
+    const mlx = { ...settings, memoryGb: 128, runtime: 'mlx' as const, quant: qwen.quants.find((q) => q.format === 'mlx') };
+    expect(evaluateCell(qwen, studio(slim), mlx, lean).prefill).toEqual(evaluateCell(qwen, studio(full), mlx, factors).prefill);
+    const fn = loadModel('qwen3.8-flash-next');
+    expect(evaluateCell(fn, studio(slim), { ...settings, memoryGb: 128 }, lean).prefill?.d0).toBe(evaluateCell(fn, studio(full), { ...settings, memoryGb: 128 }, factors).prefill?.d0);
   });
 });
 

@@ -161,21 +161,35 @@ def prefill_constant(pf: dict, chip: str, gpu_cores: int | None, platform: str =
     return None, "none", None
 
 
+def prefill_mlx_group(chip: str) -> str:
+    """m1_m2 | m3_m4 | m5plus (prefill.ts:prefillMlxGroupOf); a chip whose generation cannot be read takes m1_m2, the slowest."""
+    g = generation_number(chip)
+    if g is None:
+        return "m1_m2"
+    return "m5plus" if g >= 5 else ("m3_m4" if g >= 3 else "m1_m2")
+
+
 def prefill_tok_s(pf: dict, k: float, quant_label: str, fmt: str, cls: str, runtime: str, active_b: float) -> float:
     """Short-prompt prefill tokens/s for one build on one chip."""
     kq = pf["kquant"]["factor"] if (runtime != "mlx" and fmt != "mlx" and quant_label.upper() not in PLAIN_QUANTS) else 1.0
     class_factor = pf["class"].get(cls, pf["class"]["dense"])["factor"]
     mlx = 1.0
     if runtime == "mlx":
-        mlx = pf["mlx"]["m5plus"]["factor"] if pf.get("_mlx_group") == "m5plus" else pf["mlx"]["pre_m5"]["factor"]
+        mlx = pf["mlx"][pf.get("_mlx_group") or "m1_m2"]["factor"]
     return k * kq * class_factor * mlx / active_b
 
 
-def prefill_d0(pf: dict, kv_layers: int | None, layers: int | None) -> float:
-    """The context depth at which the rate has halved: the sweep's value, scaled by the model's share of attention layers."""
+def prefill_d0(pf: dict, kv_layers: int | None, layers: int | None, runtime: str = "gguf", model_id: str | None = None) -> float:
+    """The context depth at which the rate has halved (prefill.ts:prefillD0): the runtime's fitted value scaled by the
+    model's share of attention layers, or the model's own where it has a published sweep on that runtime."""
     ctx = pf["context"]
+    rt = "mlx" if runtime == "mlx" else "gguf"
+    own = (ctx.get("by_model") or {}).get(model_id or "", {}).get(rt)
+    if own:
+        return float(own["d0_tokens"])
+    base = ctx["mlx"]["d0_tokens"] if rt == "mlx" and ctx.get("mlx") else ctx["d0_tokens"]
     share = max(0.05, (kv_layers / layers) if (kv_layers and layers) else ctx["attention_share_ref"])
-    return ctx["d0_tokens"] * ctx["attention_share_ref"] / share
+    return base * ctx["attention_share_ref"] / share
 
 
 def prefill_rate_at(tok_s: float, d0: float, depth: int) -> float:

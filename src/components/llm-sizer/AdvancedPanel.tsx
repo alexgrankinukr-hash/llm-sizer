@@ -4,6 +4,7 @@ import type { Dispatch } from 'react';
 import type { Factors, KvBits, Platform } from '../../lib/llm-sizer/engine/types';
 import { customMachine, customModelFull, customModelQuick } from '../../lib/llm-sizer/engine/custom';
 import { resolveChipProfile } from '../../lib/llm-sizer/engine/speed';
+import { DEFAULT_LIMIT_LABEL } from '../../lib/llm-sizer/app/layout';
 import type { MachineGroup } from '../../lib/llm-sizer/app/machines';
 import { stateGroups, type Matrix } from '../../lib/llm-sizer/app/matrix';
 import { aboutHref } from '../../lib/llm-sizer/app/provenance';
@@ -157,7 +158,7 @@ export function AdvancedPanel(props: AdvancedPanelProps) {
           <span className="text-[11px] text-[var(--color-light)]">8 light · 16 typical · 24 heavy (a browser with many tabs alone is 5–7 GB)</span>
         </label>
         <label className="block text-sm">
-          <span className="flex justify-between"><span>GPU memory limit (Macs)</span><span className="text-[var(--color-muted)]">{capPct === null ? 'macOS default (67 % / 75 %)' : `${capPct} %${capPct === 100 ? ' · override' : ''}`}</span></span>
+          <span className="flex justify-between"><span>GPU memory limit (Macs)</span><span className="text-[var(--color-muted)]">{capPct === null ? `macOS default (${DEFAULT_LIMIT_LABEL})` : `${capPct} %${capPct === 100 ? ' · override' : ''}`}</span></span>
           <input type="range" className="lls-range" min={50} max={100} step={1} value={capPct ?? 75} onChange={(e) => dispatch({ type: 'SET_CAP', cap: Number(e.target.value) / 100 })} />
           <span className="flex gap-2 mt-1">
             <button type="button" className="lls-chip" aria-pressed={capPct === null} onClick={() => dispatch({ type: 'SET_CAP', cap: null })}>macOS default</button>

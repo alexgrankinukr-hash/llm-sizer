@@ -77,14 +77,14 @@ describe('pooled memory (METHODOLOGY §4, §5)', () => {
 
   it('two 128 GB M5 Max Studios: the GPU limit is judged per machine, and the override lifts each', () => {
     const two = availableMemory(studio, s(128, { machines: 2 }));
-    expect(two.availableGb).toBeCloseTo(202.16, 2);
+    expect(two.availableGb).toBeCloseTo(226.9, 2);
     expect(two.binding).toBe('cap');
     const lifted = availableMemory(studio, s(128, { machines: 2, override: 1 }));
     expect(lifted.availableGb).toBeCloseTo(255.76, 2);
-    // 2 × 24 GB stays at two thirds each: the threshold compares the machine, not the pool
+    // 2 × 24 GB stays at 74 % each: the tier is judged on the machine, not the pool (48 GB would be 78 %)
     const minis = availableMemory(machineById('mac-mini-m5-pro'), s(24, { machines: 2 }));
-    expect(minis.capPct).toBeCloseTo(2 / 3, 9);
-    expect(minis.availableGb).toBeCloseTo(2 * 24 * 1.073741824 * (2 / 3) - 4, 2);
+    expect(minis.capPct).toBe(0.74);
+    expect(minis.availableGb).toBeCloseTo(2 * 24 * 1.073741824 * 0.74 - 4, 2);
   });
 
   it('a single machine is byte-identical to before', () => {
@@ -156,16 +156,21 @@ describe('worked example H: linked machines end to end', () => {
     expect(tensor.speed.notes.some((n) => /tensor parallel/.test(n))).toBe(true);
   });
 
-  it('H2: two 128 GB M5 Max Studios need the override on a layer split; the fix carries the pool', () => {
+  it('H2: two 128 GB M5 Max Studios fit tight on a layer split at the default limit; the override on both makes it run', () => {
     const cell = evaluateCell(glm, studio, s(128, { machines: 2 }), factors);
-    expect(cell.verdict).toBe('compromise');
-    expect(cell.fix?.changes.map((c) => c.kind)).toEqual(['override']);
-    expect(cell.fix?.availability.machines).toBe(2);
-    expect(cell.fix?.availability.availableGb).toBeCloseTo(255.76, 2);
-    expect(cell.fix?.need.ratio).toBeGreaterThan(0.8);
-    expect(cell.fix?.need.ratio).toBeLessThan(0.9);
+    expect(cell.verdict).toBe('tight');
+    expect(cell.fix).toBeNull();
+    expect(cell.availability.machines).toBe(2);
+    expect(cell.availability.availableGb).toBeCloseTo(226.9, 2);
+    expect(cell.need.ratio).toBeGreaterThan(0.9);
+    expect(cell.need.ratio).toBeLessThan(1);
     expect(cell.speed.cluster?.link).toBe('mac');
     expect(cell.breakdown.machines).toBe(2);
+    const lifted = evaluateCell(glm, studio, s(128, { machines: 2, override: 1 }), factors);
+    expect(lifted.verdict).toBe('runs');
+    expect(lifted.availability.availableGb).toBeCloseTo(255.76, 2);
+    expect(lifted.need.ratio).toBeGreaterThan(0.8);
+    expect(lifted.need.ratio).toBeLessThan(0.9);
   });
 
   it('H3: the everyday model on two 24 GB minis runs, slower than one 48 GB mini writes it', () => {

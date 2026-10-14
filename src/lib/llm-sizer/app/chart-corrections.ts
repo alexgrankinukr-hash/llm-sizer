@@ -59,25 +59,25 @@ export interface ChartCorrection {
 }
 
 export const CHART_CORRECTIONS: ChartCorrection[] = [
-  // v2 chart (Q4 + 128K, empty machine). Memory sizes are binary (32 GB = 34.4 GB), the cache is FP16, the macOS limit ⅔ under 36 GB and ¾ from 36 GB,
+  // v2 chart (Q4 + 128K, empty machine). Memory sizes are binary (32 GB = 34.4 GB), the cache is FP16, the macOS 26 GPU limit (74 % at 24 GB, 78 % at 32 and 48 GB, 81 % at 64 and 96 GB, 84 % at 128 GB, 87 % at 256 GB, all but 48 GB at 512 GB),
   // buffers are 1.5 GB + 1 % of the weights, and with the override macOS keeps the larger of 6 GB and 5.5 % of the memory.
   { chart: 'v2-128k', model: 'qwen3.8-27b', gb: 16, aired: 'D', tool: 'ring', reason: 'the chart drew "does not fit at Q4" as a dash; the tool shows the cheapest compromise (a 2-bit build at 32K, tight) as a ring' },
-  { chart: 'v2-128k', model: 'qwen3.8-27b', gb: 24, aired: 'D', tool: 'ring', reason: 'Q4 fits at 8K with the override (19.1 of 19.8 GB, tight); the chart only considered 128K, where nothing fits' },
-  { chart: 'v2-128k', model: 'qwen3.8-27b', gb: 32, aired: 'S', tool: 'ring', reason: 'Q4 + 128K with an FP16 cache needs 27.1 GB against 22.9 GB at the two-thirds macOS limit; fits with the override (28.4 GB), tight' },
-  { chart: 'v2-128k', model: 'qwen3.8-flash-next', gb: 96, aired: 'S', tool: 'ring', reason: 'the Q4 file is 119 GB (the n-gram table is part of it), not the ≈ 85 GB the chart assumed; a 3-bit build (90 GB) fits with the override (97 GB), tight' },
-  { chart: 'v2-128k', model: 'qwen3.8-flash-next', gb: 128, aired: 'S', tool: 'ring', reason: 'the Q4 file is 119 GB against 103 GB at the three-quarters limit; fits with the override (130 GB), tight' },
+  { chart: 'v2-128k', model: 'qwen3.8-27b', gb: 24, aired: 'D', tool: 'ring', reason: 'a 2-bit build (UD-IQ2_S, 8.4 GB) fits at 128K (18.6 of 19.1 GB), tight; the chart only considered Q4, where nothing fits' },
+  { chart: 'v2-128k', model: 'qwen3.8-27b', gb: 32, aired: 'S', tool: 'ring', reason: 'Q4 + 128K with an FP16 cache needs 27.1 GB against 26.8 GB at the macOS 26 limit (78 %); fits with the override (28.4 GB), tight' },
+  { chart: 'v2-128k', model: 'qwen3.8-flash-next', gb: 96, aired: 'S', tool: 'ring', reason: 'the Q4 file is 119 GB (the n-gram table is part of it), not the ≈ 85 GB the chart assumed; a 2-bit build (IQ2_S, 77.8 GB) fits at the default limit (83.4 of 83.5 GB), tight' },
+  { chart: 'v2-128k', model: 'qwen3.8-flash-next', gb: 128, aired: 'S', tool: 'ring', reason: 'the Q4 file is 119 GB against 115.4 GB at the macOS 26 limit (84 %); fits with the override (130 GB), tight' },
   { chart: 'v2-128k', model: 'deepseek-v4-flash-0731', gb: 96, aired: 'D', tool: 'ring', reason: 'with the override (97 GB) a 2-bit build (90.9 GB) fits at 32K, tight; the chart stopped at Q4 and 128K' },
-  { chart: 'v2-128k', model: 'glm-5.3-flash', gb: 256, aired: 'S', tool: 'ring', reason: 'Q4 needs 204.8 GB (weights 199.7 + FP16 cache 1.5 + 3.5 GB buffers) against 206.2 GB at the three-quarters limit: it fits with under 1 % to spare, tight, which renders as a ring' },
-  { chart: 'v2-128k', model: 'glm-5.2', gb: 512, aired: 'S', tool: 'ring', reason: '485 GB against 412 GB at the three-quarters limit: needs the override, then fits at 93 % of 519.5 GB (tight renders as a ring)' },
+  { chart: 'v2-128k', model: 'glm-5.2', gb: 512, aired: 'S', tool: 'ring', reason: '485 GB against 498.2 GB at the macOS 26 limit (all but 48 GB): fits at 97 %, tight, which renders as a ring' },
   // realistic chart (16 GB reserved for apps)
   { chart: 'realistic', model: 'qwen3.8-27b', gb: 16, aired: 'D', tool: 'ring', reason: 'the chart treated your apps as fixed; the tool lists closing them plus a 2-bit build at 32K as the compromise' },
-  { chart: 'realistic', model: 'qwen3.8-27b', gb: 24, aired: 'D', tool: 'ring', reason: 'the chart treated your apps as fixed; the tool lists closing them, the override and an 8K context as the compromise' },
+  { chart: 'realistic', model: 'qwen3.8-27b', gb: 24, aired: 'D', tool: 'ring', reason: 'the chart treated your apps as fixed; the tool lists closing them plus a 2-bit build (UD-IQ2_S) as the compromise' },
   { chart: 'realistic', model: 'qwen3.8-27b', gb: 48, aired: 'S', tool: 'ring', reason: 'Q4 at 128K needs 27.1 GB (16.8 weights + 8.7 FP16 cache + 1.7 buffers) against 29.5 GB with your apps open: fits at 92 %, tight, which renders as a ring' },
-  { chart: 'realistic', model: 'qwen3.8-flash-next', gb: 64, aired: 'D', tool: 'ring', reason: 'the hand-maintained SSD-paged build (45.8 GB resident, 51.0 GB with cache and buffers) fits after closing your apps (51.5 GB at the three-quarters limit), tight; the chart knew only the regular files' },
-  { chart: 'realistic', model: 'qwen3.8-flash-next', gb: 96, aired: 'D', tool: 'ring', reason: 'closing your apps, the override and a 3-bit build (90 GB) fit, tight; the chart stopped at Q4' },
+  { chart: 'realistic', model: 'qwen3.8-flash-next', gb: 64, aired: 'D', tool: 'ring', reason: 'the hand-maintained SSD-paged build (45.8 GB resident, 51.0 GB with cache and buffers) fits after closing your apps (55.7 GB at the macOS 26 limit), tight at 92 %; the chart knew only the regular files' },
+  { chart: 'realistic', model: 'qwen3.8-flash-next', gb: 96, aired: 'D', tool: 'ring', reason: 'a 2-bit build (IQ2_XXS, 75.2 GB) fits with your apps open (80.7 of 81.1 GB), tight; the chart stopped at Q4' },
   { chart: 'realistic', model: 'deepseek-v4-flash-0731', gb: 96, aired: 'D', tool: 'ring', reason: 'closing your apps, the override, 32K and a 2-bit build (90.9 GB) fit, tight; the chart stopped at Q4 and 128K' },
-  { chart: 'realistic', model: 'deepseek-v4-flash-0731', gb: 128, aired: 'D', tool: 'ring', reason: 'a 2-bit build (90.9 GB) fits at 128K with your apps open (99.8 of 103.1 GB), tight; the chart stopped at Q4' },
-  { chart: 'realistic', model: 'glm-5.3-flash', gb: 128, aired: 'D', tool: 'ring', reason: 'closing your apps, the override and a 3-bit build (120 GB) fit, tight; the chart stopped at Q4' },
+  { chart: 'realistic', model: 'deepseek-v4-flash-0731', gb: 128, aired: 'D', tool: 'ring', reason: 'a 3-bit build (UD-IQ3_XXS, 104.2 GB) fits at 128K with your apps open (113.2 of 115.4 GB), tight; the chart stopped at Q4' },
+  { chart: 'realistic', model: 'glm-5.3-flash', gb: 128, aired: 'D', tool: 'ring', reason: 'a 2-bit build (UD-Q2_K_XL, 108.7 GB) fits with your apps open (112.9 of 115.4 GB), tight; the chart stopped at Q4' },
+  { chart: 'realistic', model: 'glm-5.3-flash', gb: 256, aired: 'R', tool: 'run', reason: 'Q4 at 128K needs 204.8 GB against 239.1 GB at the macOS 26 limit (87 %), which your open apps do not lower on a machine this size: runs at 86 %; the chart used three quarters (206.2 GB) and drew a ring' },
   { chart: 'realistic', model: 'glm-5.2', gb: 256, aired: 'D', tool: 'ring', reason: 'closing your apps, the override and a 2-bit build (238.6 GB) fit (254 of 260 GB), tight; the chart stopped at Q4' },
 ];
 

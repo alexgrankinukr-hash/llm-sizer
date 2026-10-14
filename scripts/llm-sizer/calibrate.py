@@ -23,7 +23,7 @@ import sys
 from collections import defaultdict
 
 from common import PUBLIC_DATA_DIR, log
-from fit_speed import assumed_profiles, fit_floor_profiles, fit_speed_model, fitted, render_report, spec_bandwidth, tier_profiles
+from fit_speed import assumed_profiles, fit_floor_profiles, fit_speed_model, fitted, ols, render_report, spec_bandwidth, tier_profiles
 
 TIERS = ["base", "pro", "max", "ultra", "spark"]
 
@@ -48,6 +48,56 @@ RUNTIME_FACTORS = {
 }
 # Below this active-parameter count a draft model adds little (the target is already fast).
 SMALL_ACTIVE_B = 6.0
+
+# Reading speed (METHODOLOGY §6.4). MLX rows below MLX_MIN_PROMPT, and ladder points below LADDER_MIN_PROMPT, carry the
+# per-request start-up cost and the ramp to a full GPU, so they set neither the MLX factor nor D0. SHARE_REF is the share
+# of attention layers D0 is quoted at (Qwen 3.8 27B and Flash Next both have attention in a quarter of their layers).
+MLX_MIN_PROMPT = 4096
+LADDER_MIN_PROMPT = 4096
+LADDER_MIN_SPAN = 8
+SHARE_REF = 0.25
+PROVISIONAL_D0 = 20000
+
+
+def mlx_group_of_chip(chip: str) -> str:
+    """The MLX prefill group (speed_model.py:prefill_mlx_group): the M1 and M2 GPUs, the M3 and M4 GPUs (where MLX reads about 1.6 times
+    as fast against llama.cpp's constant as on the M1 and M2), and the M5 generation and newer (neural accelerators)."""
+    m = re.match(r"^M(\d+)", chip.strip(), re.I)
+    if not m:
+        return "m1_m2"
+    g = int(m.group(1))
+    return "m5plus" if g >= 5 else ("m3_m4" if g >= 3 else "m1_m2")
+
+
+def ladder_sources(lad: dict) -> set[str]:
+    return {u for u in [lad.get("source")] + [p.get("source") for p in lad["points"]] if u}
+
+
+def fit_ladder(lad: dict) -> dict:
+    """One measured ladder of first-word waits: 1 ÷ average rate over an n-token prompt = 1 ÷ r0 + n ÷ (2 × D0 × r0),
+    least squares on the points at or above LADDER_MIN_PROMPT. A point carries tok_s (n ÷ the wait, as oMLX publishes it)
+    or wait_s. D0 is returned as measured (d0) and normalised to SHARE_REF (d0_ref). Only a ladder whose prompts span
+    LADDER_MIN_SPAN times or more, and that slows down, fits D0 and its own r0; the others get r0 from the runtime's D0
+    once it is known (calibrate.main)."""
+    pts = []
+    for p in lad["points"]:
+        n = p["prompt_tokens"]
+        if n < LADDER_MIN_PROMPT:
+            continue
+        pts.append((float(n), p["wait_s"] / n if "wait_s" in p else 1.0 / p["tok_s"]))
+    out = {"chip": lad["chip"], "gpu_cores": lad.get("gpu_cores"), "memory_gb": lad.get("memory_gb"), "model": lad["model"], "model_id": lad.get("model_id"),
+           "quant": lad["quant"], "runtime": lad["runtime"], "app": lad.get("app"), "arch_class": lad.get("arch_class", "dense"),
+           "params_active_b": lad["params_active_b"], "attention_layers": lad.get("attention_layers"), "layers": lad.get("layers"),
+           "n_points": len(pts), "rates": [[int(n), round(1.0 / y, 1)] for n, y in pts], "r0": None, "r0_from": None, "d0": None, "d0_ref": None,
+           "max_fit_err_pct": None, "report_only": bool(lad.get("report_only")), "source": lad.get("source") or "per point"}
+    if len(pts) >= 2 and max(n for n, _ in pts) >= LADDER_MIN_SPAN * min(n for n, _ in pts):
+        a, b = ols(pts)
+        if a > 0 and b > 0:
+            d0 = a / (2 * b)
+            share = lad["attention_layers"] / lad["layers"]
+            out.update({"r0": round(1.0 / a, 1), "r0_from": "its own fit", "d0": round(d0), "d0_ref": round(d0 * share / SHARE_REF),
+                        "max_fit_err_pct": round(100 * max(abs((a + b * n) / y - 1) for n, y in pts), 1)})
+    return out
 
 
 def tier_of(chip: str) -> str:
@@ -196,29 +246,59 @@ def main() -> int:
         if gen in per_core and cores:
             return per_core[gen]["value"] * cores
         return by_chip[chip]["value"] if chip in by_chip else None
+    # The context already read: measured ladders of the wait (or the average rate) for prompts of several lengths, read
+    # from an empty context. Each ladder fits 1 ÷ average rate = 1 ÷ r0 + n ÷ (2 × D0 × r0) on its points at or above
+    # LADDER_MIN_PROMPT (shorter prompts carry the per-request start-up cost): r0 is the ladder's short-prompt rate, D0 the
+    # depth at which the rate has halved, normalised to the reference share of attention layers. D0 is fitted per runtime
+    # (llama.cpp and MLX slow down very differently); a model with a published sweep of its own keeps its own value there.
+    share_ref = SHARE_REF
+    ladder_fits = [fit_ladder(lad) for lad in bench.get("prefill_ladders", [])]
+    d0_by_runtime: dict[str, list[float]] = defaultdict(list)
+    for lf in ladder_fits:
+        if lf["d0_ref"] is not None and not lf["report_only"] and lf["arch_class"] == "dense":
+            d0_by_runtime[lf["runtime"]].append(lf["d0_ref"])
+    d0_gguf = med(d0_by_runtime["llama.cpp-gguf"]) if d0_by_runtime["llama.cpp-gguf"] else PROVISIONAL_D0
+    d0_mlx = med(d0_by_runtime["mlx"]) if d0_by_runtime["mlx"] else d0_gguf
+
+    def d0_for(runtime: str, attention_layers: int | None, layers: int | None) -> float:
+        base = d0_mlx if runtime == "mlx" else d0_gguf
+        share = max(0.05, attention_layers / layers) if (attention_layers and layers) else share_ref
+        return base * share_ref / share
+
     # K-quant GGUF files against the plain-file constant of the same chip and cores (community dense rows)
     kq: list[float] = []
     cls_ratios: dict[str, list[float]] = defaultdict(list)
     cls_examples: dict[str, list[str]] = defaultdict(list)
     mlx_ratios: dict[str, list[float]] = defaultdict(list)
     mlx_examples: dict[str, list[str]] = defaultdict(list)
-    # dense reference per (chip, cores, runtime) among the community rows themselves, for the class ratios
+    mlx_excluded: list[str] = []
+    # dense reference per (chip, cores, runtime) among the community 512-token rows themselves, for the class ratios
+    # (like for like: rows measured at a longer prompt never enter a class ratio)
     dense_ref: dict[tuple, list[float]] = defaultdict(list)
     for r in pp_rows:
-        if r.get("role") == "prefill" and r.get("arch_class", "dense") == "dense":
+        if r.get("role") == "prefill" and r.get("arch_class", "dense") == "dense" and not r.get("prompt_tokens"):
             dense_ref[(r["chip"], r.get("gpu_cores"), r["runtime"])].append(k_of(r))
     for r in pp_rows:
-        if r.get("role") != "prefill":
+        if r.get("role") != "prefill" or r.get("report_only"):
             continue
         ref_plain = dense_gguf_reference(r["chip"], r.get("gpu_cores"))
         cls = r.get("arch_class", "dense")
-        if r["runtime"] == "llama.cpp-gguf" and cls == "dense" and ref_plain:
+        if r["runtime"] == "llama.cpp-gguf" and cls == "dense" and ref_plain and not r.get("prompt_tokens"):
             kq.append(k_of(r) / ref_plain)
         if r["runtime"] == "mlx" and cls == "dense" and ref_plain:
-            group = "m5plus" if (generation_of(r["chip"]) or "M0") >= "M5" else "pre_m5"
-            mlx_ratios[group].append(k_of(r) / ref_plain)
-            mlx_examples[group].append(f"{r['model']} on {r['chip']} {r.get('gpu_cores')}-core: {r['pp']} tok/s ({k_of(r) / ref_plain:.2f} of the plain-GGUF constant)")
-        if cls != "dense":
+            # MLX is judged at a real prompt: below MLX_MIN_PROMPT the per-request start-up cost and the ramp to a full
+            # GPU weigh on a short prompt (oMLX's 1K runs read at 0.81 to 0.99 of its 4K ones), so a 512-token MLX row does not set the factor.
+            # The rate measured over an n-token prompt is lifted to its short-prompt equivalent with the MLX D0.
+            prompt = r.get("prompt_tokens") or 512
+            if prompt < MLX_MIN_PROMPT:
+                mlx_excluded.append(f"{r['model']} on {r['chip']} {r.get('gpu_cores')}-core: {r['pp']} tok/s at a {prompt}-token prompt")
+            else:
+                r0 = r["pp"] * (1 + prompt / (2 * d0_for("mlx", r.get("attention_layers"), r.get("layers"))))
+                group = mlx_group_of_chip(r["chip"])
+                ratio = r0 * r["params_active_b"] / ref_plain
+                mlx_ratios[group].append(ratio)
+                mlx_examples[group].append(f"{r['model']} on {r['chip']} {r.get('gpu_cores')}-core ({r.get('app', 'MLX')}): {r['pp']} tok/s over a {prompt}-token prompt ({ratio:.2f} of the plain-GGUF constant)")
+        if cls != "dense" and not r.get("prompt_tokens"):
             ref = dense_ref.get((r["chip"], r.get("gpu_cores"), r["runtime"]))
             if ref:
                 cls_ratios[cls].append(k_of(r) / med(ref))
@@ -232,47 +312,98 @@ def main() -> int:
     classes = {"dense": {"factor": 1.0, "note": "by definition"}}
     for cls, v in cls_ratios.items():
         classes[cls] = {"factor": round(med(v), 2), "n": len(v), "range": [round(min(v), 2), round(max(v), 2)], "examples": cls_examples[cls]}
-    # the depth sweeps: D0 such that rate(d) = rate(0) ÷ (1 + d ÷ D0); the sweep's own class factor from its depth-0 point
+    # ladders without a D0 of their own: the short-prompt rate from the runtime's D0, the median over their points
+    for lf in ladder_fits:
+        if lf["r0"] is None and lf["rates"]:
+            d0 = d0_for("mlx" if lf["runtime"] == "mlx" else "gguf", lf["attention_layers"], lf["layers"])
+            lf["r0"] = round(statistics.median(v * (1 + n / (2 * d0)) for n, v in lf["rates"]), 1)
+            lf["r0_from"] = "the runtime's D0"
+    # MLX ladders are MLX rows too: each one's short-prompt rate r0 against the plain-GGUF constant of its chip and cores
+    for lf in ladder_fits:
+        ref_plain = dense_gguf_reference(lf["chip"], lf["gpu_cores"])
+        lf["plain_gguf_tok_s"] = round(ref_plain / lf["params_active_b"], 1) if ref_plain else None
+        if lf["runtime"] == "mlx" and lf["arch_class"] == "dense" and ref_plain and lf["r0"] and not lf["report_only"]:
+            group = mlx_group_of_chip(lf["chip"])
+            ratio = lf["r0"] * lf["params_active_b"] / ref_plain
+            mlx_ratios[group].append(ratio)
+            mlx_examples[group].append(f"{lf['model']} on {lf['chip']} {lf['gpu_cores']}-core ({lf['app']}): {lf['n_points']} prompt length{'s' if lf['n_points'] != 1 else ''} from 4K, {round(lf['r0'])} tok/s at a short prompt ({ratio:.2f} of the plain-GGUF constant)")
+    # the depth sweeps (pp512 at several depths, one model each): that model's own D0 on that runtime, from
+    # rate(d) = rate(0) ÷ (1 + d ÷ D0); the sweep's own class factor from its depth-0 point
     sweeps = bench.get("prefill_depth_sweeps", [])
-    d0s: list[float] = []
-    share_ref = None
+    d0_by_model: dict[str, dict] = {}
     for sw in sweeps:
         pts = [(d, v) for d, v in sw["points"] if d > 0]
         p0 = next(v for d, v in sw["points"] if d == 0)
-        d0s.extend(d / (p0 / v - 1) for d, v in pts)
-        share_ref = sw["attention_layers"] / sw["layers"]
+        sw_d0s = [d / (p0 / v - 1) for d, v in pts]
+        rt = "mlx" if sw["runtime"] == "mlx" else "gguf"
+        d0_by_model.setdefault(sw["model_id"], {})[rt] = {"d0_tokens": round(med(sw_d0s)), "n_points": len(sw_d0s), "range": [round(min(sw_d0s)), round(max(sw_d0s))], "source": sw["source"]}
         ref_plain = dense_gguf_reference(sw["chip"], sw.get("gpu_cores"))
         if ref_plain and sw.get("arch_class") and sw["arch_class"] not in classes:
             kqf = kquant["factor"] if sw["quant"] not in PLAIN else 1.0
             ratio = p0 * sw["params_active_b"] / (ref_plain * kqf)
             classes[sw["arch_class"]] = {"factor": round(ratio, 2), "n": 1, "range": [round(ratio, 2), round(ratio, 2)],
                                           "examples": [f"{sw['model']} on {sw['chip']} {sw['gpu_cores']}-core at an empty context: {p0} tok/s ({ratio:.2f} of the dense rate)"]}
+    mlx = {g: {"factor": round(med(v), 2), "n": len(v), "range": [round(min(v), 2), round(max(v), 2)], "examples": mlx_examples[g]} for g, v in mlx_ratios.items()}
+    for g, provisional in (("m1_m2", 0.65), ("m3_m4", 0.65), ("m5plus", 0.9)):
+        if g not in mlx:
+            mlx[g] = {"factor": provisional, "n": 0, "note": "assumed"}
+    # a class with no 512-token rows of its own takes its factor from MLX ladders at real prompt lengths: the ladder's
+    # short-prompt rate against the dense MLX rate of the same chip and cores (plain-GGUF constant × the MLX factor)
+    long_cls: dict[str, list[float]] = defaultdict(list)
+    long_examples: dict[str, list[str]] = defaultdict(list)
+    for lf in ladder_fits:
+        cls = lf["arch_class"]
+        ref_plain = dense_gguf_reference(lf["chip"], lf["gpu_cores"])
+        if lf["runtime"] != "mlx" or cls == "dense" or cls in classes or not ref_plain or not lf["r0"] or lf["report_only"]:
+            continue
+        ratio = lf["r0"] * lf["params_active_b"] / (ref_plain * mlx[mlx_group_of_chip(lf["chip"])]["factor"])
+        long_cls[cls].append(ratio)
+        long_examples[cls].append(f"{lf['model']} on {lf['chip']} {lf['gpu_cores']}-core ({lf['app']}): {round(lf['r0'])} tok/s at a short prompt, {ratio:.2f} of the dense MLX rate")
+    for cls, v in long_cls.items():
+        classes[cls] = {"factor": round(med(v), 2), "n": len(v), "range": [round(min(v), 2), round(max(v), 2)], "examples": long_examples[cls],
+                        "note": "fitted on MLX runs at real prompt lengths against the dense MLX rate of the same chip"}
     if "moe_latent" not in classes:
         classes["moe_latent"] = {"factor": classes.get("moe", {"factor": 0.75})["factor"], "n": 0, "note": "assumed: the mixture-of-experts factor, no measured prefill row for a latent-attention model yet"}
     if "deepseek_v4" not in classes:
         classes["deepseek_v4"] = {"factor": classes["moe_latent"]["factor"], "n": 0, "note": "assumed: the latent-attention factor"}
-    mlx = {g: {"factor": round(med(v), 2), "n": len(v), "range": [round(min(v), 2), round(max(v), 2)], "examples": mlx_examples[g]} for g, v in mlx_ratios.items()}
-    if "pre_m5" not in mlx:
-        mlx["pre_m5"] = {"factor": 0.65, "n": 0, "note": "assumed"}
-    if "m5plus" not in mlx:
-        mlx["m5plus"] = {"factor": 0.9, "n": 0, "note": "assumed"}
+    if mlx_excluded:
+        mlx["_excluded"] = {"min_prompt_tokens": MLX_MIN_PROMPT, "rows": mlx_excluded,
+                            "note": "MLX rows measured at a prompt shorter than this carry the per-request start-up cost and do not set the MLX factor"}
     class_by_model = {sw["model_id"]: sw["arch_class"] for sw in sweeps if sw.get("model_id") and sw.get("arch_class") not in (None, "dense", "moe", "moe_hybrid", "moe_latent", "deepseek_v4")}
     chips_with_rows = sorted({r["chip"] for r in pp_rows if r["runtime"] == "llama.cpp-gguf" and r.get("role") != "prefill" and r.get("arch_class", "dense") == "dense"})
+    # chips whose reading has been measured at all (table rows, fitted prefill rows or ladders, any runtime): the grid marks the others
+    chips_with_runs = sorted(set(chips_with_rows) | {r["chip"] for r in pp_rows if r.get("role") == "prefill" and not r.get("report_only")}
+                             | {lf["chip"] for lf in ladder_fits if not lf["report_only"]})
+    def d0_summary(vals: list[float], fallback: float) -> dict:
+        if not vals:
+            return {"d0_tokens": round(fallback), "n_ladders": 0, "range": None, "source": "assumed"}
+        return {"d0_tokens": round(med(vals)), "n_ladders": len(vals), "range": [round(min(vals)), round(max(vals))], "source": "fitted"}
+    gguf_ctx = d0_summary(d0_by_runtime["llama.cpp-gguf"], PROVISIONAL_D0)
     prefill = {
         "class_by_model": class_by_model,
         "chips_with_rows": chips_with_rows,
-        "_formula": "prefill tok/s at a short prompt = K ÷ active parameters (B), K = per_core[generation] × GPU cores (Apple) or by_chip (others), × kquant for K-quant and IQ GGUF files, × class[arch], × mlx[generation group] on MLX; rate at context depth d = short-prompt rate ÷ (1 + d ÷ d0_tokens × attention_share ÷ attention_share_ref); wait before the first word for an n-token prompt = (n + n² ÷ (2 × D0)) ÷ short-prompt rate",
+        "chips_with_runs": chips_with_runs,
+        "_formula": "prefill tok/s at a short prompt = K ÷ active parameters (B), K = per_core[generation] × GPU cores (Apple) or by_chip (others), × kquant for K-quant and IQ GGUF files, × class[arch], × mlx[generation group] on MLX; rate at context depth d = short-prompt rate ÷ (1 + d ÷ D0), D0 = context.by_model[model][runtime] where a model has its own sweep, else (context.d0_tokens on GGUF, context.mlx.d0_tokens on MLX) × attention_share_ref ÷ the model's share of attention layers; wait before the first word for an n-token prompt = (n + n² ÷ (2 × D0)) ÷ short-prompt rate",
         "per_core": dict(sorted(per_core.items())),
         "by_chip": dict(sorted(by_chip.items())),
         "kquant": kquant,
         "class": classes,
         "mlx": mlx,
-        "context": {"d0_tokens": round(med(d0s)) if d0s else 20000, "n_points": len(d0s), "range": [round(min(d0s)), round(max(d0s))] if d0s else None,
-                    "attention_share_ref": share_ref if share_ref is not None else 0.25,
-                    "note": "fitted on the published depth sweep(s): D0 is the context depth at which the rate has halved; other models scale D0 by their share of full-attention layers relative to the sweep's model (assumed)"},
+        "context": {"d0_tokens": gguf_ctx["d0_tokens"], "n_points": gguf_ctx["n_ladders"], "range": gguf_ctx["range"],
+                    "attention_share_ref": share_ref,
+                    "mlx": d0_summary(d0_by_runtime["mlx"], d0_gguf),
+                    "by_model": d0_by_model,
+                    "note": ("D0 is the context depth at which the reading rate has halved, fitted per runtime on the measured ladders "
+                             "(llama.cpp: d0_tokens, n_points = ladders; MLX: mlx), for a model with attention in a quarter of its layers; "
+                             "other models scale D0 by their share of full-attention layers (assumed); a model with a published depth sweep "
+                             "of its own takes its own value on that runtime (by_model)")},
+        "ladders": ladder_fits,
         "waits_tokens": [8192, 32768, 131072],
         "feels_like": [{"max_s": 3, "label": "instant"}, {"max_s": 15, "label": "short wait"}, {"max_s": 90, "label": "get a coffee"}, {"max_s": None, "label": "painful"}],
-        "_sources": ["https://github.com/ggml-org/llama.cpp/discussions/4167", "https://github.com/enescingoz/mac-llm-bench", "https://heretik.io/qwen38-flash-next-262k-macbook/"],
+        "_sources": sorted({"https://github.com/ggml-org/llama.cpp/discussions/4167", "https://github.com/enescingoz/mac-llm-bench"}
+                           | {sw["source"] for sw in sweeps}
+                           | {r["source"] for r in pp_rows if r.get("role") == "prefill" and r.get("prompt_tokens")}
+                           | {u for lad in bench.get("prefill_ladders", []) for u in ladder_sources(lad)}),
     }
 
 
@@ -362,7 +493,8 @@ def main() -> int:
                        {"max_tok_s": 30, "label": "comfortable", "description": "comfortable chat"},
                        {"max_tok_s": 60, "label": "fast", "description": "agents and coding feel fine"},
                        {"max_tok_s": None, "label": "cloud-like", "description": "as fast as a hosted model"}],
-        "sources": sorted({r["source"] for r in rows if r.get("source")} | {u for s in series for u in (s.get("source"), s.get("source_2")) if u}),
+        "sources": sorted({r["source"] for r in rows if r.get("source")} | {u for s in series for u in (s.get("source"), s.get("source_2")) if u}
+                          | {u for lad in bench.get("prefill_ladders", []) for u in ladder_sources(lad)}),
     }
     out = PUBLIC_DATA_DIR / "factors.json"
     text = json.dumps(factors, indent=1, ensure_ascii=False) + "\n"

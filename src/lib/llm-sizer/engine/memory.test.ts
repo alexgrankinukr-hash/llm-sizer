@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { availableMemory, breakdown, kvCacheBytes, neededMemory, verdictFor } from './memory';
+import { availableMemory, breakdown, defaultCap, kvCacheBytes, neededMemory, ramDecimalGb, verdictFor } from './memory';
 import { loadModel, machineById, quantByLabel } from './__fixtures__/load';
 
 const GB = 1e9;
@@ -10,29 +10,42 @@ describe('availableMemory (METHODOLOGY §4, §7)', () => {
   const spark = machineById('nvidia-dgx-spark');
 
   it('32 GB mini: the cap binds with apps off, the apps bind with the work toggle on', () => {
-    // 32 GB is 32 GiB = 34.36 decimal GB; two thirds of it is 22.9 GB
+    // 32 GB is 32 GiB = 34.36 decimal GB; macOS 26 gives the GPU 78 % of it, 26.8 GB
     const off = availableMemory(mini, { memoryGb: 32, workApps: 0, override: false });
-    expect(off.availableGb).toBeCloseTo(22.91, 2);
+    expect(off.availableGb).toBeCloseTo(26.8, 2);
     expect(off.binding).toBe('cap');
-    expect(off.capReserveGb).toBeCloseTo(34.36 - 22.91 - 6, 2);
+    expect(off.capReserveGb).toBeCloseTo(34.36 - 26.8 - 6, 2);
     const on = availableMemory(mini, { memoryGb: 32, workApps: 16, override: false });
     expect(on.availableGb).toBeCloseTo(12.36, 2);
     expect(on.binding).toBe('apps');
     expect(on.capReserveGb).toBe(0);
   });
 
-  it('256 GB Studio: 206 by default (three quarters of 274.9), 259.8 with the override (macOS keeps 5.5 %); 512 GB → 519.5', () => {
-    expect(availableMemory(ultra, { memoryGb: 256, workApps: 0, override: false }).availableGb).toBeCloseTo(206.16, 2);
+  it('256 GB Studio: 239.1 by default (87 % of 274.9), 259.8 with the override (macOS keeps 5.5 %); 512 GB → 498.2 by default, 519.5 lifted', () => {
+    expect(availableMemory(ultra, { memoryGb: 256, workApps: 0, override: false }).availableGb).toBeCloseTo(239.14, 2);
+    expect(availableMemory(ultra, { memoryGb: 512, workApps: 0, override: false }).availableGb).toBeCloseTo(498.22, 2);
     expect(availableMemory(ultra, { memoryGb: 256, workApps: 0, override: 1 }).availableGb).toBeCloseTo(259.76, 2);
     expect(availableMemory(ultra, { memoryGb: 512, workApps: 0, override: 1 }).availableGb).toBeCloseTo(519.52, 2);
     expect(availableMemory(ultra, { memoryGb: 256, workApps: 16, override: 1 }).availableGb).toBeCloseTo(243.76, 2);
   });
 
-  it('the GPU limit is two thirds under 36 GB and three quarters from 36 GB', () => {
+  it('the GPU limit is what macOS 26 reports for each size: 67 / 74 / 78 / 81 / 84 / 87 %, at most 48 GB held back', () => {
+    // recommendedMaxWorkingSetSize as logged on macOS 26 (bytes, or llama.cpp's decimal MB): a whole percent rounded up to a 16 KB page
+    const logged: [number, number][] = [
+      [8, 5726.63e6], [16, 12713115648], [18, 14302.25e6], [24, 19069.67e6], [32, 26800603136], [36, 30150672384], [48, 40200896512],
+      [64, 55662788608], [96, 83494.17e6], [128, 115448725504], [192, 173173.08e6], [256, 239143.78e6], [512, 498216.21e6],
+    ];
+    for (const [gb, bytes] of logged) expect(Math.abs(ramDecimalGb(gb) * defaultCap(gb) * 1e9 - bytes)).toBeLessThan(3e4);
+    // sizes Apple doesn't sell take the tier below them
+    expect(defaultCap(12)).toBeCloseTo(2 / 3, 9);
+    expect(defaultCap(40)).toBe(0.78);
+    expect(defaultCap(320)).toBe(0.87);
     const at = (gb: number) => availableMemory(mini, { memoryGb: gb, workApps: 0, override: false });
-    expect(at(24).availableGb).toBeCloseTo(24 * 1.073741824 * (2 / 3), 6);
-    expect(at(36).availableGb).toBeCloseTo(36 * 1.073741824 * 0.75, 6);
-    expect(at(48).availableGb).toBeCloseTo(38.65, 2);
+    expect(at(24).availableGb).toBeCloseTo(24 * 1.073741824 * 0.74, 6);
+    expect(at(48).availableGb).toBeCloseTo(40.2, 2);
+    // at 8 and 16 GB the 6 GB macOS keeps for itself binds before the GPU limit
+    expect(at(16).binding).toBe('apps');
+    expect(at(16).availableGb).toBeCloseTo(16 * 1.073741824 - 6, 6);
   });
 
   it('the override never lifts the OS + apps floor', () => {

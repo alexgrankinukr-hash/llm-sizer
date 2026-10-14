@@ -24,6 +24,9 @@ export function markerForVerdict(v: Verdict): Marker {
   return 'ring';
 }
 
+/** How toggles, panels and images name the default GPU limit: macOS 26's share depends on the machine's size (METHODOLOGY §4). */
+export const DEFAULT_LIMIT_LABEL = '67 % to 91 % by size';
+
 export const MARKER_TEXT: Record<Marker, string> = {
   run: 'runs',
   ring: 'runs with a compromise',
@@ -208,7 +211,7 @@ export function tableLayout(state: AppState, matrix: Matrix): TableLayout {
     const sizeLabel = r.linked ? `${r.row.gb} GB each · ${pooledGb(r.row.gb, r.linked)} GB pooled` : `${r.row.gb} GB`;
     rows.push({ key: r.key, groupId: r.group.id, gb: r.row.gb, sizeLabel, linked: r.linked, binLabel: r.row.binLabel, price: price !== null ? formatPrice(price) : null, cells });
   }
-  const limitPct = state.cap !== null ? `${Math.round(state.cap * 100)} % (override)` : '67 % / 75 %';
+  const limitPct = state.cap !== null ? `${Math.round(state.cap * 100)} % (override)` : DEFAULT_LIMIT_LABEL;
   return {
     headers,
     rails,

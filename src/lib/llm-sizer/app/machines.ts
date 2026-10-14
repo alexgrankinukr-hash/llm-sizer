@@ -7,7 +7,7 @@
 import { chipKey } from '../engine/speed';
 import { tensorCapable } from '../engine/cluster';
 import { customMachine, type CustomMachineInput } from '../engine/custom';
-import type { ClusterFactors, ClusterSplit, ClusterTerm, Factors, FittedTerm, Machine, Platform, SpeedModel } from '../engine/types';
+import type { ClusterFactors, ClusterSplit, ClusterTerm, Factors, FittedTerm, Machine, Platform, PrefillFactors, SpeedModel } from '../engine/types';
 
 export type Silhouette = 'mini' | 'studio' | 'laptop' | 'imac' | 'macpro' | 'spark' | 'box';
 
@@ -271,11 +271,21 @@ export function slimFactors(f: Factors): Factors {
             per_core: f.prefill.per_core,
             by_chip: f.prefill.by_chip,
             chips_with_rows: f.prefill.chips_with_rows,
+            ...(f.prefill.chips_with_runs ? { chips_with_runs: f.prefill.chips_with_runs } : {}),
             kquant: { factor: f.prefill.kquant.factor, n: f.prefill.kquant.n },
             class: Object.fromEntries(Object.entries(f.prefill.class).map(([k, v]) => [k, { factor: v.factor, ...(v.n !== undefined ? { n: v.n } : {}) }])),
             class_by_model: f.prefill.class_by_model,
-            mlx: { pre_m5: { factor: f.prefill.mlx.pre_m5.factor, n: f.prefill.mlx.pre_m5.n }, m5plus: { factor: f.prefill.mlx.m5plus.factor, n: f.prefill.mlx.m5plus.n } },
-            context: { d0_tokens: f.prefill.context.d0_tokens, n_points: f.prefill.context.n_points, range: f.prefill.context.range, attention_share_ref: f.prefill.context.attention_share_ref },
+            mlx: Object.fromEntries((['m1_m2', 'm3_m4', 'm5plus'] as const).map((g) => [g, { factor: f.prefill!.mlx[g].factor, n: f.prefill!.mlx[g].n }])) as PrefillFactors['mlx'],
+            context: {
+              d0_tokens: f.prefill.context.d0_tokens,
+              n_points: f.prefill.context.n_points,
+              range: f.prefill.context.range,
+              attention_share_ref: f.prefill.context.attention_share_ref,
+              ...(f.prefill.context.mlx ? { mlx: { d0_tokens: f.prefill.context.mlx.d0_tokens, n_ladders: f.prefill.context.mlx.n_ladders, range: f.prefill.context.mlx.range } } : {}),
+              ...(f.prefill.context.by_model
+                ? { by_model: Object.fromEntries(Object.entries(f.prefill.context.by_model).map(([id, rts]) => [id, Object.fromEntries(Object.entries(rts).map(([rt, v]) => [rt, { d0_tokens: v!.d0_tokens }]))])) }
+                : {}),
+            },
             waits_tokens: f.prefill.waits_tokens,
             feels_like: f.prefill.feels_like,
           },

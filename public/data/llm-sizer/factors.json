@@ -1,6 +1,6 @@
 {
  "schema": "llm-sizer/factors v1 — derived by scripts/llm-sizer/calibrate.py from benchmarks.json; do not edit by hand",
- "data_as_of": "2026-09-06",
+ "data_as_of": "2026-10-14",
  "efficiency": {
   "_formula": "decode tok/s = bandwidth_gbs × efficiency ÷ gigabytes read per token (active weights at the quant's bits + context cache per token)",
   "_resolve": "exact chip if present in by_chip, else assumed[chip] if present, else the tier median (tier from the chip name: base | Pro | Max | Ultra; DGX Spark = spark)",
@@ -674,7 +674,30 @@
    "M5 Max",
    "M5 Pro"
   ],
-  "_formula": "prefill tok/s at a short prompt = K ÷ active parameters (B), K = per_core[generation] × GPU cores (Apple) or by_chip (others), × kquant for K-quant and IQ GGUF files, × class[arch], × mlx[generation group] on MLX; rate at context depth d = short-prompt rate ÷ (1 + d ÷ d0_tokens × attention_share ÷ attention_share_ref); wait before the first word for an n-token prompt = (n + n² ÷ (2 × D0)) ÷ short-prompt rate",
+  "chips_with_runs": [
+   "DGX Spark",
+   "M1",
+   "M1 Max",
+   "M1 Pro",
+   "M1 Ultra",
+   "M2",
+   "M2 Max",
+   "M2 Pro",
+   "M2 Ultra",
+   "M3",
+   "M3 Max",
+   "M3 Pro",
+   "M3 Ultra",
+   "M4",
+   "M4 Max",
+   "M4 Pro",
+   "M5",
+   "M5 Max",
+   "M5 Pro",
+   "M5 Ultra",
+   "M6"
+  ],
+  "_formula": "prefill tok/s at a short prompt = K ÷ active parameters (B), K = per_core[generation] × GPU cores (Apple) or by_chip (others), × kquant for K-quant and IQ GGUF files, × class[arch], × mlx[generation group] on MLX; rate at context depth d = short-prompt rate ÷ (1 + d ÷ D0), D0 = context.by_model[model][runtime] where a model has its own sweep, else (context.d0_tokens on GGUF, context.mlx.d0_tokens on MLX) × attention_share_ref ÷ the model's share of attention layers; wait before the first word for an n-token prompt = (n + n² ÷ (2 × D0)) ÷ short-prompt rate",
   "per_core": {
    "M1": {
     "value": 112,
@@ -781,55 +804,1892 @@
     ]
    },
    "moe_latent": {
-    "factor": 0.68,
-    "n": 0,
-    "note": "assumed: the mixture-of-experts factor, no measured prefill row for a latent-attention model yet"
+    "factor": 0.48,
+    "n": 2,
+    "range": [
+     0.36,
+     0.61
+    ],
+    "examples": [
+     "GLM-5.3 Flash on M5 Ultra 80-core (oMLX 0.7.0.dev2): 1103 tok/s at a short prompt, 0.36 of the dense MLX rate",
+     "GLM-5.3 Flash on M3 Ultra 80-core (oMLX 0.7.0.dev2): 441 tok/s at a short prompt, 0.61 of the dense MLX rate"
+    ],
+    "note": "fitted on MLX runs at real prompt lengths against the dense MLX rate of the same chip"
    },
    "deepseek_v4": {
-    "factor": 0.68,
+    "factor": 0.48,
     "n": 0,
     "note": "assumed: the latent-attention factor"
    }
   },
   "mlx": {
-   "pre_m5": {
-    "factor": 0.65,
-    "n": 1,
+   "m5plus": {
+    "factor": 1.31,
+    "n": 13,
     "range": [
-     0.65,
-     0.65
+     1.09,
+     2.13
     ],
     "examples": [
-     "Qwen3-8B on M2 Max 30-core: 290.4 tok/s (0.65 of the plain-GGUF constant)"
+     "Qwen 3.8 27B on M5 Ultra 80-core (oMLX 0.7.0.dev2): 1701 tok/s over a 6091-token prompt (1.15 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M5 Max 40-core (oMLX 0.6.3rc2, accelerations off): 5 prompt lengths from 4K, 912 tok/s at a short prompt (1.19 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M5 10-core (oMLX 0.6 to 0.7 (community)): 2 prompt lengths from 4K, 250 tok/s at a short prompt (1.31 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M5 10-core (oMLX 0.6 to 0.7 (community)): 4 prompt lengths from 4K, 237 tok/s at a short prompt (1.24 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M5 Max 40-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 1044 tok/s at a short prompt (1.37 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M5 Max 40-core (oMLX 0.6 to 0.7 (community)): 3 prompt lengths from 4K, 831 tok/s at a short prompt (1.09 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M5 Pro 16-core (oMLX 0.6 to 0.7 (community)): 4 prompt lengths from 4K, 429 tok/s at a short prompt (1.40 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M5 Pro 16-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 650 tok/s at a short prompt (2.13 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M5 Pro 20-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 519 tok/s at a short prompt (1.36 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M5 Pro 20-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 529 tok/s at a short prompt (1.38 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M5 Ultra 64-core (oMLX 0.6 to 0.7 (community)): 2 prompt lengths from 4K, 1567 tok/s at a short prompt (1.28 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M5 Ultra 64-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 1644 tok/s at a short prompt (1.34 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M5 Ultra 80-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 1700 tok/s at a short prompt (1.11 of the plain-GGUF constant)"
     ]
    },
-   "m5plus": {
-    "factor": 0.61,
-    "n": 6,
+   "m3_m4": {
+    "factor": 1.27,
+    "n": 18,
     "range": [
-     0.56,
-     0.8
+     1.09,
+     1.32
     ],
     "examples": [
-     "Llama 3.1 8B on M5 10-core: 528.0 tok/s (0.80 of the plain-GGUF constant)",
-     "Qwen3-8B on M5 10-core: 405.0 tok/s (0.63 of the plain-GGUF constant)",
-     "Qwen2.5-Coder-14B on M5 10-core: 220.3 tok/s (0.61 of the plain-GGUF constant)",
-     "phi-4 on M5 10-core: 218.7 tok/s (0.61 of the plain-GGUF constant)",
-     "gemma-3-27b on M5 10-core: 113.3 tok/s (0.58 of the plain-GGUF constant)",
-     "Qwen2.5-Coder-32B on M5 10-core: 91.0 tok/s (0.56 of the plain-GGUF constant)"
+     "Qwen 3.8 27B on M3 Ultra 80-core (oMLX 0.7.0.dev2): 414 tok/s over a 6091-token prompt (1.16 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M3 Ultra 80-core (mlx-serve 26.8.10): 414 tok/s over a 16384-token prompt (1.22 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M3 Max 30-core (oMLX 0.6 to 0.7 (community)): 2 prompt lengths from 4K, 176 tok/s at a short prompt (1.27 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M3 Max 40-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 235 tok/s at a short prompt (1.28 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M3 Max 40-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 241 tok/s at a short prompt (1.31 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M3 Max 40-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 240 tok/s at a short prompt (1.30 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M3 Ultra 60-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 365 tok/s at a short prompt (1.32 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M3 Ultra 60-core (oMLX 0.6 to 0.7 (community)): 3 prompt lengths from 4K, 362 tok/s at a short prompt (1.31 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M4 10-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 60 tok/s at a short prompt (1.10 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M4 10-core (oMLX 0.6 to 0.7 (community)): 2 prompt lengths from 4K, 68 tok/s at a short prompt (1.26 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M4 Max 32-core (oMLX 0.6 to 0.7 (community)): 2 prompt lengths from 4K, 210 tok/s at a short prompt (1.21 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M4 Max 40-core (oMLX 0.6 to 0.7 (community)): 2 prompt lengths from 4K, 237 tok/s at a short prompt (1.09 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M4 Max 40-core (oMLX 0.6 to 0.7 (community)): 4 prompt lengths from 4K, 278 tok/s at a short prompt (1.28 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M4 Pro 16-core (oMLX 0.6 to 0.7 (community)): 2 prompt lengths from 4K, 111 tok/s at a short prompt (1.28 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M4 Pro 16-core (oMLX 0.6 to 0.7 (community)): 2 prompt lengths from 4K, 111 tok/s at a short prompt (1.28 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M4 Pro 16-core (oMLX 0.6 to 0.7 (community)): 2 prompt lengths from 4K, 114 tok/s at a short prompt (1.31 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M4 Pro 20-core (oMLX 0.6 to 0.7 (community)): 3 prompt lengths from 4K, 133 tok/s at a short prompt (1.22 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M4 Pro 20-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 138 tok/s at a short prompt (1.27 of the plain-GGUF constant)"
     ]
+   },
+   "m1_m2": {
+    "factor": 0.8,
+    "n": 16,
+    "range": [
+     0.74,
+     0.88
+    ],
+    "examples": [
+     "Qwen 3.8 27B on M1 Max 24-core (oMLX 0.6 to 0.7 (community)): 2 prompt lengths from 4K, 80 tok/s at a short prompt (0.83 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M1 Max 24-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 81 tok/s at a short prompt (0.83 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M1 Max 32-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 110 tok/s at a short prompt (0.85 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M1 Max 32-core (oMLX 0.6 to 0.7 (community)): 2 prompt lengths from 4K, 107 tok/s at a short prompt (0.83 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M1 Ultra 48-core (oMLX 0.6 to 0.7 (community)): 4 prompt lengths from 4K, 150 tok/s at a short prompt (0.78 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M1 Ultra 48-core (oMLX 0.6 to 0.7 (community)): 6 prompt lengths from 4K, 144 tok/s at a short prompt (0.75 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M1 Ultra 64-core (oMLX 0.6 to 0.7 (community)): 2 prompt lengths from 4K, 190 tok/s at a short prompt (0.74 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M1 Ultra 64-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 205 tok/s at a short prompt (0.80 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M2 Max 30-core (oMLX 0.6 to 0.7 (community)): 2 prompt lengths from 4K, 106 tok/s at a short prompt (0.81 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M2 Max 38-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 133 tok/s at a short prompt (0.80 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M2 Max 38-core (oMLX 0.6 to 0.7 (community)): 2 prompt lengths from 4K, 134 tok/s at a short prompt (0.80 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M2 Max 38-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 133 tok/s at a short prompt (0.80 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M2 Ultra 60-core (oMLX 0.6 to 0.7 (community)): 4 prompt lengths from 4K, 213 tok/s at a short prompt (0.81 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M2 Ultra 60-core (oMLX 0.6 to 0.7 (community)): 6 prompt lengths from 4K, 212 tok/s at a short prompt (0.80 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M2 Ultra 76-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 292 tok/s at a short prompt (0.88 of the plain-GGUF constant)",
+     "Qwen 3.8 27B on M2 Ultra 76-core (oMLX 0.6 to 0.7 (community)): 1 prompt length from 4K, 264 tok/s at a short prompt (0.79 of the plain-GGUF constant)"
+    ]
+   },
+   "_excluded": {
+    "min_prompt_tokens": 4096,
+    "rows": [
+     "Qwen3-8B on M2 Max 30-core: 290.4 tok/s at a 512-token prompt",
+     "Llama 3.1 8B on M5 10-core: 528.0 tok/s at a 512-token prompt",
+     "Qwen3-8B on M5 10-core: 405.0 tok/s at a 512-token prompt",
+     "Qwen2.5-Coder-14B on M5 10-core: 220.3 tok/s at a 512-token prompt",
+     "phi-4 on M5 10-core: 218.7 tok/s at a 512-token prompt",
+     "gemma-3-27b on M5 10-core: 113.3 tok/s at a 512-token prompt",
+     "Qwen2.5-Coder-32B on M5 10-core: 91.0 tok/s at a 512-token prompt"
+    ],
+    "note": "MLX rows measured at a prompt shorter than this carry the per-request start-up cost and do not set the MLX factor"
    }
   },
   "context": {
-   "d0_tokens": 19257,
-   "n_points": 6,
+   "d0_tokens": 81781,
+   "n_points": 3,
    "range": [
-    14649,
-    24858
+    42621,
+    185009
    ],
    "attention_share_ref": 0.25,
-   "note": "fitted on the published depth sweep(s): D0 is the context depth at which the rate has halved; other models scale D0 by their share of full-attention layers relative to the sweep's model (assumed)"
+   "mlx": {
+    "d0_tokens": 95613,
+    "n_ladders": 11,
+    "range": [
+     44291,
+     120239
+    ],
+    "source": "fitted"
+   },
+   "by_model": {
+    "qwen3.8-flash-next": {
+     "gguf": {
+      "d0_tokens": 19257,
+      "n_points": 6,
+      "range": [
+       14649,
+       24858
+      ],
+      "source": "https://heretik.io/qwen38-flash-next-262k-macbook/"
+     }
+    }
+   },
+   "note": "D0 is the context depth at which the reading rate has halved, fitted per runtime on the measured ladders (llama.cpp: d0_tokens, n_points = ladders; MLX: mlx), for a model with attention in a quarter of its layers; other models scale D0 by their share of full-attention layers (assumed); a model with a published depth sweep of its own takes its own value on that runtime (by_model)"
   },
+  "ladders": [
+   {
+    "chip": "M5 Ultra",
+    "gpu_cores": 80,
+    "memory_gb": 256,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "Q4_K_M",
+    "runtime": "llama.cpp-gguf",
+    "app": "llama.cpp, MTP off",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 6,
+    "rates": [
+     [
+      6144,
+      1059.3
+     ],
+     [
+      10240,
+      1034.3
+     ],
+     [
+      18432,
+      955.0
+     ],
+     [
+      34816,
+      825.0
+     ],
+     [
+      67584,
+      646.1
+     ],
+     [
+      133120,
+      450.0
+     ]
+    ],
+    "r0": 1155.1,
+    "r0_from": "its own fit",
+    "d0": 42621,
+    "d0_ref": 42621,
+    "max_fit_err_pct": 1.7,
+    "report_only": false,
+    "source": "https://www.tomshardware.com/desktops/mini-pcs/apple-mac-studio-m5-ultra-review",
+    "plain_gguf_tok_s": 1528.1
+   },
+   {
+    "chip": "M4 Max",
+    "gpu_cores": 40,
+    "memory_gb": null,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "Q4_K_M",
+    "runtime": "llama.cpp-gguf",
+    "app": "llama.cpp, MTP off",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 6,
+    "rates": [
+     [
+      6144,
+      233.6
+     ],
+     [
+      10240,
+      230.1
+     ],
+     [
+      18432,
+      222.1
+     ],
+     [
+      34816,
+      205.4
+     ],
+     [
+      67584,
+      176.3
+     ],
+     [
+      133120,
+      134.9
+     ]
+    ],
+    "r0": 246.2,
+    "r0_from": "its own fit",
+    "d0": 81781,
+    "d0_ref": 81781,
+    "max_fit_err_pct": 1.5,
+    "report_only": false,
+    "source": "https://www.tomshardware.com/desktops/mini-pcs/apple-mac-studio-m5-ultra-review",
+    "plain_gguf_tok_s": 217.3
+   },
+   {
+    "chip": "DGX Spark",
+    "gpu_cores": null,
+    "memory_gb": 128,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "Q4_K_M",
+    "runtime": "llama.cpp-gguf",
+    "app": "llama.cpp, MTP off",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 6,
+    "rates": [
+     [
+      6144,
+      749.3
+     ],
+     [
+      10240,
+      742.0
+     ],
+     [
+      18432,
+      731.4
+     ],
+     [
+      34816,
+      709.1
+     ],
+     [
+      67584,
+      650.5
+     ],
+     [
+      133120,
+      562.2
+     ]
+    ],
+    "r0": 766.9,
+    "r0_from": "its own fit",
+    "d0": 185009,
+    "d0_ref": 185009,
+    "max_fit_err_pct": 1.2,
+    "report_only": false,
+    "source": "https://www.tomshardware.com/desktops/mini-pcs/apple-mac-studio-m5-ultra-review",
+    "plain_gguf_tok_s": 767.7
+   },
+   {
+    "chip": "M5 Max",
+    "gpu_cores": 40,
+    "memory_gb": 48,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6.3rc2, accelerations off",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 5,
+    "rates": [
+     [
+      4096,
+      911.9
+     ],
+     [
+      8192,
+      829.2
+     ],
+     [
+      16384,
+      725.2
+     ],
+     [
+      32768,
+      684.2
+     ],
+     [
+      65536,
+      523.7
+     ]
+    ],
+    "r0": 912.2,
+    "r0_from": "its own fit",
+    "d0": 44291,
+    "d0_ref": 44291,
+    "max_fit_err_pct": 5.8,
+    "report_only": false,
+    "source": "https://omlx.ai/benchmarks/performance/32bf9vtv",
+    "plain_gguf_tok_s": 764.0
+   },
+   {
+    "chip": "M5 Ultra",
+    "gpu_cores": 80,
+    "memory_gb": 256,
+    "model": "GLM-5.3 Flash",
+    "model_id": "glm-5.3-flash",
+    "quant": "MLX mixed 4/8-bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.7.0.dev2",
+    "arch_class": "moe_latent",
+    "params_active_b": 18.0,
+    "attention_layers": 11,
+    "layers": 45,
+    "n_points": 3,
+    "rates": [
+     [
+      13639,
+      1107.0
+     ],
+     [
+      61434,
+      1016.0
+     ],
+     [
+      126964,
+      997.0
+     ]
+    ],
+    "r0": 1102.9,
+    "r0_from": "its own fit",
+    "d0": 537157,
+    "d0_ref": 525221,
+    "max_fit_err_pct": 2.6,
+    "report_only": false,
+    "source": "https://www.macstories.net/stories/m5-ultra-mac-studio-review-the-dream-mac-for-local-ai-agents/",
+    "plain_gguf_tok_s": 2360.0
+   },
+   {
+    "chip": "M3 Ultra",
+    "gpu_cores": 80,
+    "memory_gb": 512,
+    "model": "GLM-5.3 Flash",
+    "model_id": "glm-5.3-flash",
+    "quant": "MLX mixed 4/8-bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.7.0.dev2",
+    "arch_class": "moe_latent",
+    "params_active_b": 18.0,
+    "attention_layers": 11,
+    "layers": 45,
+    "n_points": 4,
+    "rates": [
+     [
+      13639,
+      428.0
+     ],
+     [
+      61434,
+      448.0
+     ],
+     [
+      126964,
+      403.0
+     ],
+     [
+      258025,
+      391.0
+     ]
+    ],
+    "r0": 440.7,
+    "r0_from": "its own fit",
+    "d0": 983155,
+    "d0_ref": 961307,
+    "max_fit_err_pct": 4.8,
+    "report_only": false,
+    "source": "https://www.macstories.net/stories/m5-ultra-mac-studio-review-the-dream-mac-for-local-ai-agents/",
+    "plain_gguf_tok_s": 568.9
+   },
+   {
+    "chip": "M1 Max",
+    "gpu_cores": 24,
+    "memory_gb": 32,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 2,
+    "rates": [
+     [
+      4096,
+      80.4
+     ],
+     [
+      16384,
+      72.4
+     ]
+    ],
+    "r0": 80.4,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 96.7
+   },
+   {
+    "chip": "M1 Max",
+    "gpu_cores": 24,
+    "memory_gb": 64,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      78.9
+     ]
+    ],
+    "r0": 80.6,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 96.7
+   },
+   {
+    "chip": "M1 Max",
+    "gpu_cores": 32,
+    "memory_gb": 32,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      107.6
+     ]
+    ],
+    "r0": 109.9,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 128.9
+   },
+   {
+    "chip": "M1 Max",
+    "gpu_cores": 32,
+    "memory_gb": 64,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 2,
+    "rates": [
+     [
+      4096,
+      104.0
+     ],
+     [
+      131072,
+      53.6
+     ]
+    ],
+    "r0": 107.3,
+    "r0_from": "its own fit",
+    "d0": 65471,
+    "d0_ref": 65471,
+    "max_fit_err_pct": 0.0,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 128.9
+   },
+   {
+    "chip": "M1 Ultra",
+    "gpu_cores": 48,
+    "memory_gb": 64,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 4,
+    "rates": [
+     [
+      4096,
+      149.0
+     ],
+     [
+      8192,
+      144.0
+     ],
+     [
+      16384,
+      136.4
+     ],
+     [
+      32768,
+      129.3
+     ]
+    ],
+    "r0": 150.5,
+    "r0_from": "its own fit",
+    "d0": 95613,
+    "d0_ref": 95613,
+    "max_fit_err_pct": 1.6,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 193.4
+   },
+   {
+    "chip": "M1 Ultra",
+    "gpu_cores": 48,
+    "memory_gb": 128,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 6,
+    "rates": [
+     [
+      4096,
+      142.3
+     ],
+     [
+      8192,
+      133.5
+     ],
+     [
+      16384,
+      134.9
+     ],
+     [
+      32768,
+      125.9
+     ],
+     [
+      65536,
+      111.1
+     ],
+     [
+      131072,
+      86.9
+     ]
+    ],
+    "r0": 144.3,
+    "r0_from": "its own fit",
+    "d0": 101390,
+    "d0_ref": 101390,
+    "max_fit_err_pct": 3.8,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 193.4
+   },
+   {
+    "chip": "M1 Ultra",
+    "gpu_cores": 64,
+    "memory_gb": 64,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 2,
+    "rates": [
+     [
+      4096,
+      187.9
+     ],
+     [
+      16384,
+      174.2
+     ]
+    ],
+    "r0": 190.5,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 257.8
+   },
+   {
+    "chip": "M1 Ultra",
+    "gpu_cores": 64,
+    "memory_gb": 128,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      200.7
+     ]
+    ],
+    "r0": 205.0,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 257.8
+   },
+   {
+    "chip": "M2 Max",
+    "gpu_cores": 30,
+    "memory_gb": 64,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 2,
+    "rates": [
+     [
+      4096,
+      104.7
+     ],
+     [
+      16384,
+      96.7
+     ]
+    ],
+    "r0": 106.0,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 131.7
+   },
+   {
+    "chip": "M2 Max",
+    "gpu_cores": 38,
+    "memory_gb": 32,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      130.2
+     ]
+    ],
+    "r0": 133.0,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 166.8
+   },
+   {
+    "chip": "M2 Max",
+    "gpu_cores": 38,
+    "memory_gb": 64,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 2,
+    "rates": [
+     [
+      4096,
+      132.2
+     ],
+     [
+      16384,
+      121.5
+     ]
+    ],
+    "r0": 133.5,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 166.8
+   },
+   {
+    "chip": "M2 Max",
+    "gpu_cores": 38,
+    "memory_gb": 96,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      130.3
+     ]
+    ],
+    "r0": 133.1,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 166.8
+   },
+   {
+    "chip": "M2 Ultra",
+    "gpu_cores": 60,
+    "memory_gb": 64,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 4,
+    "rates": [
+     [
+      4096,
+      206.0
+     ],
+     [
+      16384,
+      192.2
+     ],
+     [
+      65536,
+      146.8
+     ],
+     [
+      131072,
+      111.0
+     ]
+    ],
+    "r0": 213.4,
+    "r0_from": "its own fit",
+    "d0": 71295,
+    "d0_ref": 71295,
+    "max_fit_err_pct": 0.7,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 263.3
+   },
+   {
+    "chip": "M2 Ultra",
+    "gpu_cores": 60,
+    "memory_gb": 192,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 6,
+    "rates": [
+     [
+      4096,
+      206.3
+     ],
+     [
+      8192,
+      199.1
+     ],
+     [
+      16384,
+      189.8
+     ],
+     [
+      32768,
+      176.0
+     ],
+     [
+      65536,
+      146.0
+     ],
+     [
+      131072,
+      111.9
+     ]
+    ],
+    "r0": 211.9,
+    "r0_from": "its own fit",
+    "d0": 73408,
+    "d0_ref": 73408,
+    "max_fit_err_pct": 1.6,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 263.3
+   },
+   {
+    "chip": "M2 Ultra",
+    "gpu_cores": 76,
+    "memory_gb": 64,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      286.4
+     ]
+    ],
+    "r0": 292.5,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 333.5
+   },
+   {
+    "chip": "M2 Ultra",
+    "gpu_cores": 76,
+    "memory_gb": 192,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      259.0
+     ]
+    ],
+    "r0": 264.5,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 333.5
+   },
+   {
+    "chip": "M3 Max",
+    "gpu_cores": 30,
+    "memory_gb": 36,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 2,
+    "rates": [
+     [
+      4096,
+      169.1
+     ],
+     [
+      16384,
+      165.1
+     ]
+    ],
+    "r0": 176.0,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 138.1
+   },
+   {
+    "chip": "M3 Max",
+    "gpu_cores": 40,
+    "memory_gb": 48,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      230.1
+     ]
+    ],
+    "r0": 235.0,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 184.2
+   },
+   {
+    "chip": "M3 Max",
+    "gpu_cores": 40,
+    "memory_gb": 64,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      235.8
+     ]
+    ],
+    "r0": 240.9,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 184.2
+   },
+   {
+    "chip": "M3 Max",
+    "gpu_cores": 40,
+    "memory_gb": 128,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      235.1
+     ]
+    ],
+    "r0": 240.1,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 184.2
+   },
+   {
+    "chip": "M3 Ultra",
+    "gpu_cores": 60,
+    "memory_gb": 96,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      357.2
+     ]
+    ],
+    "r0": 364.9,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 276.3
+   },
+   {
+    "chip": "M3 Ultra",
+    "gpu_cores": 60,
+    "memory_gb": 256,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 3,
+    "rates": [
+     [
+      4096,
+      351.3
+     ],
+     [
+      16384,
+      333.9
+     ],
+     [
+      65536,
+      264.5
+     ]
+    ],
+    "r0": 361.7,
+    "r0_from": "its own fit",
+    "d0": 89611,
+    "d0_ref": 89611,
+    "max_fit_err_pct": 0.8,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 276.3
+   },
+   {
+    "chip": "M4",
+    "gpu_cores": 10,
+    "memory_gb": 24,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      58.6
+     ]
+    ],
+    "r0": 59.9,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 54.3
+   },
+   {
+    "chip": "M4",
+    "gpu_cores": 10,
+    "memory_gb": 32,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 2,
+    "rates": [
+     [
+      4096,
+      66.3
+     ],
+     [
+      16384,
+      63.3
+     ]
+    ],
+    "r0": 68.2,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 54.3
+   },
+   {
+    "chip": "M4 Max",
+    "gpu_cores": 32,
+    "memory_gb": 36,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 2,
+    "rates": [
+     [
+      4096,
+      213.9
+     ],
+     [
+      16384,
+      185.4
+     ]
+    ],
+    "r0": 209.9,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 173.8
+   },
+   {
+    "chip": "M4 Max",
+    "gpu_cores": 40,
+    "memory_gb": 48,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 2,
+    "rates": [
+     [
+      4096,
+      239.8
+     ],
+     [
+      16384,
+      211.0
+     ]
+    ],
+    "r0": 237.0,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 217.3
+   },
+   {
+    "chip": "M4 Max",
+    "gpu_cores": 40,
+    "memory_gb": 128,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 4,
+    "rates": [
+     [
+      4096,
+      272.6
+     ],
+     [
+      16384,
+      257.3
+     ],
+     [
+      32768,
+      239.8
+     ],
+     [
+      65536,
+      210.0
+     ]
+    ],
+    "r0": 278.3,
+    "r0_from": "its own fit",
+    "d0": 100999,
+    "d0_ref": 100999,
+    "max_fit_err_pct": 0.1,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 217.3
+   },
+   {
+    "chip": "M4 Pro",
+    "gpu_cores": 16,
+    "memory_gb": 24,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 2,
+    "rates": [
+     [
+      4096,
+      108.5
+     ],
+     [
+      8192,
+      106.8
+     ]
+    ],
+    "r0": 111.1,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 86.9
+   },
+   {
+    "chip": "M4 Pro",
+    "gpu_cores": 16,
+    "memory_gb": 48,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 2,
+    "rates": [
+     [
+      4096,
+      106.3
+     ],
+     [
+      16384,
+      104.4
+     ]
+    ],
+    "r0": 111.0,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 86.9
+   },
+   {
+    "chip": "M4 Pro",
+    "gpu_cores": 16,
+    "memory_gb": 64,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 2,
+    "rates": [
+     [
+      4096,
+      111.3
+     ],
+     [
+      16384,
+      105.0
+     ]
+    ],
+    "r0": 113.8,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 86.9
+   },
+   {
+    "chip": "M4 Pro",
+    "gpu_cores": 20,
+    "memory_gb": 48,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 3,
+    "rates": [
+     [
+      4096,
+      131.8
+     ],
+     [
+      16384,
+      122.8
+     ],
+     [
+      65536,
+      104.5
+     ]
+    ],
+    "r0": 132.7,
+    "r0_from": "its own fit",
+    "d0": 120239,
+    "d0_ref": 120239,
+    "max_fit_err_pct": 1.2,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 108.6
+   },
+   {
+    "chip": "M4 Pro",
+    "gpu_cores": 20,
+    "memory_gb": 64,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      135.6
+     ]
+    ],
+    "r0": 138.5,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 108.6
+   },
+   {
+    "chip": "M5",
+    "gpu_cores": 10,
+    "memory_gb": 24,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 2,
+    "rates": [
+     [
+      4096,
+      235.5
+     ],
+     [
+      16384,
+      239.3
+     ]
+    ],
+    "r0": 250.2,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 191.0
+   },
+   {
+    "chip": "M5",
+    "gpu_cores": 10,
+    "memory_gb": 32,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 4,
+    "rates": [
+     [
+      4096,
+      222.8
+     ],
+     [
+      8192,
+      189.8
+     ],
+     [
+      16384,
+      227.3
+     ],
+     [
+      32768,
+      221.6
+     ]
+    ],
+    "r0": 237.2,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 191.0
+   },
+   {
+    "chip": "M5 Max",
+    "gpu_cores": 40,
+    "memory_gb": 64,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      1022.0
+     ]
+    ],
+    "r0": 1043.9,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 764.0
+   },
+   {
+    "chip": "M5 Max",
+    "gpu_cores": 40,
+    "memory_gb": 128,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 3,
+    "rates": [
+     [
+      4096,
+      934.9
+     ],
+     [
+      8192,
+      796.5
+     ],
+     [
+      16384,
+      760.5
+     ]
+    ],
+    "r0": 830.6,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 764.0
+   },
+   {
+    "chip": "M5 Pro",
+    "gpu_cores": 16,
+    "memory_gb": 48,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 4,
+    "rates": [
+     [
+      4096,
+      419.0
+     ],
+     [
+      16384,
+      397.3
+     ],
+     [
+      65536,
+      326.7
+     ],
+     [
+      131072,
+      261.5
+     ]
+    ],
+    "r0": 428.8,
+    "r0_from": "its own fit",
+    "d0": 102925,
+    "d0_ref": 102925,
+    "max_fit_err_pct": 0.5,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 305.6
+   },
+   {
+    "chip": "M5 Pro",
+    "gpu_cores": 16,
+    "memory_gb": 64,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      8192,
+      623.7
+     ]
+    ],
+    "r0": 650.4,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 305.6
+   },
+   {
+    "chip": "M5 Pro",
+    "gpu_cores": 20,
+    "memory_gb": 48,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      508.1
+     ]
+    ],
+    "r0": 519.0,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 382.0
+   },
+   {
+    "chip": "M5 Pro",
+    "gpu_cores": 20,
+    "memory_gb": 64,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      517.6
+     ]
+    ],
+    "r0": 528.7,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 382.0
+   },
+   {
+    "chip": "M5 Ultra",
+    "gpu_cores": 64,
+    "memory_gb": 96,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 2,
+    "rates": [
+     [
+      4096,
+      1500.0
+     ],
+     [
+      16384,
+      1476.0
+     ]
+    ],
+    "r0": 1567.3,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 1222.4
+   },
+   {
+    "chip": "M5 Ultra",
+    "gpu_cores": 64,
+    "memory_gb": 256,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      65536,
+      1224.0
+     ]
+    ],
+    "r0": 1643.5,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 1222.4
+   },
+   {
+    "chip": "M5 Ultra",
+    "gpu_cores": 80,
+    "memory_gb": 96,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 1,
+    "rates": [
+     [
+      4096,
+      1664.0
+     ]
+    ],
+    "r0": 1699.6,
+    "r0_from": "the runtime's D0",
+    "d0": null,
+    "d0_ref": null,
+    "max_fit_err_pct": null,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": 1528.1
+   },
+   {
+    "chip": "M6",
+    "gpu_cores": 12,
+    "memory_gb": 32,
+    "model": "Qwen 3.8 27B",
+    "model_id": "qwen3.8-27b",
+    "quant": "MLX-4bit",
+    "runtime": "mlx",
+    "app": "oMLX 0.6 to 0.7 (community)",
+    "arch_class": "dense",
+    "params_active_b": 27.8,
+    "attention_layers": 16,
+    "layers": 64,
+    "n_points": 5,
+    "rates": [
+     [
+      4096,
+      311.2
+     ],
+     [
+      8192,
+      310.4
+     ],
+     [
+      16384,
+      284.5
+     ],
+     [
+      32768,
+      267.2
+     ],
+     [
+      65536,
+      239.5
+     ]
+    ],
+    "r0": 315.4,
+    "r0_from": "its own fit",
+    "d0": 99783,
+    "d0_ref": 99783,
+    "max_fit_err_pct": 2.4,
+    "report_only": false,
+    "source": "per point",
+    "plain_gguf_tok_s": null
+   }
+  ],
   "waits_tokens": [
    8192,
    32768,
@@ -854,9 +2714,108 @@
    }
   ],
   "_sources": [
-   "https://github.com/ggml-org/llama.cpp/discussions/4167",
+   "https://github.com/ddalcu/mlx-serve/releases/tag/v26.8.10",
    "https://github.com/enescingoz/mac-llm-bench",
-   "https://heretik.io/qwen38-flash-next-262k-macbook/"
+   "https://github.com/ggml-org/llama.cpp/discussions/4167",
+   "https://github.com/jundot/omlx/releases/tag/v0.7.0.dev2",
+   "https://heretik.io/qwen38-flash-next-262k-macbook/",
+   "https://omlx.ai/benchmarks/performance/0evdzron",
+   "https://omlx.ai/benchmarks/performance/0kcuzeek",
+   "https://omlx.ai/benchmarks/performance/11vp1obp",
+   "https://omlx.ai/benchmarks/performance/162wxvml",
+   "https://omlx.ai/benchmarks/performance/1cj8adju",
+   "https://omlx.ai/benchmarks/performance/1z2v3b4l",
+   "https://omlx.ai/benchmarks/performance/2hg7yub1",
+   "https://omlx.ai/benchmarks/performance/2wmdogda",
+   "https://omlx.ai/benchmarks/performance/30x97j9p",
+   "https://omlx.ai/benchmarks/performance/32bf9vtv",
+   "https://omlx.ai/benchmarks/performance/3oa449oh",
+   "https://omlx.ai/benchmarks/performance/3x9utgvp",
+   "https://omlx.ai/benchmarks/performance/4ijekpc9",
+   "https://omlx.ai/benchmarks/performance/4jm30l8m",
+   "https://omlx.ai/benchmarks/performance/4vz6s1gs",
+   "https://omlx.ai/benchmarks/performance/55tos9h8",
+   "https://omlx.ai/benchmarks/performance/5kon2kda",
+   "https://omlx.ai/benchmarks/performance/5r2xtful",
+   "https://omlx.ai/benchmarks/performance/5s0qqg0v",
+   "https://omlx.ai/benchmarks/performance/6i3ma787",
+   "https://omlx.ai/benchmarks/performance/6r971o1c",
+   "https://omlx.ai/benchmarks/performance/6uf9ph1k",
+   "https://omlx.ai/benchmarks/performance/7oj19l7e",
+   "https://omlx.ai/benchmarks/performance/7pi95r0i",
+   "https://omlx.ai/benchmarks/performance/8mk3zr7r",
+   "https://omlx.ai/benchmarks/performance/9k65p6xi",
+   "https://omlx.ai/benchmarks/performance/9oxxp7f5",
+   "https://omlx.ai/benchmarks/performance/a6uzn4hz",
+   "https://omlx.ai/benchmarks/performance/b6h8ny7h",
+   "https://omlx.ai/benchmarks/performance/b7zm47ua",
+   "https://omlx.ai/benchmarks/performance/br08ympg",
+   "https://omlx.ai/benchmarks/performance/cd4ly4cb",
+   "https://omlx.ai/benchmarks/performance/cy91p9l4",
+   "https://omlx.ai/benchmarks/performance/dlohmlwr",
+   "https://omlx.ai/benchmarks/performance/dpqoysjr",
+   "https://omlx.ai/benchmarks/performance/dprzuno3",
+   "https://omlx.ai/benchmarks/performance/drikpz8g",
+   "https://omlx.ai/benchmarks/performance/e87xbfwn",
+   "https://omlx.ai/benchmarks/performance/e8jtjvo8",
+   "https://omlx.ai/benchmarks/performance/ed7jfi3t",
+   "https://omlx.ai/benchmarks/performance/ep822nlz",
+   "https://omlx.ai/benchmarks/performance/f1b28mng",
+   "https://omlx.ai/benchmarks/performance/fntarakd",
+   "https://omlx.ai/benchmarks/performance/fze74chq",
+   "https://omlx.ai/benchmarks/performance/g844xneu",
+   "https://omlx.ai/benchmarks/performance/gw63nena",
+   "https://omlx.ai/benchmarks/performance/h04mqxmm",
+   "https://omlx.ai/benchmarks/performance/h3orjrax",
+   "https://omlx.ai/benchmarks/performance/hpsa2yel",
+   "https://omlx.ai/benchmarks/performance/ic77s9yf",
+   "https://omlx.ai/benchmarks/performance/icz1xarx",
+   "https://omlx.ai/benchmarks/performance/j68tjcyo",
+   "https://omlx.ai/benchmarks/performance/jbem3u47",
+   "https://omlx.ai/benchmarks/performance/jk5rc34u",
+   "https://omlx.ai/benchmarks/performance/k7d516d2",
+   "https://omlx.ai/benchmarks/performance/kap2cj2y",
+   "https://omlx.ai/benchmarks/performance/krru1433",
+   "https://omlx.ai/benchmarks/performance/lsi06w75",
+   "https://omlx.ai/benchmarks/performance/ltjy72zh",
+   "https://omlx.ai/benchmarks/performance/m0a0ia7i",
+   "https://omlx.ai/benchmarks/performance/mewvrkb3",
+   "https://omlx.ai/benchmarks/performance/mkpc7kel",
+   "https://omlx.ai/benchmarks/performance/mo6b29d0",
+   "https://omlx.ai/benchmarks/performance/nqixnl7q",
+   "https://omlx.ai/benchmarks/performance/nr79h7r8",
+   "https://omlx.ai/benchmarks/performance/ns35rgrx",
+   "https://omlx.ai/benchmarks/performance/oglo5312",
+   "https://omlx.ai/benchmarks/performance/p1rvr4gg",
+   "https://omlx.ai/benchmarks/performance/pqcpywvj",
+   "https://omlx.ai/benchmarks/performance/q1qbilcu",
+   "https://omlx.ai/benchmarks/performance/q30klq6u",
+   "https://omlx.ai/benchmarks/performance/qketz0br",
+   "https://omlx.ai/benchmarks/performance/qoh81xh5",
+   "https://omlx.ai/benchmarks/performance/r0plagoc",
+   "https://omlx.ai/benchmarks/performance/rpjwy0oh",
+   "https://omlx.ai/benchmarks/performance/s5fillje",
+   "https://omlx.ai/benchmarks/performance/sfbs3ee0",
+   "https://omlx.ai/benchmarks/performance/sud8hpp7",
+   "https://omlx.ai/benchmarks/performance/thluvt22",
+   "https://omlx.ai/benchmarks/performance/u6b0cj16",
+   "https://omlx.ai/benchmarks/performance/ubpeupc8",
+   "https://omlx.ai/benchmarks/performance/ul1lsqo7",
+   "https://omlx.ai/benchmarks/performance/v32jxcbg",
+   "https://omlx.ai/benchmarks/performance/w51ihbql",
+   "https://omlx.ai/benchmarks/performance/w5iqms2k",
+   "https://omlx.ai/benchmarks/performance/w8vuorqp",
+   "https://omlx.ai/benchmarks/performance/w9ymu97j",
+   "https://omlx.ai/benchmarks/performance/wdbivh6i",
+   "https://omlx.ai/benchmarks/performance/wolvj9rd",
+   "https://omlx.ai/benchmarks/performance/wzofxe6m",
+   "https://omlx.ai/benchmarks/performance/y1nd4v0u",
+   "https://omlx.ai/benchmarks/performance/y8wfp7ry",
+   "https://omlx.ai/benchmarks/performance/ymqinqte",
+   "https://omlx.ai/benchmarks/performance/zasd8zgb",
+   "https://www.macstories.net/stories/m5-ultra-mac-studio-review-the-dream-mac-for-local-ai-agents/",
+   "https://www.tomshardware.com/desktops/mini-pcs/apple-mac-studio-m5-ultra-review",
+   "https://www.youtube.com/watch?v=OwnzX2Ic3LU"
   ]
  },
  "cluster": {
@@ -979,20 +2938,120 @@
   "https://dev.classmethod.jp/en/articles/dgx-spark-two-node-clustering/",
   "https://forums.developer.nvidia.com/t/question-on-inference-performance-results-of-qwen3-235b-a22b-on-2x-dgx-spark/355053",
   "https://github.com/ARahim3/mlx-dspark",
+  "https://github.com/ddalcu/mlx-serve/releases/tag/v26.8.10",
   "https://github.com/eauchs/mlx-dflash",
   "https://github.com/enescingoz/mac-llm-bench",
   "https://github.com/ggml-org/llama.cpp/blob/master/benches/dgx-spark/dgx-spark.md",
   "https://github.com/ggml-org/llama.cpp/discussions/16578",
   "https://github.com/ggml-org/llama.cpp/discussions/4167",
+  "https://github.com/jundot/omlx/releases/tag/v0.7.0.dev2",
   "https://github.com/ml-explore/mlx/discussions/2990",
   "https://github.com/ml-explore/mlx/discussions/3209",
   "https://github.com/ml-explore/mlx/discussions/3939",
   "https://github.com/voipmonitor/rtx6kpro/blob/master/benchmarks/results.md",
   "https://github.com/youssofal/MTPLX",
   "https://lmsys.org/blog/2025-10-13-nvidia-dgx-spark/",
+  "https://omlx.ai/benchmarks/performance/0evdzron",
+  "https://omlx.ai/benchmarks/performance/0kcuzeek",
+  "https://omlx.ai/benchmarks/performance/11vp1obp",
+  "https://omlx.ai/benchmarks/performance/162wxvml",
+  "https://omlx.ai/benchmarks/performance/1cj8adju",
+  "https://omlx.ai/benchmarks/performance/1z2v3b4l",
+  "https://omlx.ai/benchmarks/performance/2hg7yub1",
+  "https://omlx.ai/benchmarks/performance/2wmdogda",
+  "https://omlx.ai/benchmarks/performance/30x97j9p",
+  "https://omlx.ai/benchmarks/performance/32bf9vtv",
+  "https://omlx.ai/benchmarks/performance/3oa449oh",
+  "https://omlx.ai/benchmarks/performance/3x9utgvp",
+  "https://omlx.ai/benchmarks/performance/4ijekpc9",
+  "https://omlx.ai/benchmarks/performance/4jm30l8m",
+  "https://omlx.ai/benchmarks/performance/4vz6s1gs",
+  "https://omlx.ai/benchmarks/performance/55tos9h8",
+  "https://omlx.ai/benchmarks/performance/5kon2kda",
+  "https://omlx.ai/benchmarks/performance/5r2xtful",
+  "https://omlx.ai/benchmarks/performance/5s0qqg0v",
+  "https://omlx.ai/benchmarks/performance/6i3ma787",
+  "https://omlx.ai/benchmarks/performance/6r971o1c",
+  "https://omlx.ai/benchmarks/performance/6uf9ph1k",
+  "https://omlx.ai/benchmarks/performance/7oj19l7e",
+  "https://omlx.ai/benchmarks/performance/7pi95r0i",
+  "https://omlx.ai/benchmarks/performance/8mk3zr7r",
+  "https://omlx.ai/benchmarks/performance/9k65p6xi",
+  "https://omlx.ai/benchmarks/performance/9oxxp7f5",
+  "https://omlx.ai/benchmarks/performance/a6uzn4hz",
+  "https://omlx.ai/benchmarks/performance/b6h8ny7h",
+  "https://omlx.ai/benchmarks/performance/b7zm47ua",
+  "https://omlx.ai/benchmarks/performance/br08ympg",
+  "https://omlx.ai/benchmarks/performance/cd4ly4cb",
+  "https://omlx.ai/benchmarks/performance/cy91p9l4",
+  "https://omlx.ai/benchmarks/performance/dlohmlwr",
+  "https://omlx.ai/benchmarks/performance/dpqoysjr",
+  "https://omlx.ai/benchmarks/performance/dprzuno3",
+  "https://omlx.ai/benchmarks/performance/drikpz8g",
+  "https://omlx.ai/benchmarks/performance/e87xbfwn",
+  "https://omlx.ai/benchmarks/performance/e8jtjvo8",
+  "https://omlx.ai/benchmarks/performance/ed7jfi3t",
+  "https://omlx.ai/benchmarks/performance/ep822nlz",
+  "https://omlx.ai/benchmarks/performance/f1b28mng",
+  "https://omlx.ai/benchmarks/performance/fntarakd",
+  "https://omlx.ai/benchmarks/performance/fze74chq",
+  "https://omlx.ai/benchmarks/performance/g844xneu",
+  "https://omlx.ai/benchmarks/performance/gw63nena",
+  "https://omlx.ai/benchmarks/performance/h04mqxmm",
+  "https://omlx.ai/benchmarks/performance/h3orjrax",
+  "https://omlx.ai/benchmarks/performance/hpsa2yel",
+  "https://omlx.ai/benchmarks/performance/ic77s9yf",
+  "https://omlx.ai/benchmarks/performance/icz1xarx",
+  "https://omlx.ai/benchmarks/performance/j68tjcyo",
+  "https://omlx.ai/benchmarks/performance/jbem3u47",
+  "https://omlx.ai/benchmarks/performance/jk5rc34u",
+  "https://omlx.ai/benchmarks/performance/k7d516d2",
+  "https://omlx.ai/benchmarks/performance/kap2cj2y",
+  "https://omlx.ai/benchmarks/performance/krru1433",
+  "https://omlx.ai/benchmarks/performance/lsi06w75",
+  "https://omlx.ai/benchmarks/performance/ltjy72zh",
+  "https://omlx.ai/benchmarks/performance/m0a0ia7i",
+  "https://omlx.ai/benchmarks/performance/mewvrkb3",
+  "https://omlx.ai/benchmarks/performance/mkpc7kel",
+  "https://omlx.ai/benchmarks/performance/mo6b29d0",
+  "https://omlx.ai/benchmarks/performance/nqixnl7q",
+  "https://omlx.ai/benchmarks/performance/nr79h7r8",
+  "https://omlx.ai/benchmarks/performance/ns35rgrx",
+  "https://omlx.ai/benchmarks/performance/oglo5312",
+  "https://omlx.ai/benchmarks/performance/p1rvr4gg",
+  "https://omlx.ai/benchmarks/performance/pqcpywvj",
+  "https://omlx.ai/benchmarks/performance/q1qbilcu",
+  "https://omlx.ai/benchmarks/performance/q30klq6u",
+  "https://omlx.ai/benchmarks/performance/qketz0br",
+  "https://omlx.ai/benchmarks/performance/qoh81xh5",
+  "https://omlx.ai/benchmarks/performance/r0plagoc",
+  "https://omlx.ai/benchmarks/performance/rpjwy0oh",
+  "https://omlx.ai/benchmarks/performance/s5fillje",
+  "https://omlx.ai/benchmarks/performance/sfbs3ee0",
+  "https://omlx.ai/benchmarks/performance/sud8hpp7",
+  "https://omlx.ai/benchmarks/performance/thluvt22",
+  "https://omlx.ai/benchmarks/performance/u6b0cj16",
+  "https://omlx.ai/benchmarks/performance/ubpeupc8",
+  "https://omlx.ai/benchmarks/performance/ul1lsqo7",
+  "https://omlx.ai/benchmarks/performance/v32jxcbg",
+  "https://omlx.ai/benchmarks/performance/w51ihbql",
+  "https://omlx.ai/benchmarks/performance/w5iqms2k",
+  "https://omlx.ai/benchmarks/performance/w8vuorqp",
+  "https://omlx.ai/benchmarks/performance/w9ymu97j",
+  "https://omlx.ai/benchmarks/performance/wdbivh6i",
+  "https://omlx.ai/benchmarks/performance/wolvj9rd",
+  "https://omlx.ai/benchmarks/performance/wzofxe6m",
+  "https://omlx.ai/benchmarks/performance/y1nd4v0u",
+  "https://omlx.ai/benchmarks/performance/y8wfp7ry",
+  "https://omlx.ai/benchmarks/performance/ymqinqte",
+  "https://omlx.ai/benchmarks/performance/zasd8zgb",
   "https://vinoth12940.github.io/blog/articles/genai-20260519-local-mtp-speculative-decoding/",
   "https://whitepapers.openzeka.com/papers/qwen3.6-27b-dgx-spark-scaling/",
   "https://www.jeffgeerling.com/blog/2025/15-tb-vram-on-mac-studio-rdma-over-thunderbolt-5/",
-  "https://www.macrumors.com/2025/03/17/apples-m3-ultra-runs-deepseek-r1-efficiently/"
+  "https://www.macrumors.com/2025/03/17/apples-m3-ultra-runs-deepseek-r1-efficiently/",
+  "https://www.macstories.net/stories/m5-ultra-mac-studio-review-the-dream-mac-for-local-ai-agents/",
+  "https://www.tomshardware.com/desktops/mini-pcs/apple-mac-studio-m5-ultra-review",
+  "https://www.youtube.com/watch?v=OwnzX2Ic3LU",
+  "https://www.youtube.com/watch?v=T15BuMPZW4Q"
  ]
 }

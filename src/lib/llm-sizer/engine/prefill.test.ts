@@ -12,8 +12,8 @@ const base: Omit<Settings, 'memoryGb'> = { workApps: 0, override: false, context
 const s = (memoryGb: number, over: Partial<Settings> = {}): Settings => ({ ...base, memoryGb, ...over });
 
 interface Case {
-  id: string; chip: string; gpu_cores: number | null; platform: 'apple' | 'cuda'; quant_label: string; format: 'gguf' | 'mlx'; arch_class: string; runtime: 'gguf' | 'mlx';
-  active_params_b: number; kv_layers: number; layers: number; context_tokens: number; mlx_group: 'pre_m5' | 'm5plus';
+  id: string; model_id: string; chip: string; gpu_cores: number | null; platform: 'apple' | 'cuda'; quant_label: string; format: 'gguf' | 'mlx'; arch_class: string; runtime: 'gguf' | 'mlx';
+  active_params_b: number; kv_layers: number; layers: number; context_tokens: number; mlx_group: 'm1_m2' | 'm3_m4' | 'm5plus';
   expected_k: number; expected_source: string; expected_tok_s: number; expected_d0: number; expected_wait_8k_s: number; expected_wait_ctx_s: number; expected_rate_at_ctx: number;
 }
 const cases = (JSON.parse(readFileSync(new URL('../../../../scripts/llm-sizer/tests/fixtures/prefill-cases.json', import.meta.url), 'utf8')) as { cases: Case[] }).cases;
@@ -26,7 +26,7 @@ describe('prefill parity with speed_model.py', () => {
       expect(k.k, c.id).toBeCloseTo(c.expected_k, 6);
       const tokS = prefillTokS(pf, k.k!, c.quant_label, c.format, c.arch_class, c.runtime, c.active_params_b, c.mlx_group);
       expect(tokS, c.id).toBeCloseTo(c.expected_tok_s, 2);
-      const d0 = prefillD0(pf, { architecture: { kv_layers: c.kv_layers, layers: c.layers } as never }).d0;
+      const d0 = prefillD0(pf, { id: c.model_id, architecture: { kv_layers: c.kv_layers, layers: c.layers } as never }, c.runtime).d0;
       expect(d0, c.id).toBeCloseTo(c.expected_d0, 2);
       expect(firstWordWaitS(tokS, d0, 8192), c.id).toBeCloseTo(c.expected_wait_8k_s, 3);
       expect(firstWordWaitS(tokS, d0, c.context_tokens), c.id).toBeCloseTo(c.expected_wait_ctx_s, 3);
@@ -37,7 +37,7 @@ describe('prefill parity with speed_model.py', () => {
 
 describe('the prefill estimate on real cells', () => {
   const mbp = machineById('macbook-pro-m5-max-40c');
-  it('Qwen 3.8 27B at Q4 on an M5 Max 40-core: about 670 tok/s at a short prompt, a 32K prompt waits about a minute and a half', () => {
+  it('Qwen 3.8 27B at Q4 on an M5 Max 40-core: about 670 tok/s at a short prompt, a 32K prompt waits about a minute', () => {
     const cell = evaluateCell(loadModel('qwen3.8-27b'), mbp, s(128), factors);
     const p = cell.prefill!;
     expect(p.source).toBe('measured');
@@ -46,12 +46,28 @@ describe('the prefill estimate on real cells', () => {
     expect(p.tokS!).toBeLessThan(700);
     expect(p.waits.map((w) => w.tokens)).toEqual([8192, 32768, 131072]);
     const w32 = p.waits[1].seconds;
-    expect(w32).toBeGreaterThan(75);
-    expect(w32).toBeLessThan(105);
+    expect(w32).toBeGreaterThan(50);
+    expect(w32).toBeLessThan(70);
     expect(p.waits[0].seconds * 4).toBeLessThan(w32); // worse than linear: the context already read slows the rest
     expect(p.atContext).toMatchObject({ tokens: 32768 });
     expect(p.atContext!.rateTokS).toBeLessThan(p.tokS!);
     expect(p.notes).toEqual([]);
+  });
+  it('on MLX it reads where oMLX measures it: about 1,000 tok/s, an 8K prompt in under ten seconds, and it slows later than llama.cpp', () => {
+    // oMLX benchmark 32bf9vtv (M5 Max 40-core, mlx-community 4-bit): 912 tok/s over 4K, 829 over 8K (9.9 s), 684 over 32K
+    const q = loadModel('qwen3.8-27b');
+    const mlxQ = q.quants.find((x) => x.format === 'mlx')!;
+    const p = evaluateCell(q, mbp, s(128, { runtime: 'mlx', quant: mlxQ }), factors).prefill!;
+    expect(p.tokS!).toBeGreaterThan(900);
+    expect(p.tokS!).toBeLessThan(1100);
+    expect(p.waits[0].seconds).toBeGreaterThan(7);
+    expect(p.waits[0].seconds).toBeLessThan(11);
+    expect(p.d0!).toBe(prefillD0(pf, q, 'mlx').d0);
+    expect(prefillD0(pf, q, 'mlx').d0).not.toBe(prefillD0(pf, q, 'gguf').d0);
+    // a model with a published sweep of its own keeps it on that runtime, the fitted value elsewhere
+    const fn = loadModel('qwen3.8-flash-next');
+    expect(prefillD0(pf, fn, 'gguf')).toEqual({ d0: pf.context.by_model!['qwen3.8-flash-next'].gguf!.d0_tokens, assumed: false });
+    expect(prefillD0(pf, fn, 'mlx').d0).toBe(pf.context.mlx!.d0_tokens);
   });
   it('the file\'s bits do not matter, the cores do, and a 32-core M5 Max reads at 0.8 of the 40-core', () => {
     const q8 = evaluateCell(loadModel('qwen3.8-27b'), mbp, s(128, { quant: loadModel('qwen3.8-27b').quants.find((q) => q.label === 'Q8_0') }), factors).prefill!;
@@ -60,12 +76,14 @@ describe('the prefill estimate on real cells', () => {
     const c32 = evaluateCell(loadModel('qwen3.8-27b'), machineById('macbook-pro-m5-max-32c'), s(36), factors).prefill!;
     expect(c32.tokS! / q4.tokS!).toBeCloseTo(0.8, 6);
   });
-  it('an M5 Ultra has no rows: its generation\'s rate on 80 cores, flagged; an M6 mini takes the newest generation, flagged as assumed', () => {
+  it('an M5 Ultra has no table rows: its generation\'s rate on 80 cores, flagged, with its measured runs named; an M6 mini takes the newest generation, flagged as assumed', () => {
     const ultra = evaluateCell(loadModel('glm-5.2'), machineById('mac-studio-m5-ultra'), s(512, { override: 1 }), factors).prefill!;
     expect(ultra.source).toBe('generation');
     expect(ultra.parts).toMatchObject({ cores: 80, cls: 'moe_latent' });
-    expect(ultra.notes.some((n) => n.includes('no measured prefill row'))).toBe(true);
-    expect(ultra.notes.some((n) => n.includes('assumed'))).toBe(true); // the latent-attention class factor has no rows
+    expect(ultra.notes.some((n) => n.includes('no llama.cpp table row'))).toBe(true);
+    expect(ultra.notes.some((n) => n.includes('measured reading runs of the M5 Ultra'))).toBe(true);
+    expect(pf.class.moe_latent.n).toBeGreaterThanOrEqual(2); // the latent-attention class is fitted on MacStories' GLM-5.3 Flash ladders
+    expect(ultra.notes.some((n) => n.includes('prefill factor is assumed'))).toBe(false);
     const m6 = evaluateCell(loadModel('qwen3.8-27b'), machineById('mac-mini-m6'), s(32), factors).prefill!;
     expect(m6.source).toBe('assumed');
     expect(m6.parts).toMatchObject({ cores: 12, generation: 'M5' });
@@ -88,7 +106,10 @@ describe('the prefill estimate on real cells', () => {
     const m5 = evaluateCell(loadModel('qwen3.8-27b'), mbp, s(128, { runtime: 'mlx', quant: mlxQ }), factors).prefill!;
     expect(m5.parts?.mlx).toBe(pf.mlx.m5plus.factor);
     const m1 = evaluateCell(loadModel('qwen3.8-27b'), machineById('macbook-pro-m1-max'), s(64, { runtime: 'mlx', quant: mlxQ }), factors).prefill!;
-    expect(m1.parts?.mlx).toBe(pf.mlx.pre_m5.factor);
+    expect(m1.parts?.mlx).toBe(pf.mlx.m1_m2.factor);
+    const m4 = evaluateCell(loadModel('qwen3.8-27b'), machineById('mac-studio-m4-max-40c'), s(128, { runtime: 'mlx', quant: mlxQ }), factors).prefill!;
+    expect(m4.parts?.mlx).toBe(pf.mlx.m3_m4.factor);
+    expect(pf.mlx.m1_m2.factor).toBeLessThan(pf.mlx.m3_m4.factor);
     const spark = evaluateCell(loadModel('qwen3.8-27b'), machineById('nvidia-dgx-spark'), s(128), factors).prefill!;
     expect(spark.source).toBe('measured');
     expect(spark.parts).toMatchObject({ cores: null, k: pf.by_chip['DGX Spark'].value });

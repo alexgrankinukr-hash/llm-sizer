@@ -487,6 +487,9 @@ export interface CellResult {
   contextTokens: number;
 }
 
+/** The MLX reading-factor groups: the M1 and M2 GPUs, the M3 and M4 GPUs, the M5 generation and newer. */
+export type PrefillMlxGroup = 'm1_m2' | 'm3_m4' | 'm5plus';
+
 /** The prefill (prompt-processing) terms calibrate.py derives; METHODOLOGY section 6.4. */
 export interface PrefillFactors {
   /** tokens/s × active billions per GPU core, by generation ("M1" … "M5"), on plain llama.cpp files at 512 tokens */
@@ -495,12 +498,28 @@ export interface PrefillFactors {
   by_chip: Record<string, { value: number; n: number; range: [number, number] }>;
   /** chips that have rows of their own: anything else in the generation is an extrapolation on its cores */
   chips_with_rows: string[];
+  /** chips whose reading has been measured at all (table rows, or MLX and llama.cpp runs in the calibration data) */
+  chips_with_runs?: string[];
   kquant: { factor: number; n: number; range?: [number, number]; note?: string };
   class: Record<string, { factor: number; n?: number; range?: [number, number]; note?: string; examples?: string[] }>;
   /** models whose prefill class is their own (from a published sweep), by model id */
   class_by_model: Record<string, string>;
-  mlx: Record<'pre_m5' | 'm5plus', { factor: number; n: number; range?: [number, number]; note?: string }>;
-  context: { d0_tokens: number; n_points: number; range: [number, number] | null; attention_share_ref: number; note?: string };
+  /** MLX's reading rate against llama.cpp's plain files, by GPU generation group, fitted on prompts of 4K tokens and more */
+  mlx: Record<PrefillMlxGroup, { factor: number; n: number; range?: [number, number]; note?: string }>;
+  /**
+   * How the rate falls with the context already read: D0, the depth at which it has halved, for a model with attention in
+   * `attention_share_ref` of its layers. `d0_tokens` is llama.cpp's (n_points = ladders fitted), `mlx` MLX's; a model with a
+   * published depth sweep of its own carries its own value on that runtime in `by_model`.
+   */
+  context: {
+    d0_tokens: number;
+    n_points: number;
+    range: [number, number] | null;
+    attention_share_ref: number;
+    mlx?: { d0_tokens: number; n_ladders: number; range: [number, number] | null; source?: string };
+    by_model?: Record<string, Partial<Record<'gguf' | 'mlx', { d0_tokens: number; n_points?: number; range?: [number, number]; source?: string }>>>;
+    note?: string;
+  };
   waits_tokens: number[];
   feels_like: { max_s: number | null; label: string }[];
 }

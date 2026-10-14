@@ -124,3 +124,33 @@ def test_cluster_series_rows_are_well_formed_and_out_of_the_single_machine_fits(
     # they live outside `rows`, so no single-machine loop indexes them
     assert all("tg_by_nodes" not in r for r in bench["rows"])
     assert {"mac", "spark"} <= {s["link_class"] for s in fitted_series if s["split"] == "layer"}
+
+
+def test_fit_ladder_recovers_a_known_curve():
+    from calibrate import fit_ladder
+    r0, d0 = 1000.0, 50000.0
+    lad = {"chip": "M5 Max", "model": "x", "quant": "MLX-4bit", "runtime": "mlx", "params_active_b": 27.8, "attention_layers": 16, "layers": 64,
+           "points": [{"prompt_tokens": n, "tok_s": r0 / (1 + n / (2 * d0))} for n in (1024, 4096, 16384, 65536)]}
+    f = fit_ladder(lad)
+    assert f["n_points"] == 3                      # the 1K point carries the start-up cost and is left out
+    assert abs(f["r0"] - r0) < 0.5 and abs(f["d0"] - d0) < 50 and f["d0_ref"] == f["d0"]
+    waits = {**lad, "points": [{"prompt_tokens": n, "wait_s": (n + n * n / (2 * d0)) / r0} for n in (4096, 32768)]}
+    assert abs(fit_ladder(waits)["r0"] - r0) < 0.5
+    short = {**lad, "points": [{"prompt_tokens": 4096, "tok_s": 980.0}, {"prompt_tokens": 16384, "tok_s": 900.0}]}
+    assert fit_ladder(short)["d0"] is None         # spans under 8×: its rate comes from the runtime's D0
+
+
+def test_prefill_reading_terms():
+    f = json.loads((PUBLIC_DATA_DIR / "factors.json").read_text())["prefill"]
+    ctx = f["context"]
+    # D0 per runtime, from measured ladders; Flash Next keeps its own published llama.cpp sweep
+    assert 40000 <= ctx["d0_tokens"] <= 200000 and ctx["n_points"] >= 3
+    assert 40000 <= ctx["mlx"]["d0_tokens"] <= 200000 and ctx["mlx"]["n_ladders"] >= 5
+    assert ctx["by_model"]["qwen3.8-flash-next"]["gguf"]["d0_tokens"] < ctx["d0_tokens"]
+    # MLX at real prompt lengths: three generation groups, the 512-token rows excluded from the fit
+    mlx = f["mlx"]
+    assert set(mlx) >= {"m1_m2", "m3_m4", "m5plus"}
+    assert 0.6 <= mlx["m1_m2"]["factor"] < mlx["m3_m4"]["factor"] <= mlx["m5plus"]["factor"] + 0.1
+    assert all(mlx[g]["n"] >= 5 for g in ("m1_m2", "m3_m4", "m5plus"))
+    assert mlx["_excluded"]["min_prompt_tokens"] == 4096 and len(mlx["_excluded"]["rows"]) >= 6
+    assert all(lf["r0"] for lf in f["ladders"] if lf["rates"])

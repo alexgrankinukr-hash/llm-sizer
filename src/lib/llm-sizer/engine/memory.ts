@@ -2,7 +2,7 @@
  * Memory math (METHODOLOGY §4 and §5): what a machine can give the model, what the model needs,
  * and the verdict. `kvCacheBytes` mirrors `scripts/llm-sizer/arch.py:kv_cache_bytes` exactly.
  */
-import { BYTES_PER_GB, CLUSTER_POLICY, GIB_IN_GB, GPU_CAP, MEMORY_POLICY, PREBUILT_RESERVE_GB, RUNS_HEADROOM, type ClusterPolicy, type MemoryPolicy } from './constants';
+import { BYTES_PER_GB, CLUSTER_POLICY, GIB_IN_GB, GPU_CAP_MAX_HELD_GB, GPU_CAP_TIERS, MEMORY_POLICY, PREBUILT_RESERVE_GB, RUNS_HEADROOM, type ClusterPolicy, type MemoryPolicy } from './constants';
 import { clusterOf, type Cluster } from './cluster';
 import type { Architecture, Availability, Breakdown, KvBits, Machine, Need, Settings, SpecialBuild, Quant } from './types';
 
@@ -10,9 +10,11 @@ function clamp01(x: number): number {
   return Math.min(1, Math.max(0, x));
 }
 
-/** The default GPU limit macOS applies to a machine of this (nominal) size. */
+/** The default GPU limit macOS 26 applies to a machine of this (nominal) size: its tier's share, with at most 48 GB held back. */
 export function defaultCap(memoryGb: number): number {
-  return memoryGb < GPU_CAP.thresholdGb ? GPU_CAP.small : GPU_CAP.large;
+  let share = GPU_CAP_TIERS[0].share;
+  for (const tier of GPU_CAP_TIERS) if (memoryGb >= tier.fromGb) share = tier.share;
+  return memoryGb > GPU_CAP_MAX_HELD_GB ? Math.max(share, 1 - GPU_CAP_MAX_HELD_GB / memoryGb) : share;
 }
 
 /** A machine's nominal (binary) memory size in the decimal gigabytes file sizes use: 48 GB → 51.5 GB. */

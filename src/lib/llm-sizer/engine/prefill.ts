@@ -4,10 +4,10 @@
  * or per chip elsewhere; K-quant files, the architecture class and MLX scale it; the context already read slows it.
  * Mirrors speed_model.py (prefill_constant, prefill_tok_s, prefill_d0, first_word_wait_s). METHODOLOGY section 6.4.
  */
-import { archClassOf, generationNumberOf, mlxContextGroupOf, quantFamilyOf } from './speed';
+import { archClassOf, generationNumberOf, quantFamilyOf } from './speed';
 import { isSpecialBuild } from './memory';
 import { prefillClusterFactor, termStatus, type Cluster } from './cluster';
-import type { Factors, Machine, ModelDetail, Prefill, PrefillFactors, Quant, Runtime, SpecialBuild } from './types';
+import type { Factors, Machine, ModelDetail, Prefill, PrefillFactors, PrefillMlxGroup, Quant, Runtime, SpecialBuild } from './types';
 
 const PLAIN_QUANTS = new Set(['Q4_0', 'Q8_0', 'F16', 'BF16', 'MXFP4']);
 
@@ -57,8 +57,18 @@ export function prefillConstant(pf: PrefillFactors, machine: Pick<Machine, 'chip
   return { k: null, source: 'none', cores: null, perCore: null, generation: null };
 }
 
+/**
+ * Which MLX reading factor applies (speed_model.py:prefill_mlx_group): the M1 and M2 GPUs, the M3 and M4 GPUs, the M5
+ * generation and newer. A chip whose generation cannot be read (a custom machine) takes the M1 and M2 value, the slowest.
+ */
+export function prefillMlxGroupOf(machine: Pick<Machine, 'chip'>): PrefillMlxGroup {
+  const g = generationNumberOf(machine.chip);
+  if (g === null) return 'm1_m2';
+  return g >= 5 ? 'm5plus' : g >= 3 ? 'm3_m4' : 'm1_m2';
+}
+
 /** Short-prompt tokens/s for one build (speed_model.py:prefill_tok_s). */
-export function prefillTokS(pf: PrefillFactors, k: number, quantLabel: string, format: 'gguf' | 'mlx', cls: string, runtime: Runtime, activeB: number, mlxGroup: 'pre_m5' | 'm5plus'): number {
+export function prefillTokS(pf: PrefillFactors, k: number, quantLabel: string, format: 'gguf' | 'mlx', cls: string, runtime: Runtime, activeB: number, mlxGroup: PrefillMlxGroup): number {
   const kquant = runtime !== 'mlx' && format !== 'mlx' && !PLAIN_QUANTS.has(quantLabel.toUpperCase()) ? pf.kquant.factor : 1;
   const classFactor = (pf.class[cls] ?? pf.class.dense).factor;
   const mlx = runtime === 'mlx' ? pf.mlx[mlxGroup].factor : 1;
@@ -69,12 +79,19 @@ export function prefillClassOf(model: ModelDetail, pf: PrefillFactors): string {
   return pf.class_by_model[model.id] ?? archClassOf(model);
 }
 
-/** The context depth at which the rate has halved (speed_model.py:prefill_d0). */
-export function prefillD0(pf: PrefillFactors, model: Pick<ModelDetail, 'architecture'>): { d0: number; assumed: boolean } {
-  const a = model.architecture;
+/**
+ * The context depth at which the rate has halved (speed_model.py:prefill_d0): the runtime's fitted value (llama.cpp and MLX
+ * slow down very differently) scaled by the model's share of attention layers, or the model's own where it has a sweep.
+ */
+export function prefillD0(pf: PrefillFactors, model: Pick<ModelDetail, 'architecture'> & { id?: string }, runtime: Runtime = 'gguf'): { d0: number; assumed: boolean } {
   const ctx = pf.context;
+  const rt = runtime === 'mlx' ? 'mlx' : 'gguf';
+  const own = model.id ? ctx.by_model?.[model.id]?.[rt] : undefined;
+  if (own) return { d0: own.d0_tokens, assumed: false };
+  const a = model.architecture;
+  const base = rt === 'mlx' && ctx.mlx ? ctx.mlx.d0_tokens : ctx.d0_tokens;
   const share = a?.kv_layers && a.layers ? Math.max(0.05, a.kv_layers / a.layers) : ctx.attention_share_ref;
-  return { d0: (ctx.d0_tokens * ctx.attention_share_ref) / share, assumed: Math.abs(share - ctx.attention_share_ref) > 1e-9 };
+  return { d0: (base * ctx.attention_share_ref) / share, assumed: Math.abs(share - ctx.attention_share_ref) > 1e-9 };
 }
 
 export function firstWordWaitS(tokS: number, d0: number, promptTokens: number): number {
@@ -118,25 +135,26 @@ export function estimatePrefill({ model, quant, machine, memoryGb, runtime, cont
   const kquant = runtime !== 'mlx' && family !== 'mlx' && !PLAIN_QUANTS.has(quant.label.toUpperCase()) ? pf.kquant.factor : 1;
   const cls = prefillClassOf(model, pf);
   const classFactor = (pf.class[cls] ?? pf.class.dense).factor;
-  const mlxGroup = mlxContextGroupOf(machine);
+  const mlxGroup = prefillMlxGroupOf(machine);
   const mlx = runtime === 'mlx' ? pf.mlx[mlxGroup].factor : 1;
   const single = (c.k * kquant * classFactor * mlx) / active;
   // linked machines: one machine's rate on a layer split (measured flat), scaled by an assumed exponent under tensor parallel
   const pooled = cluster && factors.cluster ? prefillClusterFactor(cluster.n, cluster.split, factors.cluster) : null;
   const clusterFactor = pooled?.factor ?? 1;
   const tokS = single * clusterFactor;
-  const { d0, assumed: d0Assumed } = prefillD0(pf, model);
+  const { d0, assumed: d0Assumed } = prefillD0(pf, model, runtime);
   const waits = pf.waits_tokens.map((tokens) => ({ tokens, seconds: firstWordWaitS(tokS, d0, tokens), feelsLike: feelsLikeWait(pf, firstWordWaitS(tokS, d0, tokens)) }));
   const atContext = { tokens: contextTokens, seconds: firstWordWaitS(tokS, d0, contextTokens), rateTokS: prefillRateAt(tokS, d0, contextTokens) };
   // the larger GPU bin of the same chip reads in proportion to its cores (the constant is per core)
   const bin = machine.platform === 'apple' ? gpuUpgradeOf(machine, memoryGb) : null;
   const upgrade = bin ? { ...bin, tokS: tokS * bin.ratio, waits: pf.waits_tokens.map((tokens) => ({ tokens, seconds: firstWordWaitS(tokS * bin.ratio, d0, tokens) })) } : null;
-  if (c.source === 'generation') notes.push(`no measured prefill row for the ${machine.chip}: its generation's rate per GPU core on ${c.cores} cores`);
-  if (c.source === 'assumed') notes.push(`no measured prefill row for the ${machine.chip} or its generation: the ${c.generation} rate per GPU core on ${c.cores} cores`);
+  if (c.source === 'generation') notes.push(`no llama.cpp table row for the ${machine.chip}: its generation's rate per GPU core on ${c.cores} cores`);
+  if (c.source === 'assumed') notes.push(`no llama.cpp table row for the ${machine.chip} or its generation: the ${c.generation} rate per GPU core on ${c.cores} cores`);
+  if (c.source !== 'measured' && pf.chips_with_runs?.includes(bareChip(machine.chip))) notes.push(`measured reading runs of the ${bareChip(machine.chip)} are in the calibration data; sections 6.4 and 8 compare them with this estimate`);
   const clsRow = pf.class[cls];
   if (clsRow && clsRow.n === 0) notes.push(`the ${cls.replace('_', ' ')} prefill factor is assumed, no measured row yet`);
   if (runtime === 'mlx' && pf.mlx[mlxGroup].n === 0) notes.push('the MLX prefill factor for this generation is assumed');
-  if (d0Assumed) notes.push('how the rate falls with context is scaled from one published sweep by this model\'s share of attention layers');
+  if (d0Assumed) notes.push('how the rate falls with context is scaled from the measured runs by this model\'s share of attention layers');
   if (cluster && !factors.cluster) notes.push('no linked-machine terms in this data set: one machine\'s reading speed shown');
   if (pooled && cluster) {
     if (cluster.split === 'layer') notes.push(`reading speed is one machine's across ${cluster.n} linked machines on a layer split (measured flat: the machines read in turn)`);

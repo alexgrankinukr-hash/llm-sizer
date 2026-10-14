@@ -5,6 +5,7 @@ import type { Factors, Quant, SpecialBuild } from '../../lib/llm-sizer/engine/ty
 import { isSpecialBuild } from '../../lib/llm-sizer/engine/memory';
 import { formatContext, formatPrice, formatTokS, formatWait } from '../../lib/llm-sizer/engine/format';
 import { firstWordWaitS, gpuUpgradeOf, prefillCoresOf } from '../../lib/llm-sizer/engine/prefill';
+import { chipKey } from '../../lib/llm-sizer/engine/speed';
 import { runningConfig } from '../../lib/llm-sizer/app/layout';
 import { rowLabel } from '../../lib/llm-sizer/app/machines';
 import type { Matrix, MatrixRow } from '../../lib/llm-sizer/app/matrix';
@@ -280,7 +281,7 @@ function ReadingBars({ cells, row, state, factors, prompt }: { cells: { column: 
             const sub = clip(`${running.quantLabel} · ${formatContext(running.ctx)}${running.atTheFix ? ' · at the fix' : ''}`, 42);
             const tokens = prompt === 'column' ? (cell.result?.contextTokens ?? column.column.ctx) : prompt;
             const wait = p && p.tokS !== null && p.d0 !== null ? firstWordWaitS(p.tokS, p.d0, tokens) : null;
-            const tilde = p && p.source !== 'measured' ? ' ~' : '';
+            const tilde = p && p.source !== 'measured' && !(pf.chips_with_runs ?? []).includes(chipKey(row.row.machine.chip)) ? ' ~' : '';
             const label = wait === null ? null : `${formatWait(wait)}${tilde} · ${formatTokS(p!.tokS)} to start`;
             const fits = cell.result && cell.result.verdict !== 'no-fit';
             return (
@@ -309,7 +310,7 @@ function ReadingBars({ cells, row, state, factors, prompt }: { cells: { column: 
         </svg>
       </div>
       <p className="mt-2 text-xs text-[var(--color-light)]">
-        The wait is the prompt read at the chip's prefill rate, which is compute: it scales with GPU cores and the generation, not with memory or the file's bits, and it falls as the context fills (halved once {formatContext(pf.context.d0_tokens)} tokens are in, for the model it was fitted on). What the model has already read stays in memory, so in a chat each turn waits only for its new text; the whole-context figure is the cost of pasting that much in one go. "~" marks chips without measured prefill rows. Shorter is better. Details and sources in the sheet.
+        The wait is the prompt read at the chip's prefill rate, which is compute: it scales with GPU cores and the generation, not with memory or the file's bits, and it falls as the context fills (on {state.runtime === 'mlx' ? 'MLX' : 'llama.cpp'}, halved once about {formatContext(state.runtime === 'mlx' && pf.context.mlx ? pf.context.mlx.d0_tokens : pf.context.d0_tokens)} tokens are in for a model with attention in a quarter of its layers, sooner for one with more). What the model has already read stays in memory, so in a chat each turn waits only for its new text; the whole-context figure is the cost of pasting that much in one go. "~" marks chips nobody has measured reading yet. Shorter is better. Details and sources in the sheet.
       </p>
     </>
   );

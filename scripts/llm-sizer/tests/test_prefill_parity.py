@@ -22,7 +22,7 @@ def test_every_case_reproduces():
         pf = dict(PF); pf["_mlx_group"] = c["mlx_group"]
         tok = prefill_tok_s(pf, k, c["quant_label"], c["format"], c["arch_class"], c["runtime"], c["active_params_b"])
         assert abs(tok - c["expected_tok_s"]) < 0.002, c["id"]
-        d0 = prefill_d0(PF, c["kv_layers"], c["layers"])
+        d0 = prefill_d0(PF, c["kv_layers"], c["layers"], c["runtime"], c["model_id"])
         assert abs(d0 - c["expected_d0"]) < 0.002, c["id"]
         assert abs(first_word_wait_s(tok, d0, 8192) - c["expected_wait_8k_s"]) < 1e-3, c["id"]
         assert abs(prefill_rate_at(tok, d0, c["context_tokens"]) - c["expected_rate_at_ctx"]) < 1e-3, c["id"]

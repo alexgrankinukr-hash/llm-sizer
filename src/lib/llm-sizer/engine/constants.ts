@@ -18,11 +18,22 @@ export const APPS_GB = { off: 0, light: 8, typical: 16, heavy: 24 } as const;
 export const GIB_IN_GB = 1.073741824;
 
 /**
- * macOS default GPU memory limit (Metal's recommended working set): ⅔ of RAM under 36 GB, ¾ from 36 GB.
- * Logged values: 16 and 32 GB machines report ⅔ (10,922 / 21,845 MiB); 36, 48, 64 and 128 GB machines report ¾
- * (28,991 / 38,655 / 49,152 / 98,304 MiB). The threshold compares the nominal size (METHODOLOGY §4).
+ * macOS default GPU memory limit (Metal's recommended working set) as macOS 26 sets it: a whole percentage of the
+ * nominal size that steps up once per doubling, each tier applying from its size up to the next (METHODOLOGY §4).
+ * Logged values, each a whole percent rounded up to a 16 KB page: 8 GB 66.67 % (5,726.63 MB); 16 GB 74 %
+ * (12,713,115,648 bytes); 32 and 48 GB 78 % (26,800,603,136 / 40,200,896,512); 64 GB 81 % (55,662,788,608);
+ * 128 GB 84 % (115,448,725,504); 256 GB 87 % (239,143.78 MB). The steps fall between sizes Apple sells.
  */
-export const GPU_CAP = { small: 2 / 3, large: 3 / 4, thresholdGb: 36 } as const;
+export const GPU_CAP_TIERS: readonly { fromGb: number; share: number }[] = [
+  { fromGb: 0, share: 2 / 3 },
+  { fromGb: 16, share: 0.74 },
+  { fromGb: 32, share: 0.78 },
+  { fromGb: 64, share: 0.81 },
+  { fromGb: 128, share: 0.84 },
+  { fromGb: 256, share: 0.87 },
+];
+/** macOS never holds back more than this many binary GB from the GPU: a 512 GB Studio's limit is 464 GiB (498,216.21 MB). */
+export const GPU_CAP_MAX_HELD_GB = 48;
 
 /** Working buffers: max(1 GB, 5 % of weights), capped at 16 GB (METHODOLOGY §5). */
 export const BUFFER_MIN_GB = 1;

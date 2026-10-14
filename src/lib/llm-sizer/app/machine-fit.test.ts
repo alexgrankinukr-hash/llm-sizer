@@ -19,26 +19,26 @@ const studio256 = pick('mac-studio-m5-ultra:256');
 const summary = (id: string, row: MatrixRow, state = base) => modelSummary(loadModel(id), row, state, factors);
 
 describe('the summary rule: best build at 32K, longest context at Q4', () => {
-  it('32 GB mini: a 27B dense model is tight at Q4, small models run at Q8, big ones do not fit', () => {
+  it('32 GB mini: a 27B dense model runs at Q4 and fits tight at Q6, small models run at Q8, big ones do not fit', () => {
     const qwen = summary('qwen3.8-27b', mini32);
     expect(qwen.status).toBe('asked');
     expect(qwen.marker).toBe('ring');
-    expect(qwen.best).toMatchObject({ bucket: 'Q4', verdict: 'tight' });
-    expect(qwen.best!.quant.label).toBe('Q4_K_M');
-    expect(qwen.best!.tokS!).toBeGreaterThan(6);
-    expect(qwen.best!.tokS!).toBeLessThan(7);
-    expect(qwen.longest).toMatchObject({ ctx: 32768, verdict: 'tight' });
-    expect(qwen.headline).toMatch(/^Q4 · 6\.\d tok\/s · usable · tight$/);
-    expect(qwen.contextLine).toBe('up to 32K at Q4 · tight');
-    expect(qwen.ariaLabel).toMatch(/^Qwen 3\.8 27B on Mac mini · M6 32 GB: runs with a compromise; Q4/);
+    expect(qwen.best).toMatchObject({ bucket: 'Q6', verdict: 'tight' });
+    expect(qwen.best!.quant.label).toBe('Q6_K');
+    expect(qwen.best!.tokS!).toBeGreaterThan(4.5);
+    expect(qwen.best!.tokS!).toBeLessThan(5.5);
+    expect(qwen.asked?.verdict).toBe('runs');
+    expect(qwen.longest).toMatchObject({ ctx: 32768, verdict: 'runs' });
+    expect(qwen.headline).toMatch(/^Q6 · 5\.\d tok\/s · usable · tight$/);
+    expect(qwen.contextLine).toBe('up to 32K at Q4');
+    expect(qwen.ariaLabel).toMatch(/^Qwen 3\.8 27B on Mac mini · M6 32 GB: runs with a compromise; Q6/);
 
     const moe = summary('qwen3.6-35b-a3b', mini32);
-    expect(moe.best).toMatchObject({ bucket: 'Q3', verdict: 'runs' });
-    expect(moe.best!.quant.label).toBe('UD-Q3_K_XL');
-    expect(moe.longest).toBeNull();
-    expect(moe.asked?.verdict).toBe('compromise');
-    expect(moe.contextLine).toBe('Q4 with a compromise');
-    expect(moe.asked?.fix?.reason).toMatch(/memory-limit override/);
+    expect(moe.best).toMatchObject({ bucket: 'Q4', verdict: 'runs' });
+    expect(moe.best!.quant.label).toBe('Q4_K_M');
+    expect(moe.longest).toMatchObject({ ctx: 131072, verdict: 'tight' });
+    expect(moe.asked?.verdict).toBe('runs');
+    expect(moe.contextLine).toBe('up to 128K at Q4 · tight');
 
     expect(summary('gemma-4-e4b', mini32)).toMatchObject({ status: 'asked', marker: 'run', longest: { ctx: 131072, verdict: 'runs' } });
     expect(summary('gemma-4-e4b', mini32).best).toMatchObject({ bucket: 'Q8', verdict: 'runs' });
@@ -47,9 +47,9 @@ describe('the summary rule: best build at 32K, longest context at Q4', () => {
     expect(oss.best!.quant.label).toBe('Q8_0');
     expect(oss.longest?.ctx).toBe(131072);
     const g31 = summary('gemma-4-31b', mini32);
-    expect(g31.best).toMatchObject({ bucket: 'Q3', verdict: 'runs' });
-    expect(g31.longest).toMatchObject({ ctx: 8192, verdict: 'tight' });
-    expect(g31.contextLine).toBe('up to 8K at Q4 · tight');
+    expect(g31.best).toMatchObject({ bucket: 'Q4', verdict: 'runs' });
+    expect(g31.longest).toMatchObject({ ctx: 32768, verdict: 'runs' });
+    expect(g31.contextLine).toBe('up to 32K at Q4');
   });
 
   it('32 GB mini: a compromise row says what runs; a dash carries the nearest miss', () => {
@@ -77,7 +77,7 @@ describe('the summary rule: best build at 32K, longest context at Q4', () => {
     expect(fitSettingsKey(work)).not.toBe(fitSettingsKey(base));
   });
 
-  it('256 GB Studio: Q8 all round, GLM-5.3 Flash tight at Q4, the 397B at Q3, GLM-5.2 a compromise, Kimi K3 a dash', () => {
+  it('256 GB Studio: Q8 all round, GLM-5.3 Flash runs at Q4, the 397B at Q3, GLM-5.2 a compromise, Kimi K3 a dash', () => {
     const qwen = summary('qwen3.8-27b', studio256);
     expect(qwen.best).toMatchObject({ bucket: 'Q8', verdict: 'runs' });
     expect(qwen.best!.quant.label).toBe('Q8_0');
@@ -85,21 +85,22 @@ describe('the summary rule: best build at 32K, longest context at Q4', () => {
     expect(qwen.best!.tokS!).toBeLessThan(34);
     expect(qwen.longest?.ctx).toBe(262144);
     const glm = summary('glm-5.3-flash', studio256);
-    expect(glm.best).toMatchObject({ bucket: 'Q4', verdict: 'tight' });
+    expect(glm.best).toMatchObject({ bucket: 'Q4', verdict: 'runs' });
     expect(glm.best!.quant.label).toBe('UD-Q4_K_XL');
-    expect(glm.longest).toMatchObject({ ctx: 131072, verdict: 'tight' });
-    expect(glm.marker).toBe('ring');
+    expect(glm.longest).toMatchObject({ ctx: 262144, verdict: 'runs' });
+    expect(glm.marker).toBe('run');
     const big = summary('qwen3.5-397b-a17b', studio256);
     expect(big.best).toMatchObject({ bucket: 'Q3', verdict: 'runs' });
     expect(big.longest).toBeNull();
     expect(big.contextLine).toBe('Q4 with a compromise');
-    expect(summary('minimax-m3', studio256).best).toMatchObject({ bucket: 'Q3', verdict: 'tight' });
+    expect(big.asked?.fix?.reason).toMatch(/memory-limit override/);
+    expect(summary('minimax-m3', studio256).best).toMatchObject({ bucket: 'Q3', verdict: 'runs' });
     const glm52 = summary('glm-5.2', studio256);
     expect(glm52.status).toBe('compromise');
     expect(glm52.headline).toMatch(/^Q2 · \d+ tok\/s · with a compromise$/);
     expect(glm52.detail).toMatch(/UD-IQ2_M/);
     expect(summary('kimi-k3', studio256)).toMatchObject({ status: 'no-fit', marker: 'no', gaps: ['Q6', 'Q3'] });
-    expect(summary('qwen3.8-flash-next', studio256).best).toMatchObject({ bucket: 'Q8', verdict: 'tight' });
+    expect(summary('qwen3.8-flash-next', studio256).best).toMatchObject({ bucket: 'Q8', verdict: 'runs' });
   });
 
   it('the runtime and the memory limit flow through settingsFor', () => {
@@ -109,6 +110,10 @@ describe('the summary rule: best build at 32K, longest context at Q4', () => {
     const lifted = summary('glm-5.3-flash', studio256, { ...base, cap: 1 });
     expect(lifted.best).toMatchObject({ bucket: 'Q4', verdict: 'runs' });
     expect(lifted.longest?.ctx).toBe(262144);
+    // 75 %, the share macOS 15 gave a 256 GB Mac, set by hand in Advanced
+    const older = summary('glm-5.3-flash', studio256, { ...base, cap: 0.75 });
+    expect(older.best).toMatchObject({ bucket: 'Q4', verdict: 'tight' });
+    expect(older.longest?.ctx).toBe(131072);
   });
 });
 
@@ -218,7 +223,7 @@ describe('ordering, the picker and the sheet target', () => {
     expect(t.column.quant?.label).toBe('UD-Q4_K_XL');
     expect(t.column.column).toEqual({ id: 'glm-5.3-flash', quant: 'auto', ctx: 32768 });
     expect(t.cell.rowKey).toBe('mac-studio-m5-ultra:256');
-    expect(t.cell.result?.verdict).toBe('tight');
+    expect(t.cell.result?.verdict).toBe('runs');
     expect(t.row.group.id).toBe('mac-studio-m5-ultra');
     // the buying map evaluates an exact file (the column's own build): the sheet names that file, not the bucket's default
     const exact = glm.quants.find((q) => q.label === 'Q8_0')!;
@@ -233,8 +238,8 @@ describe('the engram-on-SSD build in the machine view', () => {
     const mbp = pick('macbook-pro-m5-max:64');
     const summary = modelSummary(fn, mbp, defaultState(), factors);
     expect(summary.status).toBe('asked');
-    expect(summary.best).toMatchObject({ kind: 'special', bucket: 'Q4', verdict: 'tight', tokS: null, quant: { label: 'IQ4_XS · engram on SSD' } });
-    expect(summary.headline).toBe('IQ4_XS · engram on SSD · speed not estimated · tight');
+    expect(summary.best).toMatchObject({ kind: 'special', bucket: 'Q4', verdict: 'runs', tokS: null, quant: { label: 'IQ4_XS · engram on SSD' } });
+    expect(summary.headline).toBe('IQ4_XS · engram on SSD · speed not estimated');
     expect(summary.detail).toBe('45.8 GB in memory, 39.1 GB streamed from the SSD');
     expect(summary.memoryText).toBe('48.6 GB');
     const studio = modelSummary(fn, pick('mac-studio-m5-ultra:256'), defaultState(), factors);

@@ -27,11 +27,11 @@ describe('the matrix (METHODOLOGY §9 with the data\'s numbers)', () => {
   const spark = machineById('nvidia-dgx-spark');
   const mbp = machineById('macbook-pro-m5-max-40c');
 
-  it('1a/1b — 32 GB mini, Qwen 27B Q4 at 32K: tight at 90 % with apps off, "close your apps" with the work toggle on', () => {
+  it('1a/1b — 32 GB mini, Qwen 27B Q4 at 32K: runs at 77 % with apps off, "close your apps" with the work toggle on', () => {
     const qwen = loadModel('qwen3.8-27b');
     const off = evaluateCell(qwen, mini, s(32), factors);
-    expect(off.verdict).toBe('tight');
-    expect(off.need.ratio).toBeCloseTo(0.9037, 3);
+    expect(off.verdict).toBe('runs');
+    expect(off.need.ratio).toBeCloseTo(0.7724, 3);
     expect(off.speed.modelKind).toBe('floor');
     expect(off.speed.tokS!).toBeGreaterThan(5.5);
     expect(off.speed.tokS!).toBeLessThan(7.5);
@@ -39,19 +39,19 @@ describe('the matrix (METHODOLOGY §9 with the data\'s numbers)', () => {
     const on = evaluateCell(qwen, mini, s(32, { workApps: 16 }), factors);
     expect(on.verdict).toBe('compromise');
     expect(on.fix?.changes.map((c) => c.kind)).toEqual(['closeApps']);
-    expect(on.fix?.verdict).toBe('tight');
+    expect(on.fix?.verdict).toBe('runs');
     expect(on.fix?.reason).toMatch(/close your apps/);
     expect(on.alternatives.some((f) => f.changes.some((c) => c.kind === 'quant'))).toBe(true);
     expect(on.breakdown.apps).toBe(0); // the breakdown shows the configuration that fits
   });
 
-  it('2a/2b — 256 GB Studio, GLM-5.3 Flash Q4 at 128K: tight at 99 % as asked; runs with the override, at 0.840 with apps on too', () => {
+  it('2a/2b — 256 GB Studio, GLM-5.3 Flash Q4 at 128K: runs at 86 % as asked; 79 % with the override, 0.840 with apps on too', () => {
     const glm = loadModel('glm-5.3-flash');
     const cell = evaluateCell(glm, ultra, s(256, { contextTokens: 131072 }), factors);
     expect(cell.quant && 'label' in cell.quant && cell.quant.label).toBe('UD-Q4_K_XL');
-    expect(cell.verdict).toBe('tight');
+    expect(cell.verdict).toBe('runs');
     expect(cell.fix).toBeNull();
-    expect(cell.need.ratio).toBeCloseTo(0.9932, 3);
+    expect(cell.need.ratio).toBeCloseTo(0.8562, 3);
     const lifted = evaluateCell(glm, ultra, s(256, { contextTokens: 131072, override: 1 }), factors);
     expect(lifted.verdict).toBe('runs');
     expect(lifted.need.ratio).toBeCloseTo(0.7882, 3);
@@ -92,7 +92,7 @@ describe('the matrix (METHODOLOGY §9 with the data\'s numbers)', () => {
     expect(cell.belowFloor).toBeNull();
   });
 
-  it('4 — 512 GB Studio, GLM-5.2 Q4 at 128K: tight with the override; the override is the cheapest fix without it', () => {
+  it('4 — 512 GB Studio, GLM-5.2 Q4 at 128K: tight at the default limit (97 %), 93 % with the override', () => {
     const glm = loadModel('glm-5.2');
     const withOverride = evaluateCell(glm, ultra, s(512, { contextTokens: 131072, override: 1 }), factors);
     expect(withOverride.verdict).toBe('tight');
@@ -100,10 +100,12 @@ describe('the matrix (METHODOLOGY §9 with the data\'s numbers)', () => {
     const apps = evaluateCell(glm, ultra, s(512, { contextTokens: 131072, override: 1, workApps: 16 }), factors);
     expect(apps.verdict).toBe('tight');
     expect(apps.need.ratio).toBeCloseTo(0.9637, 3);
+    // macOS 26 holds back only 48 GB of a 512 GB Studio (498.2 GB for the GPU), so the override is no longer needed
     const noOverride = evaluateCell(glm, ultra, s(512, { contextTokens: 131072 }), factors);
-    expect(noOverride.verdict).toBe('compromise');
-    expect(noOverride.fix?.changes.map((c) => c.kind)).toEqual(['override']);
-    expect(noOverride.alternatives.some((f) => f.changes.some((c) => c.kind === 'quant' && c.quant.label === 'UD-IQ3_S') && f.verdict === 'runs')).toBe(true);
+    expect(noOverride.verdict).toBe('tight');
+    expect(noOverride.fix).toBeNull();
+    expect(noOverride.need.ratio).toBeCloseTo(0.974, 3);
+    expect(noOverride.availability.availableGb).toBeCloseTo(498.22, 2);
   });
 
   it('5 — 512 GB Studio, Kimi K3: a dash at the 2-bit floor; a 1.3-bit build would load at 92 %, tight', () => {
@@ -119,16 +121,16 @@ describe('the matrix (METHODOLOGY §9 with the data\'s numbers)', () => {
     expect(relaxed.verdict).toBe('compromise');
   });
 
-  it('6 — 64 GB MacBook Pro, Flash Next at Q4: the engram-on-SSD build is the fix; three quarters of 68.7 GB is enough without the override', () => {
+  it('6 — 64 GB MacBook Pro, Flash Next at Q4: the engram-on-SSD build is the fix; 81 % of 68.7 GB is enough without the override', () => {
     const fn = loadModel('qwen3.8-flash-next');
     const cell = evaluateCell(fn, mbp, s(64), factors);
     expect(cell.verdict).toBe('compromise');
     expect(cell.fix?.changes.map((c) => c.kind)).toEqual(['ssdPaged']);
     expect(cell.fix?.changes[0]).toMatchObject({ kind: 'ssdPaged', build: { label: 'IQ4_XS · engram on SSD' } }); // the smallest resident part wins
-    expect(cell.fix?.verdict).toBe('tight');
-    expect(cell.fix?.need.ratio).toBeCloseTo(0.9434, 3);
+    expect(cell.fix?.verdict).toBe('runs');
+    expect(cell.fix?.need.ratio).toBeCloseTo(0.8735, 3);
     expect(cell.fix?.need.ssdGb).toBe(39.1);
-    expect(cell.fix?.reason).toBe('with the engram-on-SSD build (45.8 GB in memory, 39.1 GB streamed from the SSD); tight: under 10 % headroom');
+    expect(cell.fix?.reason).toBe('with the engram-on-SSD build (45.8 GB in memory, 39.1 GB streamed from the SSD)');
     expect(cell.speed.tokS).toBeNull(); // one published run on one chip: quoted, never used as a number
     expect(cell.speed.notes[0]).toMatch(/^the publisher measured 36 tok\/s on an M5 Max \(MacBook Pro M5 Max 64 GB\); no speed is estimated/);
     const studio = evaluateCell(fn, machineById('mac-studio-m5-ultra'), s(256, { quant: undefined }), factors);
@@ -138,11 +140,11 @@ describe('the matrix (METHODOLOGY §9 with the data\'s numbers)', () => {
     expect(withApps.fix?.changes.map((c) => c.kind)).toContain('closeApps');
   });
 
-  it('6b — the engram-on-SSD build asked for directly: a tight fit with no fix, the SSD part beside the bar, a flag, no speed', () => {
+  it('6b — the engram-on-SSD build asked for directly: runs with no fix, the SSD part beside the bar, a flag, no speed', () => {
     const fn = loadModel('qwen3.8-flash-next');
     const [iq4, q4km] = fn.special_builds!;
     const cell = evaluateCell(fn, mbp, s(64, { quant: iq4 }), factors);
-    expect(cell.verdict).toBe('tight');
+    expect(cell.verdict).toBe('runs');
     expect(cell.fix).toBeNull();
     expect(cell.quant).toBe(iq4);
     expect(cell.need.weightsGb).toBe(45.8);
@@ -151,7 +153,7 @@ describe('the matrix (METHODOLOGY §9 with the data\'s numbers)', () => {
     expect(cell.breakdown.weights + cell.breakdown.cache + cell.breakdown.buffers).toBeCloseTo(cell.need.totalGb, 6); // the SSD part is not in the bar
     expect(cell.flags).toContain('ssd-build');
     expect(cell.speed.tokS).toBeNull();
-    // the README's recommended file keeps 54.5 GB in memory: over the default limit on 64 GB, so the fix lifts it
+    // the README's recommended file keeps 54.5 GB in memory (57.4 GB with cache and buffers): over the 55.7 GB default limit on 64 GB, so the fix lifts it
     const rec = evaluateCell(fn, mbp, s(64, { quant: q4km }), factors);
     expect(rec.verdict).toBe('compromise');
     expect(rec.fix?.changes.map((c) => c.kind)).toEqual(['override']);

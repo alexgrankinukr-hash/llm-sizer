@@ -20,8 +20,9 @@ describe('the first screen', () => {
   it('has 8 rows × 4 columns and the video chart\'s verdicts at Q4 / 32K', () => {
     expect(matrix.rows.map((r) => r.key)).toEqual(['mac-mini-m6:16', 'mac-mini-m6:24', 'mac-mini-m6:32', 'mac-studio-m5-ultra:96', 'mac-studio-m5-ultra:256', 'mac-studio-m5-ultra:512', 'nvidia-dgx-spark:64', 'nvidia-dgx-spark:128']);
     expect(matrix.columns.map((c) => c.quant?.label)).toEqual(['Q4_K_M', 'Q4_K_M', 'UD-Q4_K_XL', 'UD-Q4_K_XL']);
-    // Qwen 27B: 16 GB → ring (a 2-bit build fits), 24 GB → ring, 32 GB → ring (tight at 90 % once buffers are 1.5 GB + 1 %)
-    expect(marker('mac-mini-m6:32', 0)).toBe('ring');
+    // Qwen 27B: 16 GB → ring (a 2-bit build fits), 24 GB → ring, 32 GB → runs (77 % of the 26.8 GB macOS 26 allows)
+    expect(marker('mac-mini-m6:32', 0)).toBe('run');
+    expect(marker('mac-mini-m6:24', 0)).toBe('ring');
     expect(marker('mac-mini-m6:16', 0)).toBe('ring');
     expect(marker('mac-studio-m5-ultra:96', 0)).toBe('run');
     // Flash Next needs ~120 GB at Q4: Studio 256/512 run, Spark 128 is a compromise, mini never
@@ -33,8 +34,8 @@ describe('the first screen', () => {
     expect(marker('nvidia-dgx-spark:64', 1)).toBe('ring');
     expect(matrix.cells.get('nvidia-dgx-spark:64|1')!.result!.fix!.changes[0].kind).toBe('ssdPaged');
     expect(marker('nvidia-dgx-spark:64', 2)).toBe('no');
-    // GLM-5.3 Flash 200 GB: 256 needs the override (ring), 512 runs, Spark = 2-bit ring
-    expect(marker('mac-studio-m5-ultra:256', 2)).toBe('ring');
+    // GLM-5.3 Flash 200 GB: 256 runs (85 % of 239.1 GB), 512 runs, Spark = 2-bit ring
+    expect(marker('mac-studio-m5-ultra:256', 2)).toBe('run');
     expect(marker('mac-studio-m5-ultra:512', 2)).toBe('run');
     expect(marker('nvidia-dgx-spark:128', 2)).toBe('ring');
     // Kimi K3: nothing fits anywhere
@@ -48,7 +49,7 @@ describe('the first screen', () => {
     expect(layout.headers[0].contextLabel).toBe('32K');
     expect(layout.rails.map((r) => r.label)).toEqual(['Mac mini · M6', 'Mac Studio · M5 Ultra', 'NVIDIA DGX Spark']);
     expect(layout.rails[0].price).toBe('from $899');
-    expect(layout.rows[2].cells[0].ariaLabel).toBe('Qwen 3.8 27B on Mac mini · M6 32 GB: runs with a compromise (tight)');
+    expect(layout.rows[2].cells[0].ariaLabel).toBe('Qwen 3.8 27B on Mac mini · M6 32 GB: runs');
     expect(layout.rows.find((r) => r.key === 'nvidia-dgx-spark:128')!.price).toBe('$6,950');
     expect(layout.rows.find((r) => r.key === 'nvidia-dgx-spark:64')!.price).toBeNull(); // not on sale until 2026-10-23
     expect(layout.rails[2].price).toBe('from $6,950');

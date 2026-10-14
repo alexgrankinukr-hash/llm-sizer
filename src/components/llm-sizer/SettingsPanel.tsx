@@ -3,6 +3,7 @@ import { lazy, Suspense } from 'react';
 import type { Dispatch } from 'react';
 import type { Factors, ModelIndex } from '../../lib/llm-sizer/engine/types';
 import type { Analytics } from '../../lib/llm-sizer/app/analytics';
+import { DEFAULT_LIMIT_LABEL } from '../../lib/llm-sizer/app/layout';
 import type { MachineGroup } from '../../lib/llm-sizer/app/machines';
 import type { Matrix } from '../../lib/llm-sizer/app/matrix';
 import { BUDGET_MAX_USD, BUDGET_MIN_USD, type Action, type AppState, type FormFactor } from '../../lib/llm-sizer/app/state';
@@ -96,7 +97,7 @@ export function SettingsPanel(props: SettingsPanelProps) {
                 analytics.toggleChanged('limit', on);
               }}
               label="macOS memory limit"
-              hint={limitOn ? '(67 % / 75 %)' : `(override: ${Math.round((state.cap ?? 1) * 100)} %)`}
+              hint={limitOn ? `(${DEFAULT_LIMIT_LABEL})` : `(override: ${Math.round((state.cap ?? 1) * 100)} %)`}
             />
             <div className="flex items-center gap-3 text-sm">
               <span>Runtime</span>

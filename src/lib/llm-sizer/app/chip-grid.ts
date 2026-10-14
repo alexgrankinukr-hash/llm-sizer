@@ -165,7 +165,7 @@ export function chipGrid(model: ModelDetail, bucket: Bucket, ctx: number, groups
         readTokS,
         waitS: readTokS !== null && p?.d0 ? firstWordWaitS(readTokS, p.d0, result.contextTokens) : null,
         writeMeasured: result.speed.efficiencySource === 'measured',
-        readMeasured: p?.source === 'measured',
+        readMeasured: p?.source === 'measured' || (factors.prefill?.chips_with_runs ?? []).includes(chip.name),
       });
     }
   }

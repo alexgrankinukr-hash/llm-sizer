@@ -10,7 +10,7 @@ import { atlasKey, buildOptions, buyingMap, byPrice, cheapestSingleThatRuns, eva
 const factors = loadFactors();
 const groups = machineGroups(loadMachines());
 const base = defaultState();
-const toggles = { work: 'nothing else running', limit: 'macOS memory limit 67 % / 75 %' };
+const toggles = { work: 'nothing else running', limit: 'macOS memory limit 67 % to 91 % by size' };
 const ANY: BuyingCriteria = { minTokS: 0, budgetUsd: null, formFactor: 'any' };
 
 function col(id: string, quant: MatrixColumn['column']['quant'] = 'auto', ctx = 32768, state: AppState = base): MatrixColumn {
@@ -101,7 +101,7 @@ describe('Qwen 3.8 27B at Q4 · 32K', () => {
     expect(map.build.label).toBe('Q4');
     const byKey = new Map(map.marks.map((m) => [m.key, m]));
     expect(byKey.get('mac-mini-m6:32')).toMatchObject({ status: 'fits', qualifies: true, approx: true, band: 'usable', priceUsd: 1299 });
-    expect(byKey.get('mac-mini-m6:32')!.result.verdict).toBe('tight');
+    expect(byKey.get('mac-mini-m6:32')!.result.verdict).toBe('runs');
     expect(byKey.get('mac-mini-m6:32')!.tokS!).toBeGreaterThan(6);
     expect(byKey.get('mac-mini-m6:32')!.tokS!).toBeLessThan(7);
     expect(byKey.get('mac-mini-m6:24')).toMatchObject({ status: 'compromise', qualifies: false, wouldQualify: true, misses: ['compromise'] });
@@ -117,7 +117,7 @@ describe('Qwen 3.8 27B at Q4 · 32K', () => {
     expect(prices.slice(0, -2).every((p) => p !== null)).toBe(true);
     expect(prices.slice(-2)).toEqual([null, null]);
     expect(map.qualifying[0].key).toBe(map.recommendation.pick!.key);
-    expect(markDetail(byKey.get('mac-mini-m6:32')!, ANY)).toMatch(/^\d+\.\d GB of \d+\.\d GB used · tight · \d\.\d GB to spare$/);
+    expect(markDetail(byKey.get('mac-mini-m6:32')!, ANY)).toBe('20.7 GB of 26.8 GB used · 6.1 GB to spare');
     expect(map.captionParts.slice(0, 3)).toEqual(['Qwen 3.8 27B at Q4 (Q4_K_M) · 32K', 'GGUF', 'cache FP16']);
     expect(map.captionParts).toContain('list prices as of 2026-09-02');
   });
@@ -173,11 +173,11 @@ describe('Qwen 3.8 27B at Q4 · 32K', () => {
 });
 
 describe('GLM-5.3 Flash at Q4 · 32K and a model nothing runs', () => {
-  it('the 256 GB Ultra is the pick (tight, fast), the 512 GB one qualifies without a price, the 128 GB machines would qualify with a change', () => {
+  it('the 256 GB Ultra is the pick (runs, fast), the 512 GB one qualifies without a price, the 128 GB machines would qualify with a change', () => {
     const atlas = atlasFor('glm-5.3-flash');
     const map = buyingMap(atlas, 'column', ANY, toggles);
     expect(map.recommendation.pick).toMatchObject({ key: 'mac-studio-m5-ultra:256', priceUsd: 9499 });
-    expect(map.recommendation.pick!.result.verdict).toBe('tight');
+    expect(map.recommendation.pick!.result.verdict).toBe('runs');
     expect(map.recommendation.pick!.tokS!).toBeGreaterThan(29);
     expect(map.recommendation.pick!.tokS!).toBeLessThan(34);
     expect(keys(map.recommendation.unpricedQualifying)).toEqual(['mac-studio-m5-ultra:512']);

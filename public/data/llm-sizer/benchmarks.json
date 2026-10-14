@@ -1,6 +1,6 @@
 {
- "schema": "LLM Sizer benchmarks.json v1 — one row per measured configuration; tg = decode tok/s, pp = prefill tok/s; weights_gb = loaded weight size for the quant (decimal GB); active_weights_gb = the active weights a mixture-of-experts model re-reads per token; runtime = llama.cpp-gguf | mlx | sglang (only llama.cpp-gguf rows calibrate); accel = none | mtp | dspark | dflash | dflash2; accel rows carry baseline_tg = the same setup without acceleration; optional build = runtime build or commit; optional context_tokens = tokens already in context when tg was measured (absent = short prompt); optional role = floor-fit marks rows added for the fixed-cost speed model (F16 / Q8_0 / other GPU bins of the 7B table): they enter the per-chip floor fit but not the legacy efficiency median, which stays on its 0.8 row set until the multiplier model is removed; rows with role = prefill carry a pp figure, params_active_b and arch_class only (community rows): they calibrate the prefill terms and enter no decode fit; prefill_depth_sweeps = pp512 at several context depths, one entry per published sweep; cluster_series = one entry per published multi-machine run, tokens per second by machine count in tg_by_nodes (prefill in pp_by_nodes where it was published) with the link, the split (layer | tensor), the runtime and the architecture class: these calibrate the cluster block only and enter no single-machine fit, and a series marked report_only has no one-machine point of its own runtime (or changes quant with the count), so it is quoted and never fitted",
- "data_as_of": "2026-09-06",
+ "schema": "LLM Sizer benchmarks.json v1 — one row per measured configuration; tg = decode tok/s, pp = prefill tok/s; weights_gb = loaded weight size for the quant (decimal GB); active_weights_gb = the active weights a mixture-of-experts model re-reads per token; runtime = llama.cpp-gguf | mlx | sglang (only llama.cpp-gguf rows calibrate); accel = none | mtp | dspark | dflash | dflash2; accel rows carry baseline_tg = the same setup without acceleration; optional build = runtime build or commit; optional context_tokens = tokens already in context when tg was measured (absent = short prompt); optional role = floor-fit marks rows added for the fixed-cost speed model (F16 / Q8_0 / other GPU bins of the 7B table): they enter the per-chip floor fit but not the legacy efficiency median, which stays on its 0.8 row set until the multiplier model is removed; rows with role = prefill carry a pp figure, params_active_b and arch_class only (community rows): they calibrate the prefill terms and enter no decode fit; prefill_depth_sweeps = pp512 at several context depths, one entry per published sweep; cluster_series = one entry per published multi-machine run, tokens per second by machine count in tg_by_nodes (prefill in pp_by_nodes where it was published) with the link, the split (layer | tensor), the runtime and the architecture class: these calibrate the cluster block only and enter no single-machine fit, and a series marked report_only has no one-machine point of its own runtime (or changes quant with the count), so it is quoted and never fitted; prefill rows may carry prompt_tokens (the prompt the rate was averaged over, read from an empty context; absent = a 512-token llama-bench or mlx_lm.benchmark row) and app (the runtime release); report_only rows are quoted checks the fit never uses; prefill_ladders = measured reading at several prompt lengths for one machine and build (points carry tok_s = prompt tokens ÷ time to first token, or wait_s), each point with its source: they fit how reading slows with the context already read (D0, per runtime) and, for MLX, the MLX factor",
+ "data_as_of": "2026-10-14",
  "rows": [
   {
    "chip": "M1",
@@ -1737,6 +1737,182 @@
    "source": "https://github.com/enescingoz/mac-llm-bench",
    "date": "2026-09-06",
    "note": "mac-llm-bench community row (llama-bench pp512, flash attention on, ngl 99); prefill only, no file size, so it enters no decode fit"
+  },
+  {
+   "chip": "M5 Ultra",
+   "gpu_cores": 80,
+   "memory_gb": 256,
+   "bandwidth_gbs": 1200,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "oQ4e",
+   "runtime": "mlx",
+   "app": "oMLX 0.7.0.dev2",
+   "accel": "none",
+   "pp": 1701,
+   "prompt_tokens": 6091,
+   "role": "prefill",
+   "grade": "B",
+   "source": "https://www.macstories.net/stories/m5-ultra-mac-studio-review-the-dream-mac-for-local-ai-agents/",
+   "date": "2026-09-21",
+   "note": "MacStories review (Viticci), the \"8K\" test is a 6,091-token prompt; time to first token 4.0 s as published; writing 48 tok/s on oMLX's own oQ4e file; review unit 36-core CPU / 80-core GPU, 256 GB"
+  },
+  {
+   "chip": "M3 Ultra",
+   "gpu_cores": 80,
+   "memory_gb": 512,
+   "bandwidth_gbs": 819,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "oQ4e",
+   "runtime": "mlx",
+   "app": "oMLX 0.7.0.dev2",
+   "accel": "none",
+   "pp": 414,
+   "prompt_tokens": 6091,
+   "role": "prefill",
+   "grade": "B",
+   "source": "https://www.macstories.net/stories/m5-ultra-mac-studio-review-the-dream-mac-for-local-ai-agents/",
+   "date": "2026-09-21",
+   "note": "MacStories review, the \"8K\" test is a 6,091-token prompt; time to first token 15.4 s as published; 512 GB comes only with the 80-core GPU"
+  },
+  {
+   "chip": "M3 Ultra",
+   "gpu_cores": 80,
+   "memory_gb": 512,
+   "bandwidth_gbs": 819,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "mlx-serve 26.8.10",
+   "accel": "none",
+   "pp": 414,
+   "prompt_tokens": 16384,
+   "role": "prefill",
+   "grade": "B",
+   "source": "https://github.com/ddalcu/mlx-serve/releases/tag/v26.8.10",
+   "date": "2026-08-26",
+   "note": "maintainer's release notes, \"16k-token prompt\", GPU only (498 with both Neural Engines, off by default); the build's bits are not stated"
+  },
+  {
+   "chip": "M5 Max",
+   "gpu_cores": null,
+   "bandwidth_gbs": 614,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "oQ4e",
+   "runtime": "mlx",
+   "app": "oMLX 0.7.0.dev2",
+   "accel": "none",
+   "pp": 615.2,
+   "prompt_tokens": 32768,
+   "role": "prefill",
+   "report_only": true,
+   "grade": "B",
+   "source": "https://github.com/jundot/omlx/releases/tag/v0.7.0.dev2",
+   "date": "2026-09-11",
+   "note": "report only: the release notes do not state the GPU cores. Maintainer benchmark, Qwen3.8-27B-oQ4e-mtp with MTP off, 32K prompt, time to first token 53.3 s, medians of three runs"
+  },
+  {
+   "chip": "M5 Max",
+   "gpu_cores": null,
+   "bandwidth_gbs": 614,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "oQ4e",
+   "runtime": "mlx",
+   "app": "oMLX 0.7.0.dev2, INT8-activation prefill on",
+   "accel": "int8-prefill",
+   "pp": 826.7,
+   "prompt_tokens": 32768,
+   "role": "prefill",
+   "report_only": true,
+   "grade": "B",
+   "source": "https://github.com/jundot/omlx/releases/tag/v0.7.0.dev2",
+   "date": "2026-09-11",
+   "note": "report only: an experimental kernel, off by default, that can change outputs (+34.4 % over the row above); the tool's MLX factor is for the default setting"
+  },
+  {
+   "chip": "M5 Pro",
+   "gpu_cores": null,
+   "memory_gb": 64,
+   "bandwidth_gbs": 307,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "unstated",
+   "runtime": "mlx",
+   "app": "oMLX (implied)",
+   "accel": "none",
+   "pp": 400,
+   "prompt_tokens": 4096,
+   "role": "prefill",
+   "report_only": true,
+   "grade": "C",
+   "source": "https://www.youtube.com/watch?v=OwnzX2Ic3LU",
+   "date": "2026-09-21",
+   "note": "report only: spoken on the AppStories podcast (\"about 400\" on a roughly 4,000-token prompt, about 150 at 16,000), Mac mini M5 Pro 64 GB, GPU cores not stated"
+  },
+  {
+   "chip": "M6",
+   "gpu_cores": 12,
+   "memory_gb": 32,
+   "bandwidth_gbs": 170,
+   "model": "Qwen 3.5 9B",
+   "quant": "Q4_K_M",
+   "runtime": "llama.cpp-gguf",
+   "accel": "none",
+   "pp": 742,
+   "params_active_b": 9.0,
+   "arch_class": "dense",
+   "role": "prefill",
+   "report_only": true,
+   "grade": "B",
+   "source": "https://www.youtube.com/watch?v=T15BuMPZW4Q",
+   "date": "2026-09-21",
+   "note": "report only: Alex Ziskind's M6 Mac mini review, llama-bench (711 over HTTP with llama-benny); the M4 Mac mini read 210 on the same run. The M6 has no plain-file table rows, so the fit cannot use it"
+  },
+  {
+   "chip": "M4",
+   "gpu_cores": 10,
+   "bandwidth_gbs": 120,
+   "model": "Qwen 3.5 9B",
+   "quant": "Q4_K_M",
+   "runtime": "llama.cpp-gguf",
+   "accel": "none",
+   "pp": 210,
+   "params_active_b": 9.0,
+   "arch_class": "dense",
+   "role": "prefill",
+   "report_only": true,
+   "grade": "B",
+   "source": "https://www.youtube.com/watch?v=T15BuMPZW4Q",
+   "date": "2026-09-21",
+   "note": "report only: the comparison machine of the row above, same run (198 over HTTP); 1.4 times the M4 plain-file constant at a K-quant, a sign that current llama.cpp builds read faster than the table's M4 rows"
   }
  ],
  "prefill_depth_sweeps": [
@@ -2017,6 +2193,2288 @@
    "source": "https://github.com/voipmonitor/rtx6kpro/blob/master/benchmarks/results.md",
    "date": "2026-07",
    "note": "SGLang and vLLM tensor parallel over PCIe 5 on 96 GB cards; the two-card runs read 85 to 89 tok/s at NVFP4 and the four-card runs 71 to 81 at FP8, so the quant changes with the count and the points are quoted, never fitted; they imply a rough C of about 1.5 ms"
+  }
+ ],
+ "prefill_ladders": [
+  {
+   "chip": "M5 Ultra",
+   "gpu_cores": 80,
+   "memory_gb": 256,
+   "bandwidth_gbs": 1200,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "Q4_K_M",
+   "runtime": "llama.cpp-gguf",
+   "app": "llama.cpp, MTP off",
+   "grade": "B",
+   "source": "https://www.tomshardware.com/desktops/mini-pcs/apple-mac-studio-m5-ultra-review",
+   "date": "2026-09-21",
+   "points": [
+    {
+     "prompt_tokens": 2048,
+     "wait_s": 2.0
+    },
+    {
+     "prompt_tokens": 6144,
+     "wait_s": 5.8
+    },
+    {
+     "prompt_tokens": 10240,
+     "wait_s": 9.9
+    },
+    {
+     "prompt_tokens": 18432,
+     "wait_s": 19.3
+    },
+    {
+     "prompt_tokens": 34816,
+     "wait_s": 42.2
+    },
+    {
+     "prompt_tokens": 67584,
+     "wait_s": 104.6
+    },
+    {
+     "prompt_tokens": 133120,
+     "wait_s": 295.8
+    }
+   ],
+   "note": "Tom's Hardware review, time-to-first-token chart: a 2,048-token prompt on top of the stated context depth, read in one go (the tokens here are depth + 2,048), 512 tokens generated; read from the chart image. Review unit 36-core CPU / 80-core GPU, 256 GB, 4 TB. At 65,536 the M5 Ultra and DGX Spark labels (103.9 and 104.6 s) sit on the point where the two lines cross; the transcription follows the fact sheet"
+  },
+  {
+   "chip": "M4 Max",
+   "gpu_cores": 40,
+   "memory_gb": null,
+   "bandwidth_gbs": 546,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "Q4_K_M",
+   "runtime": "llama.cpp-gguf",
+   "app": "llama.cpp, MTP off",
+   "grade": "B",
+   "source": "https://www.tomshardware.com/desktops/mini-pcs/apple-mac-studio-m5-ultra-review",
+   "date": "2026-09-21",
+   "points": [
+    {
+     "prompt_tokens": 2048,
+     "wait_s": 8.6
+    },
+    {
+     "prompt_tokens": 6144,
+     "wait_s": 26.3
+    },
+    {
+     "prompt_tokens": 10240,
+     "wait_s": 44.5
+    },
+    {
+     "prompt_tokens": 18432,
+     "wait_s": 83.0
+    },
+    {
+     "prompt_tokens": 34816,
+     "wait_s": 169.5
+    },
+    {
+     "prompt_tokens": 67584,
+     "wait_s": 383.3
+    },
+    {
+     "prompt_tokens": 133120,
+     "wait_s": 987.0
+    }
+   ],
+   "note": "Tom's Hardware review, time-to-first-token chart: a 2,048-token prompt on top of the stated context depth, read in one go (the tokens here are depth + 2,048), 512 tokens generated; read from the chart image. The review gives the M5 Ultra's 1.2 TB/s as double the M4 Max's, so the 546 GB/s 40-core bin. At 65,536 the M5 Ultra and DGX Spark labels (103.9 and 104.6 s) sit on the point where the two lines cross; the transcription follows the fact sheet"
+  },
+  {
+   "chip": "DGX Spark",
+   "gpu_cores": null,
+   "memory_gb": 128,
+   "bandwidth_gbs": 273,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "Q4_K_M",
+   "runtime": "llama.cpp-gguf",
+   "app": "llama.cpp, MTP off",
+   "grade": "B",
+   "source": "https://www.tomshardware.com/desktops/mini-pcs/apple-mac-studio-m5-ultra-review",
+   "date": "2026-09-21",
+   "points": [
+    {
+     "prompt_tokens": 2048,
+     "wait_s": 3.1
+    },
+    {
+     "prompt_tokens": 6144,
+     "wait_s": 8.2
+    },
+    {
+     "prompt_tokens": 10240,
+     "wait_s": 13.8
+    },
+    {
+     "prompt_tokens": 18432,
+     "wait_s": 25.2
+    },
+    {
+     "prompt_tokens": 34816,
+     "wait_s": 49.1
+    },
+    {
+     "prompt_tokens": 67584,
+     "wait_s": 103.9
+    },
+    {
+     "prompt_tokens": 133120,
+     "wait_s": 236.8
+    }
+   ],
+   "note": "Tom's Hardware review, same chart and method as the M5 Ultra ladder (the comparison machine). At depth 0 the chart's 3.1 s label belongs to the Spark and 8.6 s to the M4 Max: 2,048 tokens in 8.6 s is the M4 Max's 238 tok/s, the rate of its other points"
+  },
+  {
+   "chip": "M5 Max",
+   "gpu_cores": 40,
+   "memory_gb": 48,
+   "bandwidth_gbs": 614,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6.3rc2, accelerations off",
+   "grade": "B",
+   "source": "https://omlx.ai/benchmarks/performance/32bf9vtv",
+   "date": "2026-08-20",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 911.9
+    },
+    {
+     "prompt_tokens": 8192,
+     "tok_s": 829.2
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 725.2
+    },
+    {
+     "prompt_tokens": 32768,
+     "tok_s": 684.2
+    },
+    {
+     "prompt_tokens": 65536,
+     "tok_s": 523.7
+    }
+   ],
+   "note": "one oMLX benchmark submission (mlx-community/Qwen3.8-27B-4bit, macOS 27.0): reading speed = prompt tokens ÷ time to first token at each length (8K: 9,879 ms); its writing rows are already in validation.json"
+  },
+  {
+   "chip": "M5 Ultra",
+   "gpu_cores": 80,
+   "memory_gb": 256,
+   "bandwidth_gbs": 1200,
+   "model": "GLM-5.3 Flash",
+   "model_id": "glm-5.3-flash",
+   "params_active_b": 18.0,
+   "arch_class": "moe_latent",
+   "attention_layers": 11,
+   "layers": 45,
+   "quant": "MLX mixed 4/8-bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.7.0.dev2",
+   "grade": "B",
+   "source": "https://www.macstories.net/stories/m5-ultra-mac-studio-review-the-dream-mac-for-local-ai-agents/",
+   "date": "2026-09-21",
+   "points": [
+    {
+     "prompt_tokens": 3408,
+     "tok_s": 1217
+    },
+    {
+     "prompt_tokens": 13639,
+     "tok_s": 1107
+    },
+    {
+     "prompt_tokens": 61434,
+     "tok_s": 1016
+    },
+    {
+     "prompt_tokens": 126964,
+     "tok_s": 997
+    }
+   ],
+   "note": "MacStories review, GLM-5.3-Flash-MLX-mixed-4_8bit (4-bit routed experts, 8-bit attention and dense weights), prompt lengths as published; time to first token 62.5 s at 61,434 tokens and 130 s at 126,964; 256K ran out of memory. A latent-attention mixture of experts: it sets that class's reading factor, not D0"
+  },
+  {
+   "chip": "M3 Ultra",
+   "gpu_cores": 80,
+   "memory_gb": 512,
+   "bandwidth_gbs": 819,
+   "model": "GLM-5.3 Flash",
+   "model_id": "glm-5.3-flash",
+   "params_active_b": 18.0,
+   "arch_class": "moe_latent",
+   "attention_layers": 11,
+   "layers": 45,
+   "quant": "MLX mixed 4/8-bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.7.0.dev2",
+   "grade": "B",
+   "source": "https://www.macstories.net/stories/m5-ultra-mac-studio-review-the-dream-mac-for-local-ai-agents/",
+   "date": "2026-09-21",
+   "points": [
+    {
+     "prompt_tokens": 3408,
+     "tok_s": 458
+    },
+    {
+     "prompt_tokens": 13639,
+     "tok_s": 428
+    },
+    {
+     "prompt_tokens": 61434,
+     "tok_s": 448
+    },
+    {
+     "prompt_tokens": 126964,
+     "tok_s": 403
+    },
+    {
+     "prompt_tokens": 258025,
+     "tok_s": 391
+    }
+   ],
+   "note": "MacStories review, same file and app as the M5 Ultra ladder; time to first token 140 s at 61,434 tokens, 318 s at 126,964, 664 s at 258,025; 512 GB comes only with the 80-core GPU"
+  },
+  {
+   "chip": "M1 Max",
+   "gpu_cores": 24,
+   "memory_gb": 32,
+   "bandwidth_gbs": 400,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 80.4,
+     "tg": 15.1,
+     "runs": 8,
+     "source": "https://omlx.ai/benchmarks/performance/gw63nena",
+     "submissions": [
+      "gw63nena",
+      "wq8q97nu",
+      "0uejmvv8",
+      "lv9k3ywp",
+      "jfb878o5",
+      "6sjlsyzo",
+      "9pl06b8q",
+      "a60ahc3j"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 72.4,
+     "tg": 13.6,
+     "runs": 2,
+     "source": "https://omlx.ai/benchmarks/performance/u6b0cj16",
+     "submissions": [
+      "u6b0cj16",
+      "hel8xnqe"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 10 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-08 to 2026-10-14"
+  },
+  {
+   "chip": "M1 Max",
+   "gpu_cores": 24,
+   "memory_gb": 64,
+   "bandwidth_gbs": 400,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 78.9,
+     "tg": 15.1,
+     "runs": 4,
+     "source": "https://omlx.ai/benchmarks/performance/0kcuzeek",
+     "submissions": [
+      "0kcuzeek",
+      "0b66m8dz",
+      "hlhznqdx",
+      "1kop1gbk"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 4 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders) (1: da34fhnm); submissions 2026-10-08 to 2026-10-14"
+  },
+  {
+   "chip": "M1 Max",
+   "gpu_cores": 32,
+   "memory_gb": 32,
+   "bandwidth_gbs": 400,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 107.6,
+     "tg": 18.8,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/dlohmlwr",
+     "submissions": [
+      "dlohmlwr"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 1 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders) (2: w2k2mufg cq3eul9a); submissions 2026-10-12 to 2026-10-12"
+  },
+  {
+   "chip": "M1 Max",
+   "gpu_cores": 32,
+   "memory_gb": 64,
+   "bandwidth_gbs": 400,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 104,
+     "tg": 18.7,
+     "runs": 4,
+     "source": "https://omlx.ai/benchmarks/performance/icz1xarx",
+     "submissions": [
+      "icz1xarx",
+      "tnrq2esk",
+      "4ivahl8l",
+      "hfkw1gwc"
+     ]
+    },
+    {
+     "prompt_tokens": 131072,
+     "tok_s": 53.6,
+     "tg": 10.3,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/jbem3u47",
+     "submissions": [
+      "jbem3u47"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 5 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders) (10: nz9q39qt d8bd9q4n all9vr6m 8tre1gb8 kipqnfd0 s4a1g3e2 blvnuexh hjj2oqji mfu5mt77 wudfs3p0); submissions 2026-10-07 to 2026-10-14"
+  },
+  {
+   "chip": "M1 Ultra",
+   "gpu_cores": 48,
+   "memory_gb": 64,
+   "bandwidth_gbs": 800,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 149,
+     "tg": 23.9,
+     "runs": 13,
+     "source": "https://omlx.ai/benchmarks/performance/ltjy72zh",
+     "submissions": [
+      "ltjy72zh",
+      "t6vwvpjo",
+      "tyvqnh0s",
+      "wuxfxwtd",
+      "hgih44zc",
+      "yr0zvo47",
+      "dgjz6fbb",
+      "271nibpl",
+      "mp9estni",
+      "wvnz41z7",
+      "bm8rcf0c",
+      "wwvytcqk",
+      "c7fk365p"
+     ]
+    },
+    {
+     "prompt_tokens": 8192,
+     "tok_s": 144,
+     "tg": 23.2,
+     "runs": 4,
+     "source": "https://omlx.ai/benchmarks/performance/qketz0br",
+     "submissions": [
+      "qketz0br",
+      "3352m5xn",
+      "c8cewzao",
+      "c7lz59mk"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 136.4,
+     "tg": 21.9,
+     "runs": 7,
+     "source": "https://omlx.ai/benchmarks/performance/8mk3zr7r",
+     "submissions": [
+      "8mk3zr7r",
+      "qs6q1894",
+      "6875uatx",
+      "85pjrhqt",
+      "a8jz8wif",
+      "1mk8rxf3",
+      "3owz7xy4"
+     ]
+    },
+    {
+     "prompt_tokens": 32768,
+     "tok_s": 129.3,
+     "tg": 19.8,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/1z2v3b4l",
+     "submissions": [
+      "1z2v3b4l"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 25 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-08-15 to 2026-10-13"
+  },
+  {
+   "chip": "M1 Ultra",
+   "gpu_cores": 48,
+   "memory_gb": 128,
+   "bandwidth_gbs": 800,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 142.3,
+     "tg": 23.7,
+     "runs": 4,
+     "source": "https://omlx.ai/benchmarks/performance/hpsa2yel",
+     "submissions": [
+      "hpsa2yel",
+      "w21xxfst",
+      "lad5o68b",
+      "810b58pt"
+     ]
+    },
+    {
+     "prompt_tokens": 8192,
+     "tok_s": 133.5,
+     "tg": 23,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/fze74chq",
+     "submissions": [
+      "fze74chq"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 134.9,
+     "tg": 22.1,
+     "runs": 2,
+     "source": "https://omlx.ai/benchmarks/performance/q30klq6u",
+     "submissions": [
+      "q30klq6u",
+      "pgmdy4gx"
+     ]
+    },
+    {
+     "prompt_tokens": 32768,
+     "tok_s": 125.9,
+     "tg": 19.6,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/y1nd4v0u",
+     "submissions": [
+      "y1nd4v0u"
+     ]
+    },
+    {
+     "prompt_tokens": 65536,
+     "tok_s": 111.1,
+     "tg": 16.9,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/drikpz8g",
+     "submissions": [
+      "drikpz8g"
+     ]
+    },
+    {
+     "prompt_tokens": 131072,
+     "tok_s": 86.9,
+     "tg": 13.7,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/j68tjcyo",
+     "submissions": [
+      "j68tjcyo"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 10 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-08-14 to 2026-09-22"
+  },
+  {
+   "chip": "M1 Ultra",
+   "gpu_cores": 64,
+   "memory_gb": 64,
+   "bandwidth_gbs": 800,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 187.9,
+     "tg": 28.9,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/ed7jfi3t",
+     "submissions": [
+      "ed7jfi3t"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 174.2,
+     "tg": 26.6,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/5kon2kda",
+     "submissions": [
+      "5kon2kda"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 2 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-05 to 2026-10-05"
+  },
+  {
+   "chip": "M1 Ultra",
+   "gpu_cores": 64,
+   "memory_gb": 128,
+   "bandwidth_gbs": 800,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 200.7,
+     "tg": 28.7,
+     "runs": 4,
+     "source": "https://omlx.ai/benchmarks/performance/11vp1obp",
+     "submissions": [
+      "11vp1obp",
+      "fmg7p1rl",
+      "luxurb2c",
+      "21b24mwg"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 4 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-09-15 to 2026-10-12"
+  },
+  {
+   "chip": "M2 Max",
+   "gpu_cores": 30,
+   "memory_gb": 64,
+   "bandwidth_gbs": 400,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 104.7,
+     "tg": 19.15,
+     "runs": 2,
+     "source": "https://omlx.ai/benchmarks/performance/sfbs3ee0",
+     "submissions": [
+      "sfbs3ee0",
+      "ern6l8b4"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 96.7,
+     "tg": 17.1,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/4jm30l8m",
+     "submissions": [
+      "4jm30l8m"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 3 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders) (1: 3uzys69f); submissions 2026-09-24 to 2026-10-08"
+  },
+  {
+   "chip": "M2 Max",
+   "gpu_cores": 38,
+   "memory_gb": 32,
+   "bandwidth_gbs": 400,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 130.2,
+     "tg": 18.6,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/ul1lsqo7",
+     "submissions": [
+      "ul1lsqo7"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 1 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-14 to 2026-10-14"
+  },
+  {
+   "chip": "M2 Max",
+   "gpu_cores": 38,
+   "memory_gb": 64,
+   "bandwidth_gbs": 400,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 132.2,
+     "tg": 20.1,
+     "runs": 5,
+     "source": "https://omlx.ai/benchmarks/performance/6uf9ph1k",
+     "submissions": [
+      "6uf9ph1k",
+      "nlia9mud",
+      "komgrcuq",
+      "sfjvomg0",
+      "ys53qfjm"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 121.5,
+     "tg": 18.45,
+     "runs": 2,
+     "source": "https://omlx.ai/benchmarks/performance/h3orjrax",
+     "submissions": [
+      "h3orjrax",
+      "mtysyg4m"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 7 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders) (4: x1nx5czp b6s0xkfh 6rj8yq34 y1br0ddt); submissions 2026-09-25 to 2026-10-12"
+  },
+  {
+   "chip": "M2 Max",
+   "gpu_cores": 38,
+   "memory_gb": 96,
+   "bandwidth_gbs": 400,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 130.3,
+     "tg": 20.25,
+     "runs": 2,
+     "source": "https://omlx.ai/benchmarks/performance/w9ymu97j",
+     "submissions": [
+      "w9ymu97j",
+      "hulu1zqh"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 2 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders) (9: os7k2pxd 24dq03ca t19w931w xdvlw0dc oo83i6g5 af4guvsg xq1u1wf5 0s8hpcqv pqrmyuty); submissions 2026-09-30 to 2026-09-30"
+  },
+  {
+   "chip": "M2 Ultra",
+   "gpu_cores": 60,
+   "memory_gb": 64,
+   "bandwidth_gbs": 800,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 206,
+     "tg": 32,
+     "runs": 10,
+     "source": "https://omlx.ai/benchmarks/performance/oglo5312",
+     "submissions": [
+      "oglo5312",
+      "thqg5lip",
+      "rv7sj11y",
+      "m7qdknw7",
+      "lwjg8rmk",
+      "c0ccdg7y",
+      "smp77f13",
+      "e26tvwfh",
+      "5q4uqqww",
+      "h0bwekcl"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 192.2,
+     "tg": 29.7,
+     "runs": 8,
+     "source": "https://omlx.ai/benchmarks/performance/7oj19l7e",
+     "submissions": [
+      "7oj19l7e",
+      "saqc1aec",
+      "wpskq1jk",
+      "2l710ctc",
+      "5hhwdgp7",
+      "v1evc45g",
+      "fp4kt73j",
+      "1aaaz4ex"
+     ]
+    },
+    {
+     "prompt_tokens": 65536,
+     "tok_s": 146.8,
+     "tg": 23.7,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/0evdzron",
+     "submissions": [
+      "0evdzron"
+     ]
+    },
+    {
+     "prompt_tokens": 131072,
+     "tok_s": 111,
+     "tg": 18.4,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/kap2cj2y",
+     "submissions": [
+      "kap2cj2y"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 20 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-09-17 to 2026-10-12"
+  },
+  {
+   "chip": "M2 Ultra",
+   "gpu_cores": 60,
+   "memory_gb": 192,
+   "bandwidth_gbs": 800,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 206.3,
+     "tg": 31,
+     "runs": 2,
+     "source": "https://omlx.ai/benchmarks/performance/wolvj9rd",
+     "submissions": [
+      "wolvj9rd",
+      "s5ozd54n"
+     ]
+    },
+    {
+     "prompt_tokens": 8192,
+     "tok_s": 199.1,
+     "tg": 28.9,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/162wxvml",
+     "submissions": [
+      "162wxvml"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 189.8,
+     "tg": 29.6,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/4vz6s1gs",
+     "submissions": [
+      "4vz6s1gs"
+     ]
+    },
+    {
+     "prompt_tokens": 32768,
+     "tok_s": 176,
+     "tg": 26.5,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/f1b28mng",
+     "submissions": [
+      "f1b28mng"
+     ]
+    },
+    {
+     "prompt_tokens": 65536,
+     "tok_s": 146,
+     "tg": 22.5,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/ic77s9yf",
+     "submissions": [
+      "ic77s9yf"
+     ]
+    },
+    {
+     "prompt_tokens": 131072,
+     "tok_s": 111.9,
+     "tg": 16.7,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/mo6b29d0",
+     "submissions": [
+      "mo6b29d0"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 7 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-09-25 to 2026-09-25"
+  },
+  {
+   "chip": "M2 Ultra",
+   "gpu_cores": 76,
+   "memory_gb": 64,
+   "bandwidth_gbs": 800,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 286.4,
+     "tg": 35,
+     "runs": 3,
+     "source": "https://omlx.ai/benchmarks/performance/ubpeupc8",
+     "submissions": [
+      "ubpeupc8",
+      "s428okyg",
+      "g1zks1f7"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 3 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-09-16 to 2026-09-30"
+  },
+  {
+   "chip": "M2 Ultra",
+   "gpu_cores": 76,
+   "memory_gb": 192,
+   "bandwidth_gbs": 800,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 259,
+     "tg": 34.7,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/cd4ly4cb",
+     "submissions": [
+      "cd4ly4cb"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 1 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-05 to 2026-10-05"
+  },
+  {
+   "chip": "M3 Max",
+   "gpu_cores": 30,
+   "memory_gb": 36,
+   "bandwidth_gbs": 300,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 169.1,
+     "tg": 17.2,
+     "runs": 5,
+     "source": "https://omlx.ai/benchmarks/performance/k7d516d2",
+     "submissions": [
+      "k7d516d2",
+      "vw2wli3x",
+      "ysljw1ce",
+      "zdd54l0n",
+      "71ybvp0h"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 165.1,
+     "tg": 15.5,
+     "runs": 2,
+     "source": "https://omlx.ai/benchmarks/performance/55tos9h8",
+     "submissions": [
+      "55tos9h8",
+      "j8t0s3ec"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 7 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-01 to 2026-10-09"
+  },
+  {
+   "chip": "M3 Max",
+   "gpu_cores": 40,
+   "memory_gb": 48,
+   "bandwidth_gbs": 400,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 230.1,
+     "tg": 21.8,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/r0plagoc",
+     "submissions": [
+      "r0plagoc"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 1 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-09-29 to 2026-09-29"
+  },
+  {
+   "chip": "M3 Max",
+   "gpu_cores": 40,
+   "memory_gb": 64,
+   "bandwidth_gbs": 400,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 235.8,
+     "tg": 22.25,
+     "runs": 4,
+     "source": "https://omlx.ai/benchmarks/performance/ymqinqte",
+     "submissions": [
+      "ymqinqte",
+      "tp6o66rl",
+      "flp4bmvp",
+      "wnji3sk4"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 4 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders) (2: l2rnzptb udjoxcwq); submissions 2026-10-06 to 2026-10-14"
+  },
+  {
+   "chip": "M3 Max",
+   "gpu_cores": 40,
+   "memory_gb": 128,
+   "bandwidth_gbs": 400,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 235.1,
+     "tg": 22.2,
+     "runs": 7,
+     "source": "https://omlx.ai/benchmarks/performance/e8jtjvo8",
+     "submissions": [
+      "e8jtjvo8",
+      "z53tmvmw",
+      "0nxe71cg",
+      "fp2wei9c",
+      "74wkc5q8",
+      "i7rqn7k3",
+      "6obpq627"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 7 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders) (7: f9m9x7ty nffkzjc1 xti0vbd0 npbcvpvu ep26h13b 5gw3ct6v iojgu27a); submissions 2026-10-08 to 2026-10-13"
+  },
+  {
+   "chip": "M3 Ultra",
+   "gpu_cores": 60,
+   "memory_gb": 96,
+   "bandwidth_gbs": 819,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 357.2,
+     "tg": 38.1,
+     "runs": 3,
+     "source": "https://omlx.ai/benchmarks/performance/wdbivh6i",
+     "submissions": [
+      "wdbivh6i",
+      "m9nemqei",
+      "ysfkf8j7"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 3 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-12 to 2026-10-13"
+  },
+  {
+   "chip": "M3 Ultra",
+   "gpu_cores": 60,
+   "memory_gb": 256,
+   "bandwidth_gbs": 819,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 351.3,
+     "tg": 37.8,
+     "runs": 3,
+     "source": "https://omlx.ai/benchmarks/performance/ep822nlz",
+     "submissions": [
+      "ep822nlz",
+      "tjhua5jr",
+      "tewt29uo"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 333.9,
+     "tg": 35.1,
+     "runs": 3,
+     "source": "https://omlx.ai/benchmarks/performance/cy91p9l4",
+     "submissions": [
+      "cy91p9l4",
+      "hi605sum",
+      "n8bm6vvg"
+     ]
+    },
+    {
+     "prompt_tokens": 65536,
+     "tok_s": 264.5,
+     "tg": 27.4,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/sud8hpp7",
+     "submissions": [
+      "sud8hpp7"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 7 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-13 to 2026-10-13"
+  },
+  {
+   "chip": "M4",
+   "gpu_cores": 10,
+   "memory_gb": 24,
+   "bandwidth_gbs": 120,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 58.6,
+     "tg": 6.5,
+     "runs": 5,
+     "source": "https://omlx.ai/benchmarks/performance/4ijekpc9",
+     "submissions": [
+      "4ijekpc9",
+      "9s5dvjsh",
+      "q34gzsal",
+      "mpetabs8",
+      "7wfchl2q"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 5 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders) (1: l34uhfiv); submissions 2026-08-22 to 2026-09-23"
+  },
+  {
+   "chip": "M4",
+   "gpu_cores": 10,
+   "memory_gb": 32,
+   "bandwidth_gbs": 120,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 66.3,
+     "tg": 6.6,
+     "runs": 15,
+     "source": "https://omlx.ai/benchmarks/performance/a6uzn4hz",
+     "submissions": [
+      "a6uzn4hz",
+      "47l3z56x",
+      "xo9xo5ue",
+      "b6irigxy",
+      "e3hj2a4x",
+      "0oyodrf5",
+      "c3uhiixn",
+      "2xnjbk81",
+      "okwxoryl",
+      "aufftli1",
+      "eptxss98",
+      "gre6w12u",
+      "t92hirbm",
+      "dfevqjaa",
+      "nv1dly2l"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 63.3,
+     "tg": 6.1,
+     "runs": 6,
+     "source": "https://omlx.ai/benchmarks/performance/rpjwy0oh",
+     "submissions": [
+      "rpjwy0oh",
+      "0vc1rk4y",
+      "62ga69t6",
+      "vvnjpfu0",
+      "7ep5tbdc",
+      "wa96r2z7"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 21 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders) (12: jold7z64 b15wgyj0 r4q1t1jr 3hva12h4 hr1b2lqo 2xnswp1j v8fo2r77 3sn70y7r pnvoz00m puz06127 v0rkcscb kufa1ie7); submissions 2026-08-20 to 2026-10-09"
+  },
+  {
+   "chip": "M4 Max",
+   "gpu_cores": 32,
+   "memory_gb": 36,
+   "bandwidth_gbs": 410,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 213.9,
+     "tg": 21.8,
+     "runs": 5,
+     "source": "https://omlx.ai/benchmarks/performance/5s0qqg0v",
+     "submissions": [
+      "5s0qqg0v",
+      "ui5jp7sx",
+      "8kzh7xjm",
+      "vwntpckj",
+      "74viq9p6"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 185.4,
+     "tg": 19.5,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/h04mqxmm",
+     "submissions": [
+      "h04mqxmm"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 6 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-11 to 2026-10-14"
+  },
+  {
+   "chip": "M4 Max",
+   "gpu_cores": 40,
+   "memory_gb": 48,
+   "bandwidth_gbs": 546,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 239.8,
+     "tg": 25.9,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/br08ympg",
+     "submissions": [
+      "br08ympg"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 211,
+     "tg": 24.8,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/v32jxcbg",
+     "submissions": [
+      "v32jxcbg"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 2 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-12 to 2026-10-12"
+  },
+  {
+   "chip": "M4 Max",
+   "gpu_cores": 40,
+   "memory_gb": 128,
+   "bandwidth_gbs": 546,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 272.6,
+     "tg": 28.3,
+     "runs": 5,
+     "source": "https://omlx.ai/benchmarks/performance/w51ihbql",
+     "submissions": [
+      "w51ihbql",
+      "3idxu4ie",
+      "6cba28r0",
+      "7es9hfog",
+      "td9v2uqt"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 257.3,
+     "tg": 26.4,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/g844xneu",
+     "submissions": [
+      "g844xneu"
+     ]
+    },
+    {
+     "prompt_tokens": 32768,
+     "tok_s": 239.8,
+     "tg": 25,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/b7zm47ua",
+     "submissions": [
+      "b7zm47ua"
+     ]
+    },
+    {
+     "prompt_tokens": 65536,
+     "tok_s": 210,
+     "tg": 21.7,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/6i3ma787",
+     "submissions": [
+      "6i3ma787"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 8 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders) (1: 78qfyntr); submissions 2026-10-03 to 2026-10-12"
+  },
+  {
+   "chip": "M4 Pro",
+   "gpu_cores": 16,
+   "memory_gb": 24,
+   "bandwidth_gbs": 273,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 108.5,
+     "tg": 15.4,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/mewvrkb3",
+     "submissions": [
+      "mewvrkb3"
+     ]
+    },
+    {
+     "prompt_tokens": 8192,
+     "tok_s": 106.8,
+     "tg": 14.9,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/dprzuno3",
+     "submissions": [
+      "dprzuno3"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 2 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-12 to 2026-10-12"
+  },
+  {
+   "chip": "M4 Pro",
+   "gpu_cores": 16,
+   "memory_gb": 48,
+   "bandwidth_gbs": 273,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 106.3,
+     "tg": 14.7,
+     "runs": 8,
+     "source": "https://omlx.ai/benchmarks/performance/wzofxe6m",
+     "submissions": [
+      "wzofxe6m",
+      "3ddlvbbu",
+      "pvhp6tsq",
+      "sldb1k21",
+      "0mq8mmyw",
+      "75pj21ro",
+      "r4f2qgkf",
+      "ypb03ah2"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 104.4,
+     "tg": 13.8,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/jk5rc34u",
+     "submissions": [
+      "jk5rc34u"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 9 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders) (3: bsau72vi 175brvyp b0gc1jvu); submissions 2026-09-30 to 2026-10-13"
+  },
+  {
+   "chip": "M4 Pro",
+   "gpu_cores": 16,
+   "memory_gb": 64,
+   "bandwidth_gbs": 273,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 111.3,
+     "tg": 15,
+     "runs": 2,
+     "source": "https://omlx.ai/benchmarks/performance/s5fillje",
+     "submissions": [
+      "s5fillje",
+      "ser3x6tk"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 105,
+     "tg": 14,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/b6h8ny7h",
+     "submissions": [
+      "b6h8ny7h"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 3 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-10 to 2026-10-10"
+  },
+  {
+   "chip": "M4 Pro",
+   "gpu_cores": 20,
+   "memory_gb": 48,
+   "bandwidth_gbs": 273,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 131.8,
+     "tg": 14.9,
+     "runs": 11,
+     "source": "https://omlx.ai/benchmarks/performance/q1qbilcu",
+     "submissions": [
+      "q1qbilcu",
+      "wxsgpayp",
+      "crpb8dni",
+      "3xl0ytqr",
+      "b75r98kz",
+      "gjqyada2",
+      "favthauf",
+      "2o81opeu",
+      "s8lo9zgu",
+      "36g11m6x",
+      "7rt2kq3y"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 122.8,
+     "tg": 14,
+     "runs": 3,
+     "source": "https://omlx.ai/benchmarks/performance/mkpc7kel",
+     "submissions": [
+      "mkpc7kel",
+      "p0hs5td7",
+      "m0y7q4gy"
+     ]
+    },
+    {
+     "prompt_tokens": 65536,
+     "tok_s": 104.5,
+     "tg": 11.4,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/fntarakd",
+     "submissions": [
+      "fntarakd"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 15 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-01 to 2026-10-14"
+  },
+  {
+   "chip": "M4 Pro",
+   "gpu_cores": 20,
+   "memory_gb": 64,
+   "bandwidth_gbs": 273,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 135.6,
+     "tg": 15,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/1cj8adju",
+     "submissions": [
+      "1cj8adju"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 1 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-13 to 2026-10-13"
+  },
+  {
+   "chip": "M5",
+   "gpu_cores": 10,
+   "memory_gb": 24,
+   "bandwidth_gbs": 153,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 235.5,
+     "tg": 8,
+     "runs": 3,
+     "source": "https://omlx.ai/benchmarks/performance/5r2xtful",
+     "submissions": [
+      "5r2xtful",
+      "ebr91nnb",
+      "c1nac379"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 239.3,
+     "tg": 7.7,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/m0a0ia7i",
+     "submissions": [
+      "m0a0ia7i"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 4 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-08-22 to 2026-10-03"
+  },
+  {
+   "chip": "M5",
+   "gpu_cores": 10,
+   "memory_gb": 32,
+   "bandwidth_gbs": 153,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 222.8,
+     "tg": 8,
+     "runs": 18,
+     "source": "https://omlx.ai/benchmarks/performance/3oa449oh",
+     "submissions": [
+      "3oa449oh",
+      "uy2zptbw",
+      "czwqyxhg",
+      "b4oh80a2",
+      "rs1qt6zn",
+      "x91aqk2x",
+      "qdk4souy",
+      "qhfge1mm",
+      "roc0ytfs",
+      "blcyheje",
+      "bd8rfen3",
+      "q272jz82",
+      "8ixomn60",
+      "4kfr2w7f",
+      "abazdsds",
+      "y9olmpio",
+      "5i1otx91",
+      "tfp0hr0i"
+     ]
+    },
+    {
+     "prompt_tokens": 8192,
+     "tok_s": 189.8,
+     "tg": 8,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/thluvt22",
+     "submissions": [
+      "thluvt22"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 227.3,
+     "tg": 7.7,
+     "runs": 5,
+     "source": "https://omlx.ai/benchmarks/performance/6r971o1c",
+     "submissions": [
+      "6r971o1c",
+      "3a1ktw95",
+      "lzy0uz0t",
+      "vfam05gd",
+      "s5bqxgfu"
+     ]
+    },
+    {
+     "prompt_tokens": 32768,
+     "tok_s": 221.6,
+     "tg": 6.8,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/7pi95r0i",
+     "submissions": [
+      "7pi95r0i"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 25 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders) (7: 2inz1o6y opru1r68 3yav8n8f 1zd5acof ew70yzq1 cq00ki4f vejja11k); submissions 2026-08-21 to 2026-10-13"
+  },
+  {
+   "chip": "M5 Max",
+   "gpu_cores": 40,
+   "memory_gb": 64,
+   "bandwidth_gbs": 614,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 1022,
+     "tg": 32.9,
+     "runs": 3,
+     "source": "https://omlx.ai/benchmarks/performance/lsi06w75",
+     "submissions": [
+      "lsi06w75",
+      "hgw7kll2",
+      "ga59forh"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 3 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-14 to 2026-10-14"
+  },
+  {
+   "chip": "M5 Max",
+   "gpu_cores": 40,
+   "memory_gb": 128,
+   "bandwidth_gbs": 614,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 934.9,
+     "tg": 32.7,
+     "runs": 3,
+     "source": "https://omlx.ai/benchmarks/performance/pqcpywvj",
+     "submissions": [
+      "pqcpywvj",
+      "8tq5buyr",
+      "w78z8qq6"
+     ]
+    },
+    {
+     "prompt_tokens": 8192,
+     "tok_s": 796.5,
+     "tg": 32,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/y8wfp7ry",
+     "submissions": [
+      "y8wfp7ry"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 760.5,
+     "tg": 29.65,
+     "runs": 2,
+     "source": "https://omlx.ai/benchmarks/performance/9k65p6xi",
+     "submissions": [
+      "9k65p6xi",
+      "rb7bqer3"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 6 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-13 to 2026-10-14"
+  },
+  {
+   "chip": "M5 Pro",
+   "gpu_cores": 16,
+   "memory_gb": 48,
+   "bandwidth_gbs": 307,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 419,
+     "tg": 17.9,
+     "runs": 3,
+     "source": "https://omlx.ai/benchmarks/performance/dpqoysjr",
+     "submissions": [
+      "dpqoysjr",
+      "vqohhgnn",
+      "t53uibil"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 397.3,
+     "tg": 16.75,
+     "runs": 2,
+     "source": "https://omlx.ai/benchmarks/performance/nqixnl7q",
+     "submissions": [
+      "nqixnl7q",
+      "dm45vg4t"
+     ]
+    },
+    {
+     "prompt_tokens": 65536,
+     "tok_s": 326.7,
+     "tg": 13.5,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/e87xbfwn",
+     "submissions": [
+      "e87xbfwn"
+     ]
+    },
+    {
+     "prompt_tokens": 131072,
+     "tok_s": 261.5,
+     "tg": 10.65,
+     "runs": 2,
+     "source": "https://omlx.ai/benchmarks/performance/nr79h7r8",
+     "submissions": [
+      "nr79h7r8",
+      "4qxlxdjv"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 8 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders) (2: s5yje908 1fl5ltxq); submissions 2026-10-13 to 2026-10-14"
+  },
+  {
+   "chip": "M5 Pro",
+   "gpu_cores": 16,
+   "memory_gb": 64,
+   "bandwidth_gbs": 307,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 8192,
+     "tok_s": 623.7,
+     "tg": 16.8,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/2wmdogda",
+     "submissions": [
+      "2wmdogda"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 1 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-13 to 2026-10-13"
+  },
+  {
+   "chip": "M5 Pro",
+   "gpu_cores": 20,
+   "memory_gb": 48,
+   "bandwidth_gbs": 307,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 508.1,
+     "tg": 17.8,
+     "runs": 4,
+     "source": "https://omlx.ai/benchmarks/performance/zasd8zgb",
+     "submissions": [
+      "zasd8zgb",
+      "uasqdedp",
+      "od6a06vm",
+      "7fzr31k9"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 4 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-13 to 2026-10-14"
+  },
+  {
+   "chip": "M5 Pro",
+   "gpu_cores": 20,
+   "memory_gb": 64,
+   "bandwidth_gbs": 307,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 517.6,
+     "tg": 17.7,
+     "runs": 3,
+     "source": "https://omlx.ai/benchmarks/performance/ns35rgrx",
+     "submissions": [
+      "ns35rgrx",
+      "hkeg1o1b",
+      "34khwhlt"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 3 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-13 to 2026-10-14"
+  },
+  {
+   "chip": "M5 Ultra",
+   "gpu_cores": 64,
+   "memory_gb": 96,
+   "bandwidth_gbs": 1200,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 1500,
+     "tg": 53.45,
+     "runs": 4,
+     "source": "https://omlx.ai/benchmarks/performance/p1rvr4gg",
+     "submissions": [
+      "p1rvr4gg",
+      "su9gq20t",
+      "emx47h0e",
+      "cdigoskn"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 1476,
+     "tg": 50.6,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/w8vuorqp",
+     "submissions": [
+      "w8vuorqp"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 5 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-08 to 2026-10-13"
+  },
+  {
+   "chip": "M5 Ultra",
+   "gpu_cores": 64,
+   "memory_gb": 256,
+   "bandwidth_gbs": 1200,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 65536,
+     "tok_s": 1224,
+     "tg": 41.3,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/30x97j9p",
+     "submissions": [
+      "30x97j9p"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 1 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders) (2: 5vj2funr 1cjd1k0w); submissions 2026-10-08 to 2026-10-08"
+  },
+  {
+   "chip": "M5 Ultra",
+   "gpu_cores": 80,
+   "memory_gb": 96,
+   "bandwidth_gbs": 1200,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 1664,
+     "tg": 53.6,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/krru1433",
+     "submissions": [
+      "krru1433"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 1 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders); submissions 2026-10-13 to 2026-10-13"
+  },
+  {
+   "chip": "M6",
+   "gpu_cores": 12,
+   "memory_gb": 32,
+   "bandwidth_gbs": 170,
+   "model": "Qwen 3.8 27B",
+   "model_id": "qwen3.8-27b",
+   "params_active_b": 27.8,
+   "arch_class": "dense",
+   "attention_layers": 16,
+   "layers": 64,
+   "quant": "MLX-4bit",
+   "runtime": "mlx",
+   "app": "oMLX 0.6 to 0.7 (community)",
+   "grade": "B",
+   "date": "2026-10-14",
+   "points": [
+    {
+     "prompt_tokens": 4096,
+     "tok_s": 311.2,
+     "tg": 9.6,
+     "runs": 17,
+     "source": "https://omlx.ai/benchmarks/performance/w5iqms2k",
+     "submissions": [
+      "w5iqms2k",
+      "n1w9nvud",
+      "mgps5ag0",
+      "vupbl73n",
+      "9rh8w92g",
+      "dq4dllf0",
+      "svowkdap",
+      "1tl3odaf",
+      "xdcsadp9",
+      "xfqpuwss",
+      "r5e2e0ie",
+      "c05ilfjj",
+      "lwcjeow9",
+      "6ti97fvl",
+      "krmnsb9t",
+      "hz4782ou",
+      "j9naqlpc"
+     ]
+    },
+    {
+     "prompt_tokens": 8192,
+     "tok_s": 310.4,
+     "tg": 9.4,
+     "runs": 5,
+     "source": "https://omlx.ai/benchmarks/performance/2hg7yub1",
+     "submissions": [
+      "2hg7yub1",
+      "i56ltsu3",
+      "44fwvy2f",
+      "i66ezn1b",
+      "cjqtt3sb"
+     ]
+    },
+    {
+     "prompt_tokens": 16384,
+     "tok_s": 284.5,
+     "tg": 8.75,
+     "runs": 6,
+     "source": "https://omlx.ai/benchmarks/performance/9oxxp7f5",
+     "submissions": [
+      "9oxxp7f5",
+      "28u1xgbj",
+      "4cx36oqi",
+      "cmb9qv7u",
+      "8eh6vllf",
+      "j5uvq6hi"
+     ]
+    },
+    {
+     "prompt_tokens": 32768,
+     "tok_s": 267.2,
+     "tg": 7.9,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/3x9utgvp",
+     "submissions": [
+      "3x9utgvp"
+     ]
+    },
+    {
+     "prompt_tokens": 65536,
+     "tok_s": 239.5,
+     "tg": 7.1,
+     "runs": 1,
+     "source": "https://omlx.ai/benchmarks/performance/qoh81xh5",
+     "submissions": [
+      "qoh81xh5"
+     ]
+    }
+   ],
+   "note": "oMLX community benchmarks (omlx.ai), 30 submissions of the plain 4-bit file (mlx-community Qwen3.8-27B-4bit or a same-size MLX-4bit copy), no acceleration; each point is the median over its submissions of prompt tokens ÷ time to first token; a run is dropped as throttled, swapping or busy when it writes under 90 % of the chip's usual speed at that length (the median of the chip's runs, and at least its 4K speed × 0.97 at 8K, 0.92 at 16K, 0.83 at 32K, 0.74 at 64K, 0.58 at 128K, the falls of the clean ladders) (1: qnf4yqbl); submissions 2026-09-23 to 2026-10-11"
   }
  ]
 }

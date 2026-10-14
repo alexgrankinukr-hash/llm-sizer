@@ -1,5 +1,5 @@
-/** The explanation sheet: why a cell is what it is, the fix, alternatives, and the memory bar. One native dialog. */
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+/** The explanation sheet: why a cell is what it is, the fix, alternatives, and the memory bar. One native dialog, centred on desktop, pinned to the bottom on mobile. */
+import { useEffect, useMemo, useRef } from 'react';
 import type { Change, Factors, Fix, Quant, SpecialBuild, Speed as CellResultSpeed } from '../../lib/llm-sizer/engine/types';
 import { formatContext, formatDate, formatGb, formatPrice, formatTokS, formatWait } from '../../lib/llm-sizer/engine/format';
 import { FLAG_TEXT, verdictSentence } from '../../lib/llm-sizer/app/layout';
@@ -41,7 +41,6 @@ export interface CellSheetProps {
   cell: MatrixCell | null;
   row: MatrixRow | null;
   column: MatrixColumn | null;
-  anchor: HTMLElement | null;
   state: AppState;
   factors: Factors;
   onClose: () => void;
@@ -110,27 +109,6 @@ export function CellSheet(props: CellSheetProps) {
     }
     if (!open && d.open) d.close();
   }, [open]);
-
-  // desktop: anchor the card near the cell; mobile: the stylesheet pins it to the bottom
-  useLayoutEffect(() => {
-    const d = ref.current;
-    if (!d || !open) return;
-    if (window.innerWidth < 768 || !props.anchor) {
-      d.style.top = d.style.left = '';
-      return;
-    }
-    const r = props.anchor.getBoundingClientRect();
-    const width = Math.min(540, window.innerWidth * 0.92);
-    const height = Math.min(d.offsetHeight || 420, window.innerHeight * 0.88);
-    let left = r.right + 12;
-    if (left + width > window.innerWidth - 8) left = Math.max(8, r.left - width - 12);
-    let top = r.top - 24;
-    if (top + height > window.innerHeight - 8) top = Math.max(8, window.innerHeight - height - 8);
-    d.style.position = 'fixed';
-    d.style.margin = '0';
-    d.style.left = `${left}px`;
-    d.style.top = `${top}px`;
-  }, [open, props.anchor, cell]);
 
   if (!cell?.result || !row || !column) return <dialog ref={ref} className="lls-sheet" onClose={props.onClose} />;
   const result = cell.result;

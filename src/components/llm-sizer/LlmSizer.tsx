@@ -71,9 +71,9 @@ function Empty({ children }: { children: React.ReactNode }) {
 }
 
 type OpenCell =
-  | { kind: 'matrix'; rowKey: string; column: number; anchor: HTMLElement }
+  | { kind: 'matrix'; rowKey: string; column: number }
   /** a synthesised cell: from the machine view's grid, or from the buying map (which already is the "which machine" answer) */
-  | { kind: 'fit'; origin: 'machine' | 'buying'; target: { cell: MatrixCell; row: MatrixRow; column: MatrixColumn }; ref: { modelId: string; bucket: Bucket; ctx: number }; anchor: HTMLElement };
+  | { kind: 'fit'; origin: 'machine' | 'buying'; target: { cell: MatrixCell; row: MatrixRow; column: MatrixColumn }; ref: { modelId: string; bucket: Bucket; ctx: number } };
 
 export default function LlmSizer({ initial, machines, factors, notices = [], initialRecords, present = false, reveal = false, showHidden = false, machinesAsOf }: LlmSizerProps) {
   const analytics = present ? silentAnalytics : liveAnalytics;
@@ -148,8 +148,8 @@ export default function LlmSizer({ initial, machines, factors, notices = [], ini
   const shareUrl = origin ? `${origin}?s=${encodeURIComponent(encoded)}` : '';
 
   const openCellSheet = useCallback(
-    (rowKey: string, column: number, anchor: HTMLElement) => {
-      setOpenCell({ kind: 'matrix', rowKey, column, anchor });
+    (rowKey: string, column: number) => {
+      setOpenCell({ kind: 'matrix', rowKey, column });
       setInteractions((n) => n + 1);
       const cell = matrix.cells.get(`${rowKey}|${column}`);
       analytics.cellOpened(cell?.result?.verdict ?? 'unknown');
@@ -157,15 +157,15 @@ export default function LlmSizer({ initial, machines, factors, notices = [], ini
     [matrix],
   );
   // the machine view's cells are not table columns: the sheet gets a synthesised target
-  const openFitSheet = useCallback((t: FitTarget, anchor: HTMLElement) => {
+  const openFitSheet = useCallback((t: FitTarget) => {
     const pickRow = t.pick;
-    setOpenCell({ kind: 'fit', origin: 'machine', target: syntheticSheetTarget(t.model, pickRow, t.bucket, t.ctx, t.result, state), ref: { modelId: t.model.id, bucket: t.bucket, ctx: t.ctx }, anchor });
+    setOpenCell({ kind: 'fit', origin: 'machine', target: syntheticSheetTarget(t.model, pickRow, t.bucket, t.ctx, t.result, state), ref: { modelId: t.model.id, bucket: t.bucket, ctx: t.ctx } });
     setInteractions((n) => n + 1);
     analytics.cellOpened(t.result.verdict);
   }, [state]);
   // the buying map's marks: the same sheet, named after the exact file the mark was evaluated at
-  const openMapSheet = useCallback((t: MapTarget, anchor: HTMLElement) => {
-    setOpenCell({ kind: 'fit', origin: 'buying', target: syntheticSheetTarget(t.model, t.pick, t.bucket, t.ctx, t.result, state, t.quant), ref: { modelId: t.model.id, bucket: t.bucket, ctx: t.ctx }, anchor });
+  const openMapSheet = useCallback((t: MapTarget) => {
+    setOpenCell({ kind: 'fit', origin: 'buying', target: syntheticSheetTarget(t.model, t.pick, t.bucket, t.ctx, t.result, state, t.quant), ref: { modelId: t.model.id, bucket: t.bucket, ctx: t.ctx } });
     setInteractions((n) => n + 1);
     analytics.cellOpened(t.result.verdict);
   }, [state]);
@@ -435,7 +435,6 @@ export default function LlmSizer({ initial, machines, factors, notices = [], ini
         cell={cellForSheet}
         row={rowForSheet}
         column={columnForSheet}
-        anchor={openCell?.anchor ?? null}
         state={state}
         factors={factors}
         onClose={() => setOpenCell(null)}

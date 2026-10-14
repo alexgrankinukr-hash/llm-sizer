@@ -608,7 +608,11 @@ input[type='range'].lls-range {
   gap: 0.75rem;
 }
 @media (min-width: 768px) {
-  .lls-tiles { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .lls-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+/* six tiles: one row once each has room for its line of text */
+@media (min-width: 1200px) {
+  .lls-tiles { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 }
 /* five tiles two per row leave one alone: it takes the whole last row */
 @media (max-width: 767px) {
@@ -894,4 +898,205 @@ sup.lls-note {
 }
 .lls-band-help > svg {
   color: var(--color-light);
+}
+
+/* "Every Mac, how fast?": generations across, tiers down, one filled card per chip, coloured by the feels-like bands */
+.lls-chips {
+  width: calc(100% + 12px);
+  min-width: 760px;
+  margin: -6px;
+  border-collapse: separate;
+  border-spacing: 6px;
+  table-layout: fixed;
+}
+.lls-chips thead th {
+  padding: 0 0 2px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+.lls-chips thead th > span {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-light);
+}
+.lls-chips thead td:first-child,
+.lls-chips tbody th {
+  width: 132px;
+}
+.lls-chips tbody th {
+  padding-right: 6px;
+  text-align: left;
+  vertical-align: middle;
+}
+.lls-chips tbody th > b {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+}
+.lls-chips tbody th > span {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--color-light);
+}
+.lls-chips td {
+  padding: 0;
+  vertical-align: middle;
+}
+.lls-chipcell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  width: 100%;
+  min-height: 94px;
+  padding: 10px 6px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--fill, #efece7);
+  color: #1a1a1a;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  transition: box-shadow 0.12s ease;
+}
+.lls-chipcell .v {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.lls-chipcell .v small {
+  margin-left: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.lls-chipcell .l {
+  font-size: 11.5px;
+  line-height: 1.2;
+  color: #4a4742;
+}
+.lls-chipcell .m {
+  margin-top: 3px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #5f5d58;
+}
+.lls-chipcell:hover {
+  box-shadow: 0 0 0 1.5px #1a1a1a;
+}
+.lls-chipcell:focus-visible {
+  outline: 2px solid var(--lls-focus);
+  outline-offset: 2px;
+}
+.lls-chipcell.is-open {
+  box-shadow: 0 0 0 2.5px #1a1a1a;
+}
+/* runs only with the macOS memory limit lifted: an outline in the band's colour, the video's convention */
+.lls-chipcell.is-lifted {
+  background: #fbfaf8;
+  box-shadow: inset 0 0 0 4px var(--ring);
+}
+.lls-chipcell.is-lifted:hover {
+  box-shadow: inset 0 0 0 4px var(--ring), 0 0 0 1.5px #1a1a1a;
+}
+.lls-chipcell.is-lifted.is-open {
+  box-shadow: inset 0 0 0 4px var(--ring), 0 0 0 2.5px #1a1a1a;
+}
+/* no measured runs on this chip: a dashed rule inside the card */
+.lls-chipcell.is-est::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1.5px dashed rgba(26, 26, 26, 0.45);
+  border-radius: 8px;
+  pointer-events: none;
+}
+.lls-chipcell.is-lifted.is-est::after {
+  inset: 8px;
+}
+.lls-chipcell.is-nofit {
+  background: #efece7;
+}
+.lls-chipcell.is-nofit .v {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: #6f6d68;
+}
+.lls-chipcell.is-nofit .m {
+  font-weight: 500;
+}
+.lls-chipcell.is-none {
+  cursor: default;
+  background: transparent;
+  border: 1.5px dashed rgba(26, 26, 26, 0.12);
+  font-size: 11.5px;
+  color: #a29e97;
+}
+.lls-swatch-ring {
+  width: 12px;
+  height: 12px;
+  background: #fbfaf8;
+  box-shadow: inset 0 0 0 2.5px #ddc56f;
+}
+.lls-swatch-dash {
+  width: 12px;
+  height: 12px;
+  background: transparent;
+  outline: 1.5px dashed rgba(26, 26, 26, 0.5);
+  outline-offset: -1.5px;
+}
+.lls-chip-sizes {
+  margin-top: 14px;
+  padding: 14px 16px 10px;
+  border: 1px solid #d4af37;
+  border-radius: 14px;
+  background: #fff;
+}
+.lls-sizes-table th:first-child,
+.lls-sizes-table td:first-child {
+  padding-left: 8px;
+}
+.lls-sizes-table tbody tr {
+  cursor: pointer;
+}
+.lls-sizes-table tbody tr:hover > td {
+  background: var(--color-gold-tint);
+}
+.lls-sizes-table tbody tr.is-shown > td:first-child {
+  box-shadow: inset 3px 0 0 #d4af37;
+}
+/* phones: the tier labels shrink to the tier name and stay put while the generations scroll */
+.lls-chips thead td:first-child,
+.lls-chips tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--color-bg);
+}
+@media (max-width: 767px) {
+  .lls-chips {
+    min-width: 600px;
+  }
+  .lls-chips thead td:first-child,
+  .lls-chips tbody th {
+    width: 64px;
+  }
+  .lls-chips tbody th > span {
+    display: none;
+  }
+  .lls-chipcell .v {
+    font-size: 22px;
+  }
 }

@@ -209,3 +209,21 @@ describe('linked machines in the link', () => {
     expect(encodeState(old)).toContain('gmac-mini-m6*16*24!mac-studio-m5-ultra');
   });
 });
+
+describe('the every-chip view in the link', () => {
+  it('round-trips the model, build, context, reading and the smallest-memory pick, and keeps the plain grid short', () => {
+    const plain: AppState = { ...s0, view: { kind: 'chips', model: 'qwen3.8-27b', bucket: 'Q4', ctx: 8192, mode: 'write', memory: 'max' } };
+    expect(encodeState(plain)).toMatch(/~vchips\*qwen3\.8-27b\*Q4\*8$/);
+    expect(decodeState(encodeState(plain), s0).state.view).toEqual(plain.view);
+    const full: AppState = { ...s0, view: { kind: 'chips', model: 'glm-5.3-flash', bucket: 'Q8', ctx: 131072, mode: 'read', memory: 'min' } };
+    expect(encodeState(full)).toMatch(/~vchips\*glm-5\.3-flash\*Q8\*128\*r\*n$/);
+    expect(decodeState(encodeState(full), s0).state.view).toEqual(full.view);
+  });
+
+  it('reads a bad build as Q4 and a bad context as 32K, and drops a custom model the browser does not have', () => {
+    const odd = decodeState(`${encodeState(s0)}~vchips*qwen3.8-27b*Q7*zz`, s0).state.view;
+    expect(odd).toEqual({ kind: 'chips', model: 'qwen3.8-27b', bucket: 'Q4', ctx: 32768, mode: 'write', memory: 'max' });
+    expect(decodeState(`${encodeState(s0)}~vchips*custom-nope*Q4*8`, s0).state.view).toEqual({ kind: 'table' });
+    expect(decodeState(`${encodeState(s0)}~vchips*Not_An_Id*Q4*8`, s0).state.view).toEqual({ kind: 'table' });
+  });
+});

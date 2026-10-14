@@ -14,12 +14,15 @@ import { MAX_COLUMNS } from '../../lib/llm-sizer/app/state';
 import type { Bucket } from '../../lib/llm-sizer/app/quants';
 import type { MatrixCell, MatrixColumn, MatrixRow } from '../../lib/llm-sizer/app/matrix';
 import { aboutHref } from '../../lib/llm-sizer/app/provenance';
+import { chipsViewFor } from '../../lib/llm-sizer/app/chip-grid';
+import { DEFAULT_MODELS } from '../../lib/llm-sizer/app/defaults';
 import { FitTable } from './FitTable';
 import { CellSheet } from './CellSheet';
 import { SpeedView } from './SpeedView';
 import { MemoryView } from './MemoryView';
 import { MachineFitView, type FitTarget } from './MachineFitView';
 import { MachineMapView, type MapTarget } from './MachineMapView';
+import { ChipGridView, type ChipsView, type ChipTarget } from './ChipGridView';
 import { ShareExport } from './ShareExport';
 import { SettingsPanel } from './SettingsPanel';
 import { isHiddenView, ViewTiles, type ViewKind } from './ViewTiles';
@@ -72,8 +75,8 @@ function Empty({ children }: { children: React.ReactNode }) {
 
 type OpenCell =
   | { kind: 'matrix'; rowKey: string; column: number }
-  /** a synthesised cell: from the machine view's grid, or from the buying map (which already is the "which machine" answer) */
-  | { kind: 'fit'; origin: 'machine' | 'buying'; target: { cell: MatrixCell; row: MatrixRow; column: MatrixColumn }; ref: { modelId: string; bucket: Bucket; ctx: number } };
+  /** a synthesised cell: from the machine view's grid, the every-chip grid, or the buying map (which already is the "which machine" answer) */
+  | { kind: 'fit'; origin: 'machine' | 'chips' | 'buying'; target: { cell: MatrixCell; row: MatrixRow; column: MatrixColumn }; ref: { modelId: string; bucket: Bucket; ctx: number } };
 
 export default function LlmSizer({ initial, machines, factors, notices = [], initialRecords, present = false, reveal = false, showHidden = false, machinesAsOf }: LlmSizerProps) {
   const analytics = present ? silentAnalytics : liveAnalytics;
@@ -98,6 +101,8 @@ export default function LlmSizer({ initial, machines, factors, notices = [], ini
   const [noticeList, setNoticeList] = useState<string[]>(notices);
   const chartRef = useRef<HTMLDivElement>(null);
   const lastRow = useRef<string | null>('row' in initial.view ? initial.view.row : null);
+  /** the every-chip grid as the visitor left it, so coming back to the tile restores the model and settings */
+  const lastChips = useRef<ChipsView | null>(initial.view.kind === 'chips' ? initial.view : null);
 
   // the local mirror of custom entries and the panel flags (the URL wins on conflicts)
   useEffect(() => {
@@ -125,6 +130,7 @@ export default function LlmSizer({ initial, machines, factors, notices = [], ini
   }, [settingsOpen]);
   useEffect(() => {
     if ('row' in state.view) lastRow.current = state.view.row;
+    if (state.view.kind === 'chips') lastChips.current = state.view;
   }, [state.view]);
 
   // URL sync: throttled, only when the encoded state changed, other params preserved
@@ -160,6 +166,12 @@ export default function LlmSizer({ initial, machines, factors, notices = [], ini
   const openFitSheet = useCallback((t: FitTarget) => {
     const pickRow = t.pick;
     setOpenCell({ kind: 'fit', origin: 'machine', target: syntheticSheetTarget(t.model, pickRow, t.bucket, t.ctx, t.result, state), ref: { modelId: t.model.id, bucket: t.bucket, ctx: t.ctx } });
+    setInteractions((n) => n + 1);
+    analytics.cellOpened(t.result.verdict);
+  }, [state]);
+  // the every-chip grid's sizes: the same sheet, for one exact configuration of a chip
+  const openChipSheet = useCallback((t: ChipTarget) => {
+    setOpenCell({ kind: 'fit', origin: 'chips', target: syntheticSheetTarget(t.model, t.pick, t.bucket, t.ctx, t.result, state, t.quant), ref: { modelId: t.model.id, bucket: t.bucket, ctx: t.ctx } });
     setInteractions((n) => n + 1);
     analytics.cellOpened(t.result.verdict);
   }, [state]);
@@ -200,7 +212,9 @@ export default function LlmSizer({ initial, machines, factors, notices = [], ini
             ? { kind: 'memory', row }
             : kind === 'machine'
               ? { kind: 'machine', row: resolvePick(lastRow.current, groups, state, matrix.rows)?.key ?? row, expanded: false }
-              : modelView(column, view);
+              : kind === 'chips'
+                ? (lastChips.current ?? chipsViewFor(matrix.columns[column] ?? matrix.columns[0] ?? null, DEFAULT_MODELS[0]))
+                : modelView(column, view);
     dispatch({ type: 'SET_VIEW', view: next });
     analytics.viewSelected(kind);
   }
@@ -284,6 +298,24 @@ export default function LlmSizer({ initial, machines, factors, notices = [], ini
       ) : (
         <Empty>Add a machine in Settings to see what it can run.</Empty>
       )
+    ) : view.kind === 'chips' ? (
+      <ChipGridView
+        state={state}
+        view={view}
+        groups={groups}
+        factors={factors}
+        columns={matrix.columns}
+        records={records}
+        seed={initialRecords}
+        index={index.status === 'ready' ? index.index : null}
+        analytics={analytics}
+        onView={(next) => dispatch({ type: 'SET_VIEW', view: next })}
+        onOpenCell={openChipSheet}
+        onOpenSettings={() => {
+          setSettingsOpen(true);
+          analytics.settingsOpened();
+        }}
+      />
     ) : view.kind === 'model' ? (
       modelColumn ? (
         <MachineMapView

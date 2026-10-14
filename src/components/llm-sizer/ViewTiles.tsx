@@ -1,6 +1,6 @@
 /** The chart types as a tab-like row of tiles. */
 import type { View } from '../../lib/llm-sizer/app/state';
-import { GaugeIcon, GridIcon, LayersIcon, ListChecksIcon, TargetIcon } from './icons';
+import { ChipIcon, GaugeIcon, GridIcon, LayersIcon, ListChecksIcon, TargetIcon } from './icons';
 
 export type ViewKind = View['kind'];
 
@@ -11,6 +11,7 @@ export const isHiddenView = (kind: ViewKind): boolean => HIDDEN_VIEWS.includes(k
 const TILES: { kind: ViewKind; Icon: (p: { size?: number }) => React.JSX.Element; title: string; text: string }[] = [
   { kind: 'table', Icon: GridIcon, title: 'Will it fit?', text: 'Every model on every machine, at a glance.' },
   { kind: 'speed', Icon: GaugeIcon, title: 'How fast?', text: 'Writing speed on one machine.' },
+  { kind: 'chips', Icon: ChipIcon, title: 'How fast is every Mac?', text: 'One model on every chip, M1 onward.' },
   { kind: 'model', Icon: TargetIcon, title: 'Which machine?', text: 'One model across every Mac: memory, speed, price.' },
   { kind: 'memory', Icon: LayersIcon, title: 'How much memory?', text: 'What each model, build and context needs.' },
   { kind: 'machine', Icon: ListChecksIcon, title: 'What can it run?', text: 'Every model on one machine, best build first.' },

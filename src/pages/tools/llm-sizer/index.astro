@@ -31,7 +31,8 @@ const shareUrl = shared && decoded.ok ? `${Astro.site?.origin ?? ''}${Astro.url.
 const ogImage = shared && decoded.ok ? `/api/llm-sizer/image.png?s=${encodeURIComponent(shared)}&size=og` : undefined;
 // The records for the initial columns come with the page, so the first paint is the complete table (the island
 // fetches as before if the database is unavailable).
-const columnIds = [...new Set(decoded.state.columns.map((c) => c.id).filter((id) => !id.startsWith('custom-')))];
+const chipsModel = decoded.state.view.kind === 'chips' ? [decoded.state.view.model] : [];
+const columnIds = [...new Set([...decoded.state.columns.map((c) => c.id), ...chipsModel].filter((id) => !id.startsWith('custom-')))];
 let initialRecords: Record<string, ModelDetail> = {};
 try {
   const live = await getLiveExports(columnIds.map((id) => `model:${id}`));
@@ -43,7 +44,7 @@ try {
   console.warn('[llm-sizer] initial records unavailable, the island will fetch them', err instanceof Error ? err.message : err);
   initialRecords = {};
 }
-const modelNames = columnIds.map((id) => initialRecords[id]?.name ?? id);
+const modelNames = [...new Set(decoded.state.columns.map((c) => c.id).filter((id) => !id.startsWith('custom-')))].map((id) => initialRecords[id]?.name ?? id);
 const machineNames = decoded.state.groups.map((g) => machineGroups(machines).find((x) => x.id === g)).filter(Boolean).map((g) => `${g!.family}${g!.chip !== g!.family ? ' ' + g!.chip : ''}`);
 const ogImageAlt = `LLM Sizer table: ${modelNames.join(', ')} on ${machineNames.join(', ')}`;
 const title = `LLM Sizer: which AI models fit your machine, and how fast${SITE.titleSuffix}`;

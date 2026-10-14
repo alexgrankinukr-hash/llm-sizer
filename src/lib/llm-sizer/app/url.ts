@@ -9,8 +9,9 @@
  *   1~gmac-mini-m6!mac-studio-m5-ultra~cqwen3.8-27b*-*32!glm-5.3-flash*UD-Q4_K_XL*128*k4~w16~o1~rmlx~b3500~pl
  * Each section starts with its key letter; `(` prefixes an optional quantizer name. `b` is the budget in US
  * dollars, `p` the form-factor preference (`l` laptop, `d` desktop). An `m` section (the owned machine, 0.9.5 to 0.10.2) is ignored.
+ * The every-chip view is `vchips*<model>*<bucket>*<context>`, then `r` for reading and `n` for the smallest memory that runs it.
  */
-import { BUCKET_RE, isBucketSetting, isLabelSetting, isSpecialSetting, type Bucket } from './quants';
+import { BUCKET_RE, isBucketSetting, isLabelSetting, isSpecialSetting, SIMPLE_BUCKETS, type Bucket } from './quants';
 import type { KvBits, Platform, Runtime } from '../engine/types';
 import { customMachine, customModelFull, customModelQuick, type CustomMachineInput, type CustomModelFullInput } from '../engine/custom';
 import type { AppState, CustomModel, ModelColumn, View } from './state';
@@ -140,6 +141,7 @@ function encView(v: View): string | null {
     return parts.join(FIELD);
   }
   if (v.kind === 'machine') return ['machine', encText(v.row), ...(v.expanded ? ['x'] : [])].join(FIELD);
+  if (v.kind === 'chips') return ['chips', v.model, v.bucket, encCtx(v.ctx), ...(v.mode === 'read' ? ['r'] : []), ...(v.memory === 'min' ? ['n'] : [])].join(FIELD);
   return null;
 }
 
@@ -147,6 +149,11 @@ function decView(text: string): View {
   const f = text.split(FIELD);
   if ((f[0] === 'speed' || f[0] === 'memory') && f[1]) return { kind: f[0], row: decText(f[1]) };
   if (f[0] === 'machine' && f[1]) return { kind: 'machine', row: decText(f[1]), expanded: f[2] === 'x' };
+  if (f[0] === 'chips' && f[1] && ID_RE.test(f[1])) {
+    const bucket = SIMPLE_BUCKETS.includes(f[2] as Bucket) ? (f[2] as Bucket) : 'Q4';
+    const flags = f.slice(4);
+    return { kind: 'chips', model: f[1], bucket, ctx: decCtx(f[3] ?? '') ?? 32768, mode: flags.includes('r') ? 'read' : 'write', memory: flags.includes('n') ? 'min' : 'max' };
+  }
   if (f[0] === 'model') {
     const column = num(f[1]);
     // `c` / `t` are the scope letters of links made before the buying map: they open the map at its defaults
@@ -267,6 +274,7 @@ export function decodeState(text: string | null | undefined, fallback: AppState,
   if (view) state.view = decView(view);
   if (state.view.kind === 'model' && state.view.column >= state.columns.length) state.view = { kind: 'table' };
   if ((state.view.kind === 'speed' || state.view.kind === 'memory') && !state.groups.some((g) => 'row' in state.view && state.view.row.startsWith(`${g}:`))) state.view = { kind: 'table' };
+  if (state.view.kind === 'chips' && state.view.model.startsWith('custom-') && !customModelIds.has(state.view.model)) state.view = { kind: 'table' };
   if (state.view.kind === 'machine') {
     // any catalog machine may be picked, not only a table row; with the catalog known, a machine that is neither in it nor typed into the link falls back
     const p = parseRowKey(state.view.row);

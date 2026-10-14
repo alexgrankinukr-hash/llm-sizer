@@ -5,7 +5,7 @@ import { CONTEXT_CHIPS } from '../engine/constants';
 import { type CustomMachineInput, type CustomModelFullInput, type CustomModelQuickInput } from '../engine/custom';
 import type { ClusterSplit, KvBits, Runtime } from '../engine/types';
 import { parseRowKey, rowKey, type LinkedInfo } from './machines';
-import type { ColumnQuant } from './quants';
+import type { Bucket, ColumnQuant } from './quants';
 
 export const MAX_GROUPS = 6;
 export const MAX_COLUMNS = 8;
@@ -23,6 +23,8 @@ export interface ModelColumn {
 export type BuildKey = 'column' | 'Q4' | 'Q8' | 'ssd';
 /** A buyer's form-factor preference (Settings › Assumptions). */
 export type FormFactor = 'any' | 'laptop' | 'desktop';
+/** The memory size the every-chip grid shows per chip: the biggest it was sold with, or the smallest that runs the model. */
+export type MemoryPick = 'max' | 'min';
 
 export type View =
   | { kind: 'table' }
@@ -31,7 +33,9 @@ export type View =
   /** the buying map: one column's model across every current machine, at a build, above a minimum speed */
   | { kind: 'model'; column: number; build: BuildKey; minTokS: number }
   /** one machine at one memory size against the whole catalog; `row` may name any catalog or custom machine, not only a table row */
-  | { kind: 'machine'; row: string; expanded: boolean };
+  | { kind: 'machine'; row: string; expanded: boolean }
+  /** one model at one build and context on every Apple chip: writing or reading, at each chip's biggest memory or the smallest that runs it */
+  | { kind: 'chips'; model: string; bucket: Bucket; ctx: number; mode: 'write' | 'read'; memory: MemoryPick };
 
 export type CustomModel = ({ mode: 'quick' } & CustomModelQuickInput) | ({ mode: 'full' } & CustomModelFullInput);
 

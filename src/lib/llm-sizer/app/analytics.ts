@@ -6,7 +6,7 @@ export const analytics = {
   view: () => track(EVENTS.view),
   machineAdded: (group: string) => track(EVENTS.machineAdded, { group }),
   modelAdded: (modelId: string, featured: boolean) => track(EVENTS.modelAdded, { model_id: modelId, featured }),
-  toggleChanged: (toggle: 'work' | 'limit' | 'runtime' | 'advanced' | 'all_columns' | 'size' | 'budget' | 'form_factor' | 'build' | 'min_tok_s' | 'linked' | 'split', value: string | number | boolean) =>
+  toggleChanged: (toggle: 'work' | 'limit' | 'runtime' | 'advanced' | 'all_columns' | 'size' | 'budget' | 'form_factor' | 'build' | 'min_tok_s' | 'linked' | 'split' | 'speed_mode' | 'context' | 'memory_pick', value: string | number | boolean) =>
     track(EVENTS.toggleChanged, { toggle, value }),
   cellOpened: (verdict: string) => track(EVENTS.cellOpened, { verdict }),
   shareLink: (method: 'copy' | 'share') => track(EVENTS.shareLink, { method }),

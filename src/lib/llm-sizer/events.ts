@@ -13,6 +13,9 @@ export const EVENTS = {
   viewSelected: 'llm_sizer_view_selected',
   settingsOpened: 'llm_sizer_settings_opened',
   benchmarksInterest: 'llm_sizer_benchmarks_interest',
+  promoShown: 'llm_sizer_promo_shown',
+  promoClicked: 'llm_sizer_promo_clicked',
+  promoDismissed: 'llm_sizer_promo_dismissed',
 } as const;
 
 export type EventName = (typeof EVENTS)[keyof typeof EVENTS];

@@ -241,7 +241,7 @@
    "repo": "unsloth/Qwen3.5-397B-A17B-GGUF",
    "url": "https://huggingface.co/unsloth/Qwen3.5-397B-A17B-GGUF",
    "format": "gguf",
-   "label": "UD-Q3_K_S",
+   "label": "Q3_K_S",
    "bits": 3.26,
    "size_gb": 164.32,
    "size_bytes": 164323293504,
@@ -254,7 +254,7 @@
    "repo": "unsloth/Qwen3.5-397B-A17B-GGUF",
    "url": "https://huggingface.co/unsloth/Qwen3.5-397B-A17B-GGUF",
    "format": "gguf",
-   "label": "Q3_K_S",
+   "label": "UD-Q3_K_S",
    "bits": 3.26,
    "size_gb": 164.32,
    "size_bytes": 164323293504,
@@ -800,7 +800,7 @@
    "repo": "unsloth/Qwen3.5-397B-A17B-GGUF",
    "url": "https://huggingface.co/unsloth/Qwen3.5-397B-A17B-GGUF",
    "format": "gguf",
-   "label": "Q6_K",
+   "label": "UD-Q6_K",
    "bits": 6.48,
    "size_gb": 326.6,
    "size_bytes": 326595345056,
@@ -813,7 +813,7 @@
    "repo": "unsloth/Qwen3.5-397B-A17B-GGUF",
    "url": "https://huggingface.co/unsloth/Qwen3.5-397B-A17B-GGUF",
    "format": "gguf",
-   "label": "UD-Q6_K",
+   "label": "Q6_K",
    "bits": 6.48,
    "size_gb": 326.6,
    "size_bytes": 326595345056,
@@ -1017,9 +1017,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:23:29.683312+00:00",
-  "last_checked": "2026-10-14T08:35:21.409711+00:00",
+  "last_checked": "2026-10-15T08:10:29.266391+00:00",
   "last_changed": "2026-09-02T20:23:29.683312+00:00"
  },
- "generated_at": "2026-10-14T08:36:08+00:00",
- "sha": "c120557c2c3cacb2"
+ "generated_at": "2026-10-15T08:11:26+00:00",
+ "sha": "ede4b1af28e60ae7"
 }

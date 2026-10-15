@@ -276,7 +276,7 @@
    "repo": "bartowski/FINAL-Bench_Darwin-27B-RSI-GGUF",
    "url": "https://huggingface.co/bartowski/FINAL-Bench_Darwin-27B-RSI-GGUF",
    "format": "gguf",
-   "label": "IQ4_NL",
+   "label": "Q4_K_M",
    "bits": 5.12,
    "size_gb": 17.2,
    "size_bytes": 17203415456,
@@ -289,7 +289,7 @@
    "repo": "bartowski/FINAL-Bench_Darwin-27B-RSI-GGUF",
    "url": "https://huggingface.co/bartowski/FINAL-Bench_Darwin-27B-RSI-GGUF",
    "format": "gguf",
-   "label": "Q4_K_M",
+   "label": "IQ4_NL",
    "bits": 5.12,
    "size_gb": 17.2,
    "size_bytes": 17203415456,
@@ -454,6 +454,6 @@
   "last_checked": "2026-10-05T10:17:26.077701+00:00",
   "last_changed": "2026-10-05T10:17:26.077701+00:00"
  },
- "generated_at": "2026-10-14T08:36:08+00:00",
- "sha": "eba45ac17730ec03"
+ "generated_at": "2026-10-15T08:11:26+00:00",
+ "sha": "00707cbd95344288"
 }

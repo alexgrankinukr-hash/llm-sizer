@@ -1,9 +1,19 @@
 /**
  * Site adapter for this copy. The upstream site (theaibridges.com) has its own values here: its name, its author
- * line, its email update card and its feedback inbox. This copy is neutral: no card, and the feedback form opens a
- * prefilled issue on the code repository. Edit this one file to put the tool on your own site.
+ * line, its email update card, its product card and its feedback inbox. This copy is neutral: no cards, and the
+ * feedback form opens a prefilled issue on the code repository. Edit this one file to put the tool on your own site.
  */
 export type FeedbackMode = 'inbox' | 'issues';
+
+/** A small closable card at the bottom right pointing at your own product. */
+export interface SitePromo {
+  id: string;
+  eyebrow: string;
+  title: string;
+  text: string;
+  cta: string;
+  href: string;
+}
 
 export interface SiteConfig {
   name: string;
@@ -15,6 +25,7 @@ export interface SiteConfig {
   repos: { code: string; data: string };
   ogFallback: string;
   features: { notify: boolean; feedback: FeedbackMode };
+  promo?: SitePromo | null;
   corsOrigins: string[];
 }
 
@@ -31,6 +42,7 @@ export const SITE: SiteConfig = {
   repos: { code: 'https://github.com/alexgrankinukr-hash/llm-sizer', data: 'https://github.com/alexgrankinukr-hash/llm-sizer-data' },
   ogFallback: '/og/default.png',
   features: { notify: false, feedback: 'issues' },
+  promo: null,
   corsOrigins: ['http://localhost:4321', 'http://127.0.0.1:4321'],
 };
 

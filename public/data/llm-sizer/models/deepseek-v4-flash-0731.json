@@ -64,7 +64,7 @@
   "moe_layers": 43,
   "accel_mtp": true,
   "accel_dflash_repo": null,
-  "accel_dspark_repo": "alessandrobologna/DeepSeek-V4-Flash-0731-DSpark-Drafter-GGUF",
+  "accel_dspark_repo": "Lucebox/DeepSeek-V4-Flash-0731-DSpark-GGUF",
   "conventional_assumed": false,
   "source": "config",
   "config_sha": "bd2c2daff7fb54a2",
@@ -220,7 +220,7 @@
    "repo": "unsloth/DeepSeek-V4-Flash-0731-GGUF",
    "url": "https://huggingface.co/unsloth/DeepSeek-V4-Flash-0731-GGUF",
    "format": "gguf",
-   "label": "UD-IQ4_NL",
+   "label": "UD-IQ4_XS",
    "bits": 3.59,
    "size_gb": 136.66,
    "size_bytes": 136662446656,
@@ -233,7 +233,7 @@
    "repo": "unsloth/DeepSeek-V4-Flash-0731-GGUF",
    "url": "https://huggingface.co/unsloth/DeepSeek-V4-Flash-0731-GGUF",
    "format": "gguf",
-   "label": "UD-IQ4_XS",
+   "label": "UD-IQ4_NL",
    "bits": 3.59,
    "size_gb": 136.66,
    "size_bytes": 136662446656,
@@ -339,13 +339,13 @@
  "special_builds": [],
  "drafts": {
   "dflash": null,
-  "dspark": "alessandrobologna/DeepSeek-V4-Flash-0731-DSpark-Drafter-GGUF"
+  "dspark": "Lucebox/DeepSeek-V4-Flash-0731-DSpark-GGUF"
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:25:08.769191+00:00",
-  "last_checked": "2026-10-14T08:35:33.570456+00:00",
+  "last_checked": "2026-10-15T08:10:34.608338+00:00",
   "last_changed": "2026-09-02T20:25:08.769191+00:00"
  },
- "generated_at": "2026-10-14T08:36:08+00:00",
- "sha": "011ee1e57f136a19"
+ "generated_at": "2026-10-15T08:11:26+00:00",
+ "sha": "cab1bac8d96d7d76"
 }

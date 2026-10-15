@@ -28,6 +28,7 @@ import { SettingsPanel } from './SettingsPanel';
 import { isHiddenView, ViewTiles, type ViewKind } from './ViewTiles';
 import { FeedbackDialog } from './FeedbackDialog';
 import { NotifyPopup, type NotifyRequest } from './NotifyPopup';
+import { GuidePromo } from './GuidePromo';
 import { MessageIcon, SlidersIcon } from './icons';
 import { retryIndex, retryRecord, useModelIndex, useModelRecords } from './useModelRecords';
 
@@ -461,6 +462,7 @@ export default function LlmSizer({ initial, machines, factors, notices = [], ini
 
       <FeedbackDialog open={feedback.open} prefill={feedback.prefill} onPrefillUsed={() => setFeedback((f) => ({ ...f, prefill: null }))} onClose={() => setFeedback({ open: false, prefill: null })} shareUrl={shareUrl} encoded={encoded} view={view.kind} />
       {SITE.features.notify && <NotifyPopup encoded={encoded} interactions={interactions} request={notifyRequest} />}
+      {SITE.promo && <GuidePromo promo={SITE.promo} analytics={analytics} />}
       <CellSheet
         groups={groups}
         open={!!openCell && !!cellForSheet?.result}

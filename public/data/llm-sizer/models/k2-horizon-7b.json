@@ -389,6 +389,19 @@
    "first_seen": "2026-10-01"
   },
   {
+   "repo": "mlx-community/K2-Horizon-7B-chat-mlx-16bit",
+   "url": "https://huggingface.co/mlx-community/K2-Horizon-7B-chat-mlx-16bit",
+   "format": "mlx",
+   "label": "MLX-16bit",
+   "bits": 16.0,
+   "size_gb": 18.0,
+   "size_bytes": 17998394488,
+   "quantizer": "mlx-community",
+   "file_count": 4,
+   "qat": false,
+   "first_seen": "2026-10-15"
+  },
+  {
    "repo": "IFM/K2-Horizon-7B",
    "url": "https://huggingface.co/IFM/K2-Horizon-7B",
    "format": "safetensors",
@@ -440,9 +453,9 @@
  },
  "timestamps": {
   "first_seen": "2026-10-01T10:00:53.609055+00:00",
-  "last_checked": "2026-10-08T10:22:01.962093+00:00",
+  "last_checked": "2026-10-15T08:10:58.387976+00:00",
   "last_changed": "2026-10-01T10:00:53.609055+00:00"
  },
- "generated_at": "2026-10-14T08:36:08+00:00",
- "sha": "69db62fbd8417440"
+ "generated_at": "2026-10-15T08:11:26+00:00",
+ "sha": "96e763133e237257"
 }

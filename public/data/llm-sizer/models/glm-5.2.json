@@ -60,7 +60,7 @@
   "moe_intermediate": 2048,
   "moe_layers": 75,
   "accel_mtp": true,
-  "accel_dflash_repo": null,
+  "accel_dflash_repo": "m8than/GLM-5.2-DFlash2-B12",
   "accel_dspark_repo": "AlayaNeW/GLM-5.2-DSpark",
   "conventional_assumed": false,
   "source": "config",
@@ -343,19 +343,6 @@
    "first_seen": "2026-09-02"
   },
   {
-   "repo": "zai-org/GLM-5.2-FP8",
-   "url": "https://huggingface.co/zai-org/GLM-5.2-FP8",
-   "format": "safetensors",
-   "label": "FP8",
-   "bits": 8.02,
-   "size_gb": 755.63,
-   "size_bytes": 755632050320,
-   "quantizer": "official",
-   "file_count": 141,
-   "qat": false,
-   "first_seen": "2026-09-02"
-  },
-  {
    "repo": "unsloth/GLM-5.2-FP8",
    "url": "https://huggingface.co/unsloth/GLM-5.2-FP8",
    "format": "safetensors",
@@ -364,6 +351,19 @@
    "size_gb": 755.63,
    "size_bytes": 755632050320,
    "quantizer": "unsloth",
+   "file_count": 141,
+   "qat": false,
+   "first_seen": "2026-09-02"
+  },
+  {
+   "repo": "zai-org/GLM-5.2-FP8",
+   "url": "https://huggingface.co/zai-org/GLM-5.2-FP8",
+   "format": "safetensors",
+   "label": "FP8",
+   "bits": 8.02,
+   "size_gb": 755.63,
+   "size_bytes": 755632050320,
+   "quantizer": "official",
    "file_count": 141,
    "qat": false,
    "first_seen": "2026-09-02"
@@ -454,14 +454,14 @@
  },
  "special_builds": [],
  "drafts": {
-  "dflash": null,
+  "dflash": "m8than/GLM-5.2-DFlash2-B12",
   "dspark": "AlayaNeW/GLM-5.2-DSpark"
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:29:51.274032+00:00",
-  "last_checked": "2026-10-14T08:35:54.579788+00:00",
+  "last_checked": "2026-10-15T08:10:53.886866+00:00",
   "last_changed": "2026-09-02T20:29:51.274032+00:00"
  },
- "generated_at": "2026-10-14T08:36:08+00:00",
- "sha": "1d09d613be922109"
+ "generated_at": "2026-10-15T08:11:26+00:00",
+ "sha": "421f6a5599da37cd"
 }

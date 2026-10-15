@@ -41,7 +41,8 @@
   "dataset:openbmb/UltraData-SFT-Agent-2609",
   "dataset:openbmb/UltraData-RL-2609",
   "text-generation-inference",
-  "endpoints_compatible"
+  "endpoints_compatible",
+  "deploy:sagemaker"
  ],
  "featured": false,
  "tier": null,
@@ -186,6 +187,19 @@
    "file_count": 1,
    "qat": false,
    "first_seen": "2026-09-10"
+  },
+  {
+   "repo": "mlx-community/MiniCPM5-2B-chat-mlx-4bit",
+   "url": "https://huggingface.co/mlx-community/MiniCPM5-2B-chat-mlx-4bit",
+   "format": "mlx",
+   "label": "MLX-4bit",
+   "bits": 4.5,
+   "size_gb": 1.42,
+   "size_bytes": 1416035216,
+   "quantizer": "mlx-community",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-15"
   },
   {
    "repo": "mlx-community/MiniCPM5-2B-mlx-4Bit",
@@ -370,6 +384,19 @@
    "first_seen": "2026-09-10"
   },
   {
+   "repo": "mlx-community/MiniCPM5-2B-chat-mlx-16bit",
+   "url": "https://huggingface.co/mlx-community/MiniCPM5-2B-chat-mlx-16bit",
+   "format": "mlx",
+   "label": "MLX-16bit",
+   "bits": 16.0,
+   "size_gb": 5.03,
+   "size_bytes": 5033556906,
+   "quantizer": "mlx-community",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-15"
+  },
+  {
    "repo": "mlx-community/MiniCPM5-2B-bf16",
    "url": "https://huggingface.co/mlx-community/MiniCPM5-2B-bf16",
    "format": "mlx",
@@ -419,7 +446,7 @@
    "label": "Q8_0"
   },
   "mlx4": {
-   "repo": "mlx-community/MiniCPM5-2B-mlx-4Bit",
+   "repo": "mlx-community/MiniCPM5-2B-chat-mlx-4bit",
    "label": "MLX-4bit"
   },
   "native": {
@@ -434,9 +461,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-10T08:02:46.004577+00:00",
-  "last_checked": "2026-09-11T07:58:26.402237+00:00",
+  "last_checked": "2026-10-15T08:11:23.414201+00:00",
   "last_changed": "2026-09-10T08:02:46.004577+00:00"
  },
- "generated_at": "2026-10-14T08:36:08+00:00",
- "sha": "fd9806c0117129c3"
+ "generated_at": "2026-10-15T08:11:26+00:00",
+ "sha": "10235d7b0a3ad5ad"
 }

@@ -17,6 +17,9 @@ export const analytics = {
   viewSelected: (view: string) => track(EVENTS.viewSelected, { view }),
   settingsOpened: () => track(EVENTS.settingsOpened),
   benchmarksInterest: (machine: string) => track(EVENTS.benchmarksInterest, { machine }),
+  promoShown: (promoId: string) => track(EVENTS.promoShown, { promo_id: promoId }),
+  promoClicked: (promoId: string) => track(EVENTS.promoClicked, { promo_id: promoId }),
+  promoDismissed: (promoId: string) => track(EVENTS.promoDismissed, { promo_id: promoId }),
 };
 
 /** The same surface with no effect: used in presentation mode so filming never counts as usage. */

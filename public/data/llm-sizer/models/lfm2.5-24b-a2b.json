@@ -323,6 +323,19 @@
    "first_seen": "2026-10-15"
   },
   {
+   "repo": "ggml-org/LFM2.5-24B-A2B-GGUF",
+   "url": "https://huggingface.co/ggml-org/LFM2.5-24B-A2B-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_M",
+   "bits": 4.85,
+   "size_gb": 14.53,
+   "size_bytes": 14526259232,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-16"
+  },
+  {
    "repo": "unsloth/LFM2.5-24B-A2B-GGUF",
    "url": "https://huggingface.co/unsloth/LFM2.5-24B-A2B-GGUF",
    "format": "gguf",
@@ -492,6 +505,19 @@
    "first_seen": "2026-10-14"
   },
   {
+   "repo": "ggml-org/LFM2.5-24B-A2B-GGUF",
+   "url": "https://huggingface.co/ggml-org/LFM2.5-24B-A2B-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 8.51,
+   "size_gb": 25.49,
+   "size_bytes": 25493733408,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-16"
+  },
+  {
    "repo": "bartowski/LiquidAI_LFM2.5-24B-A2B-GGUF",
    "url": "https://huggingface.co/bartowski/LiquidAI_LFM2.5-24B-A2B-GGUF",
    "format": "gguf",
@@ -531,6 +557,19 @@
    "first_seen": "2026-10-14"
   },
   {
+   "repo": "ggml-org/LFM2.5-24B-A2B-GGUF",
+   "url": "https://huggingface.co/ggml-org/LFM2.5-24B-A2B-GGUF",
+   "format": "gguf",
+   "label": "BF16",
+   "bits": 16.01,
+   "size_gb": 47.96,
+   "size_bytes": 47962095648,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-16"
+  },
+  {
    "repo": "bartowski/LiquidAI_LFM2.5-24B-A2B-GGUF",
    "url": "https://huggingface.co/bartowski/LiquidAI_LFM2.5-24B-A2B-GGUF",
    "format": "gguf",
@@ -566,9 +605,9 @@
  },
  "timestamps": {
   "first_seen": "2026-10-14T08:35:56.901923+00:00",
-  "last_checked": "2026-10-15T08:10:59.501455+00:00",
+  "last_checked": "2026-10-16T08:03:57.112222+00:00",
   "last_changed": "2026-10-14T08:35:56.901923+00:00"
  },
- "generated_at": "2026-10-15T08:11:26+00:00",
- "sha": "91bf6f25c1546a64"
+ "generated_at": "2026-10-16T08:04:08+00:00",
+ "sha": "3c5a1da2bb32cc0f"
 }

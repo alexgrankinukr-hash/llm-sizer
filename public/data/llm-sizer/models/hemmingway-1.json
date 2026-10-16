@@ -257,7 +257,7 @@
    "repo": "bartowski/Altworld_Hemmingway-1-GGUF",
    "url": "https://huggingface.co/bartowski/Altworld_Hemmingway-1-GGUF",
    "format": "gguf",
-   "label": "IQ4_NL",
+   "label": "Q4_K_M",
    "bits": 5.19,
    "size_gb": 17.44,
    "size_bytes": 17442400320,
@@ -270,7 +270,7 @@
    "repo": "bartowski/Altworld_Hemmingway-1-GGUF",
    "url": "https://huggingface.co/bartowski/Altworld_Hemmingway-1-GGUF",
    "format": "gguf",
-   "label": "Q4_K_M",
+   "label": "IQ4_NL",
    "bits": 5.19,
    "size_gb": 17.44,
    "size_bytes": 17442400320,
@@ -435,6 +435,6 @@
   "last_checked": "2026-09-23T08:29:10.387100+00:00",
   "last_changed": "2026-09-23T08:29:10.387100+00:00"
  },
- "generated_at": "2026-10-15T08:11:26+00:00",
- "sha": "9fb19bc634c579cb"
+ "generated_at": "2026-10-16T08:04:08+00:00",
+ "sha": "8a233b7b45d6b39b"
 }

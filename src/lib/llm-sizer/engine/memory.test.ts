@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { availableMemory, breakdown, defaultCap, kvCacheBytes, neededMemory, ramDecimalGb, verdictFor } from './memory';
+import { availableMemory, breakdown, defaultCap, kvCacheBytes, neededMemory, ngramTableShare, ramDecimalGb, tableOnSsdGb, verdictFor } from './memory';
 import { loadModel, machineById, quantByLabel } from './__fixtures__/load';
 
 const GB = 1e9;
@@ -140,6 +140,33 @@ describe('neededMemory + verdict (METHODOLOGY §5, §9)', () => {
     expect(verdictFor(need)).toBe('no');
     expect(verdictFor(neededMemory(build, model.architecture, 32768, 16, 58))).toBe('runs');
     expect(neededMemory(model.quants[0], model.architecture, 32768, 16, 58).ssdGb).toBe(0);
+  });
+
+  it('an MLX file of Flash Next leaves its n-gram table (28.3 %) on the SSD: about 80 GB of the 111.5 GB file in memory', () => {
+    const model = loadModel('qwen3.8-flash-next');
+    expect(ngramTableShare(model.architecture)).toBe(0.283);
+    expect(ngramTableShare(loadModel('qwen3.8-27b').architecture)).toBe(0);
+    const mlx = quantByLabel(model, 'MLX-4bit');
+    expect(mlx.size_gb).toBe(111.52);
+    expect(tableOnSsdGb(mlx, model.architecture)).toBeCloseTo(31.56, 2);
+    const need = neededMemory(mlx, model.architecture, 4096, 16, 115.45);
+    expect(need.weightsGb).toBeCloseTo(79.96, 2);
+    expect(need.ssdGb).toBeCloseTo(31.56, 2);
+    expect(need.buffersGb).toBeCloseTo(1.5 + 0.7996, 3); // on the part in memory
+    // oMLX peaks at 75.5 GiB (81.1 GB) on this file at 4K, 0ggvto3x
+    expect(need.totalGb).toBeCloseTo(82.42, 1);
+    expect(verdictFor(need)).toBe('runs');
+    // the whole file where no MLX engine loads it (a DGX Spark), and for the GGUF files, which keep the table in the shards
+    expect(neededMemory(mlx, model.architecture, 4096, 16, 129.4, undefined, null, undefined, 'gguf').weightsGb).toBe(111.52);
+    const gguf = quantByLabel(model, 'Q4_K_M', 'lmstudio-community/Qwen3.8-Flash-Next-GGUF');
+    expect(tableOnSsdGb(gguf, model.architecture)).toBe(0);
+    expect(neededMemory(gguf, model.architecture, 4096, 16, 115.45).weightsGb).toBe(gguf.size_gb);
+    // a special build already carries its own split
+    expect(tableOnSsdGb(model.special_builds![0], model.architecture)).toBe(0);
+    // other models' MLX files are counted whole
+    const qwen = loadModel('qwen3.8-27b');
+    const q27 = quantByLabel(qwen, 'MLX-4bit');
+    expect(neededMemory(q27, qwen.architecture, 4096, 16, 50).weightsGb).toBe(q27.size_gb);
   });
 
   it('breakdown sums to RAM when the model fits and reports the excess when it does not', () => {

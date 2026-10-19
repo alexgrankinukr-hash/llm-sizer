@@ -67,6 +67,24 @@ export const MEMORY_POLICY_V08: MemoryPolicy = { bufferMinGb: 1, bufferBaseGb: 0
  */
 export const MEMORY_POLICY: MemoryPolicy = { bufferMinGb: 0, bufferBaseGb: 1.5, bufferPct: 0.01, bufferCapGb: null, mlxScratchGbPer1k: 0.15, mlxScratchFromTokens: 8192, osBaseGb: 6, osReservePctOnOverride: 0.055 };
 
+/**
+ * Architectures with an n-gram table that Mac engines keep on the SSD when they run an MLX file (METHODOLOGY §5), keyed
+ * on the config's model_type, with the table's share of the file. Qwen 3.8 Flash Next (qwen4_exp): 51B of its 180B
+ * parameters. oMLX, MTPLX and mlx-serve page the table from the SSD, so the 111.5 GB mlx-community 4-bit file holds
+ * about 80 GB in memory (oMLX peaks 75 GiB; 69 to 79 GiB on the 106 GB oQ4e build). Mirrored in speed_model.py.
+ */
+export const NGRAM_TABLES: readonly { modelTypePrefix: string; share: number }[] = [{ modelTypePrefix: 'qwen4_exp', share: 0.283 }];
+
+/**
+ * Sparse-attention architectures whose MLX engines read only part of the cache per generated token (METHODOLOGY §6.1),
+ * keyed on the config's model_type, with the tokens the attention reads. Qwen 3.8 Flash Next (qwen4_exp): an index over
+ * the whole context picks 2,048 cached tokens for each of its 12 attention layers (`indexer_budget` in its config), so
+ * oMLX writes 68.5 tok/s at 32K and 64 at 128K on an M5 Max where a full read gave 57 and 40. GLM-5.x, DeepSeek V4
+ * and MiniMax M3 carry similar indexes but have no long-context run to check them against, so they are not listed.
+ * Mirrored in speed_model.py.
+ */
+export const SPARSE_ATTENTION: readonly { modelTypePrefix: string; budgetTokens: number }[] = [{ modelTypePrefix: 'qwen4_exp', budgetTokens: 2048 }];
+
 /** "Runs" needs at most this share of the available memory; up to 100 % is "tight" (METHODOLOGY §5). */
 export const RUNS_HEADROOM = 0.9;
 

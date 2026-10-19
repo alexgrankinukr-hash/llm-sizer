@@ -1,6 +1,6 @@
 /** The chart types as a tab-like row of tiles. */
 import type { View } from '../../lib/llm-sizer/app/state';
-import { ChipIcon, GaugeIcon, GridIcon, LayersIcon, ListChecksIcon, TargetIcon } from './icons';
+import { ChipIcon, GaugeIcon, GridIcon, LayersIcon, ListChecksIcon, RoutesIcon, TargetIcon } from './icons';
 
 export type ViewKind = View['kind'];
 
@@ -15,6 +15,7 @@ const TILES: { kind: ViewKind; Icon: (p: { size?: number }) => React.JSX.Element
   { kind: 'model', Icon: TargetIcon, title: 'Which machine?', text: 'One model across every Mac: memory, speed, price.' },
   { kind: 'memory', Icon: LayersIcon, title: 'How much memory?', text: 'What each model, build and context needs.' },
   { kind: 'machine', Icon: ListChecksIcon, title: 'What can it run?', text: 'Every model on one machine, best build first.' },
+  { kind: 'routes', Icon: RoutesIcon, title: 'Every way to 128 GB', text: 'Macs, boxes, PCs and cards, with prices.' },
 ];
 
 export function ViewTiles({ value, onSelect, className, showHidden = false }: { value: ViewKind; onSelect: (kind: ViewKind) => void; className?: string; showHidden?: boolean }) {

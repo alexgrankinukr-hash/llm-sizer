@@ -2,9 +2,9 @@
  * Memory math (METHODOLOGY §4 and §5): what a machine can give the model, what the model needs,
  * and the verdict. `kvCacheBytes` mirrors `scripts/llm-sizer/arch.py:kv_cache_bytes` exactly.
  */
-import { BYTES_PER_GB, CLUSTER_POLICY, GIB_IN_GB, GPU_CAP_MAX_HELD_GB, GPU_CAP_TIERS, MEMORY_POLICY, PREBUILT_RESERVE_GB, RUNS_HEADROOM, type ClusterPolicy, type MemoryPolicy } from './constants';
+import { BYTES_PER_GB, CLUSTER_POLICY, GIB_IN_GB, GPU_CAP_MAX_HELD_GB, GPU_CAP_TIERS, MEMORY_POLICY, NGRAM_TABLES, PREBUILT_RESERVE_GB, RUNS_HEADROOM, type ClusterPolicy, type MemoryPolicy } from './constants';
 import { clusterOf, type Cluster } from './cluster';
-import type { Architecture, Availability, Breakdown, KvBits, Machine, Need, Settings, SpecialBuild, Quant } from './types';
+import type { Architecture, Availability, Breakdown, KvBits, Machine, Need, Runtime, Settings, SpecialBuild, Quant } from './types';
 
 function clamp01(x: number): number {
   return Math.min(1, Math.max(0, x));
@@ -99,8 +99,33 @@ export function ssdGbOf(build: SpecialBuild): number {
   return build.disk_gb !== undefined ? Math.max(0, build.disk_gb - build.resident_gb) : 0;
 }
 
+/** The share of a file that is the model's n-gram table, for the architectures that have one (Qwen 3.8 Flash Next); 0 otherwise. */
+export function ngramTableShare(arch: Pick<Architecture, 'model_type'> | null): number {
+  const type = arch?.model_type ?? '';
+  return NGRAM_TABLES.find((t) => type.startsWith(t.modelTypePrefix))?.share ?? 0;
+}
+
+/**
+ * The GB of a plain file's n-gram table that stays on the SSD (METHODOLOGY §5): MLX files of a table architecture, as
+ * oMLX, MTPLX and mlx-serve run them. `loader` is the runtime that loads the file: MLX on a Mac (the default, as the
+ * memory view assumes), GGUF anywhere else, where an MLX file is counted whole as it always was. Plain GGUF files keep
+ * the table inside the weight shards and need all of it in memory; the special builds that split it out carry their
+ * own sizes.
+ */
+export function tableOnSsdGb(quant: Quant | SpecialBuild, arch: Pick<Architecture, 'model_type'> | null, loader: Runtime = 'mlx'): number {
+  if (isSpecialBuild(quant) || quant.format !== 'mlx' || loader !== 'mlx') return 0;
+  return quant.size_gb * ngramTableShare(arch);
+}
+
+/** The runtime that loads an MLX file on this machine: MLX on a Mac, nothing that keeps its table on the SSD elsewhere. */
+export function loaderOn(machine: Pick<Machine, 'platform'>): Runtime {
+  return machine.platform === 'apple' ? 'mlx' : 'gguf';
+}
+
 /**
  * What the model needs on this machine: weights + context cache + working buffers (+ MLX prompt scratch at long context).
+ * The weights are what stays in memory: a special build's resident part, or the file less an n-gram table the runtime
+ * leaves on the SSD (`tableOnSsdGb`); the SSD part is reported beside the total, never in it.
  * Across linked machines (METHODOLOGY §5): the shards pack looser (5 % on a layer split, 8 % under tensor parallel), the
  * cache is duplicated on every machine under tensor parallel on latent-attention models, each machine keeps its own
  * working buffers and prompt scratch.
@@ -114,17 +139,20 @@ export function neededMemory(
   policy: MemoryPolicy = MEMORY_POLICY,
   cluster: Cluster | null = null,
   clusterPolicy: ClusterPolicy = CLUSTER_POLICY,
+  loader: Runtime = 'mlx',
 ): Need {
   const n = cluster?.n ?? 1;
   const split = cluster?.split ?? 'layer';
-  const weights = n > 1 ? residentGb(quant) * (1 + clusterPolicy.weightsOverhead[split]) : residentGb(quant);
+  const table = tableOnSsdGb(quant, arch, loader);
+  const resident = residentGb(quant) - table;
+  const weights = n > 1 ? resident * (1 + clusterPolicy.weightsOverhead[split]) : resident;
   const cacheOne = kvCacheBytes(arch, contextTokens, kvBits) / BYTES_PER_GB;
   const latent = !!arch && (arch.attention === 'mla' || arch.attention === 'latent');
   const cache = n > 1 && split === 'tensor' && latent ? cacheOne * n : cacheOne;
   const buffers = buffersGb(weights, policy) + (n - 1) * policy.bufferBaseGb;
   const scratch = scratchGb(quant, contextTokens, policy) * n;
   const total = weights + cache + buffers + scratch;
-  const ssd = isSpecialBuild(quant) ? ssdGbOf(quant) : 0;
+  const ssd = isSpecialBuild(quant) ? ssdGbOf(quant) : table;
   return { weightsGb: weights, cacheGb: cache, buffersGb: buffers, scratchGb: scratch, ssdGb: ssd, totalGb: total, ratio: availableGb > 0 ? total / availableGb : Number.POSITIVE_INFINITY };
 }
 

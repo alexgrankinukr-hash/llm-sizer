@@ -5,10 +5,13 @@ engine compute the same milliseconds. Every function here has a namesake in spee
     ms per token = read_ms + fixed_ms + attn_ms
     read_ms      = GB read per token ÷ (b_eff_ratio × spec bandwidth) × 1000 × read_factor[quant family]   (the K-quant factor on Metal only)
     fixed_ms     = (t0_ms + architecture_cost_ms[class]) × mlx_overhead[group]   (GGUF → 1.0)
-    attn_ms      = (attention_ms_per_32k[attention] + mlx_attention_ms_per_32k[runtime]) × context ÷ 32768
+                   on MLX, a mixture under 6B active instead: expert layers × ms_per_layer[chip generation]
+    attn_ms      = (attention_ms_per_32k[attention] + mlx_attention_ms_per_32k[runtime]) × attended ÷ 32768
+                   + mlx_index_ms_per_32k[runtime] × context ÷ 32768   (sparse-attention models on MLX only)
     tok/s        = 1000 ÷ ms
 
-GB read per token = active parameters × bits ÷ 8 + cache bytes per token × context (memory.ts:kvBytesPerToken).
+GB read per token = active parameters × bits ÷ 8 + cache bytes per token × attended (memory.ts:kvBytesPerToken).
+attended          = the context, or a sparse-attention model's budget on MLX (attended_tokens).
 """
 from __future__ import annotations
 
@@ -24,10 +27,18 @@ PLAIN_FAMILIES = {
     "F16": "f16", "BF16": "f16", "FP16": "f16", "F32": "f16",
     "MXFP4": "mxfp4", "MXFP4_MOE": "mxfp4", "NVFP4": "mxfp4", "FP4": "mxfp4",
 }
-ARCH_CLASSES = ("dense", "moe", "moe_hybrid", "moe_latent", "deepseek_v4")
+ARCH_CLASSES = ("dense", "moe", "moe_hybrid", "moe_latent", "deepseek_v4", "flash_next")
 MLX_GROUPS = ("dense", "small_active_moe_m4plus", "small_active_moe_pre_m4", "moe_other")
+# the groups whose MLX fixed cost is the expert-layer rule (mlx_expert_ms) when factors carry it
+EXPERT_LAYER_GROUPS = ("small_active_moe_m4plus", "small_active_moe_pre_m4")
 SMALL_ACTIVE_B = 6.0
 CONTEXT_UNIT = 32768
+# architectures whose n-gram table Mac engines keep on the SSD when they run an MLX file, with the table's share of the
+# file (memory.ts / constants.ts:NGRAM_TABLES): Qwen 3.8 Flash Next, 51B of 180B parameters
+NGRAM_TABLES = (("qwen4_exp", 0.283),)
+# sparse-attention architectures and the cached tokens their attention reads per generated token on MLX
+# (constants.ts:SPARSE_ATTENTION): Qwen 3.8 Flash Next's index picks 2,048 for each attention layer (indexer_budget)
+SPARSE_ATTENTION = (("qwen4_exp", 2048),)
 
 
 def quant_family(label: str, fmt: str | None = None) -> str:
@@ -38,11 +49,14 @@ def quant_family(label: str, fmt: str | None = None) -> str:
 
 
 def arch_class(arch: dict | None, override: str | None = None) -> str:
-    """dense | moe | moe_hybrid | moe_latent | deepseek_v4 (speed.ts:archClassOf)."""
+    """dense | moe | moe_hybrid | moe_latent | deepseek_v4 | flash_next (speed.ts:archClassOf)."""
     if override in ARCH_CLASSES:
         return override
     if not arch:
         return "dense"
+    # the n-gram-table architecture (Qwen 3.8 Flash Next): 512 experts and a table lookup per token, its own fixed cost
+    if str(arch.get("model_type") or "").startswith("qwen4_exp"):
+        return "flash_next"
     experts = arch.get("experts_total") or 0
     if experts <= 1:
         return "dense"
@@ -51,6 +65,32 @@ def arch_class(arch: dict | None, override: str | None = None) -> str:
     if (arch.get("linear_layers") or 0) > 0:
         return "moe_hybrid"
     return "moe"
+
+
+def ngram_table_share(arch: dict | None) -> float:
+    """The share of a file that is the model's n-gram table; 0 for every other architecture (memory.ts:ngramTableShare)."""
+    model_type = str((arch or {}).get("model_type") or "")
+    return next((share for prefix, share in NGRAM_TABLES if model_type.startswith(prefix)), 0.0)
+
+
+def table_on_ssd_gb(size_gb: float, fmt: str, arch: dict | None, loader: str = "mlx") -> float:
+    """The GB of a plain file's n-gram table that an MLX engine leaves on the SSD; GGUF files and other loaders keep it
+    in memory (memory.ts:tableOnSsdGb)."""
+    if fmt != "mlx" or loader != "mlx":
+        return 0.0
+    return size_gb * ngram_table_share(arch)
+
+
+def sparse_budget(arch: dict | None) -> int | None:
+    """The cached tokens a sparse-attention model's attention reads per token, or None (speed.ts:sparseBudgetOf)."""
+    model_type = str((arch or {}).get("model_type") or "")
+    return next((budget for prefix, budget in SPARSE_ATTENTION if model_type.startswith(prefix)), None)
+
+
+def attended_tokens(context_tokens: int, runtime: str, budget: int | None) -> int:
+    """The context the attention reads per token: the whole of it, or a sparse model's budget under MLX, whose engines
+    run the index (speed.ts:attendedTokens). GGUF keeps the whole context."""
+    return min(context_tokens, budget) if runtime == "mlx" and budget is not None else context_tokens
 
 
 def generation_number(chip: str) -> int | None:
@@ -95,18 +135,61 @@ def read_factor(sm: dict, fam: str, platform: str) -> float:
     return float(t["value"]) if platform in t.get("platforms", [platform]) else 1.0
 
 
+def expert_layer_rate(el: dict, chip: str) -> float | None:
+    """ms per expert layer for the chip's generation (speed.ts:expertLayerRate): its own fitted value; a generation newer
+    than the rows takes the newest fitted one, an older or unreadable one the oldest (the slowest)."""
+    rates = el["ms_per_layer"]
+    if not rates:
+        return None
+    g = generation_number(chip)
+    key = f"M{g}" if g is not None else None
+    if key in rates:
+        return rates[key]["value"]
+    gens = sorted(int(k[1:]) for k in rates)
+    if g is not None and g > gens[-1]:
+        return rates[f"M{gens[-1]}"]["value"]
+    if g is not None:
+        older = [x for x in gens if x < g]
+        if older:
+            return rates[f"M{older[-1]}"]["value"]
+    return rates[f"M{gens[0]}"]["value"]
+
+
+def mlx_expert_ms(sm: dict, chip: str, moe_layers: int | None) -> float | None:
+    """The MLX fixed cost of a small mixture: expert layers × the chip generation's ms per layer (speed.ts:mlxExpertMs).
+    None when the factors carry no expert-layer block or the model's layer count is unknown."""
+    el = (sm.get("mlx") or {}).get("expert_layer")
+    if not el or not moe_layers:
+        return None
+    rate = expert_layer_rate(el, chip)
+    return None if rate is None else moe_layers * rate
+
+
 def decode_ms(profile: dict, bandwidth_gbs: float, gb: float, fam: str, cls: str, runtime: str, group: str,
-              attention: str, context_tokens: int, sm: dict, platform: str = "apple", mlx_ctx: str = "pre_m5") -> float:
+              attention: str, context_tokens: int, sm: dict, platform: str = "apple", mlx_ctx: str = "pre_m5",
+              chip: str = "", moe_layers: int | None = None, budget: int | None = None) -> float:
     """Milliseconds per generated token under the floor model. `runtime` is 'mlx' or anything else (GGUF path);
-    `mlx_ctx` is the chip's MLX context-cost group (mlx_context_group)."""
+    `mlx_ctx` is the chip's MLX context-cost group (mlx_context_group); `chip` and `moe_layers` feed the expert-layer
+    rule for small mixtures on MLX; `budget` is a sparse model's (sparse_budget), and `gb` must count the cache over
+    attended_tokens(context_tokens, runtime, budget)."""
     b_eff = profile["b_eff_ratio"] * bandwidth_gbs
     read = gb / b_eff * 1000 * read_factor(sm, fam, platform)
     is_mlx = runtime == "mlx"
-    fixed = (profile["t0_ms"] + sm["architecture_cost_ms"][cls]["value"]) * (sm["mlx"]["overhead_factor"][group]["value"] if is_mlx else 1.0)
+    expert = mlx_expert_ms(sm, chip, moe_layers) if is_mlx and group in EXPERT_LAYER_GROUPS else None
+    if expert is not None:
+        fixed = expert
+    else:
+        fixed = (profile["t0_ms"] + sm["architecture_cost_ms"][cls]["value"]) * (sm["mlx"]["overhead_factor"][group]["value"] if is_mlx else 1.0)
     attn_key = attention if attention in sm["attention_ms_per_32k"] else "gqa"
     mlx_attn = sm["mlx"]["attention_ms_per_32k"]
     mlx_ctx_ms = (mlx_attn.get(mlx_ctx) or mlx_attn["pre_m5"])["value"] if is_mlx else 0.0
-    attn = (sm["attention_ms_per_32k"][attn_key]["value"] + mlx_ctx_ms) * context_tokens / CONTEXT_UNIT
+    attended = attended_tokens(context_tokens, runtime, budget)
+    # a sparse model's index scores every cached token before the attention reads its budget
+    index = 0.0
+    if is_mlx and budget is not None:
+        idx = (sm["mlx"].get("index_ms_per_32k") or {}).get(mlx_ctx)
+        index = (idx["value"] if idx else 0.0) * context_tokens / CONTEXT_UNIT
+    attn = (sm["attention_ms_per_32k"][attn_key]["value"] + mlx_ctx_ms) * attended / CONTEXT_UNIT + index
     return read + fixed + attn
 
 

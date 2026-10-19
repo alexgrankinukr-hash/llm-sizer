@@ -26,6 +26,8 @@ export interface SiteConfig {
   ogFallback: string;
   features: { notify: boolean; feedback: FeedbackMode };
   promo?: SitePromo | null;
+  /** one quiet line under the Macs in the 128 GB comparison, pointing at your own guide; null for none */
+  macGuide?: { lead: string; label: string; href: string } | null;
   corsOrigins: string[];
 }
 
@@ -43,6 +45,7 @@ export const SITE: SiteConfig = {
   ogFallback: '/og/default.png',
   features: { notify: false, feedback: 'issues' },
   promo: null,
+  macGuide: null,
   corsOrigins: ['http://localhost:4321', 'http://127.0.0.1:4321'],
 };
 

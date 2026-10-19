@@ -146,7 +146,7 @@ describe('accelerations and feels-like', () => {
 });
 
 describe('fixed-cost model (METHODOLOGY §6.1; dormant until factors.speed_model.kind is "floor")', async () => {
-  const { archClassOf, floorMs, mlxGroupOf, quantFamilyOf, resolveChipProfile, speedModelKind } = await import('./speed');
+  const { archClassOf, expertLayerRate, floorMs, mlxGroupOf, quantFamilyOf, resolveChipProfile, speedModelKind } = await import('./speed');
   const sm = factors.speed_model!;
   const floor: typeof factors = { ...factors, speed_model: { ...sm, kind: 'floor' } };
   const m4max40 = machineById('macbook-pro-m4-max-40c');
@@ -161,7 +161,7 @@ describe('fixed-cost model (METHODOLOGY §6.1; dormant until factors.speed_model
     expect(sm.kind === 'multiplier' || sm.kind === 'floor').toBe(true);
     expect(speedModelKind(floor)).toBe('floor');
     expect(speedModelKind({ ...factors, speed_model: undefined })).toBe('multiplier');
-    for (const cls of ['dense', 'moe', 'moe_hybrid', 'moe_latent', 'deepseek_v4']) expect(sm.architecture_cost_ms[cls]).toBeDefined();
+    for (const cls of ['dense', 'moe', 'moe_hybrid', 'moe_latent', 'deepseek_v4', 'flash_next']) expect(sm.architecture_cost_ms[cls]).toBeDefined();
     expect(sm.read_factor.gguf_kquant.value).toBeGreaterThanOrEqual(1);
     expect(sm.read_factor.gguf_kquant.value).toBeLessThanOrEqual(1.4);
   });
@@ -196,10 +196,12 @@ describe('fixed-cost model (METHODOLOGY §6.1; dormant until factors.speed_model
     expect(s.key).toBe('DGX Spark');
   });
 
-  it('architecture classes: dense, MoE, hybrid MoE, latent-attention MoE and the DeepSeek override', () => {
+  it('architecture classes: dense, MoE, hybrid MoE, latent-attention MoE, the n-gram-table model and the DeepSeek override', () => {
     expect(archClassOf(qwen)).toBe('dense');
     expect(archClassOf(oss)).toBe('moe');
-    expect(archClassOf(loadModel('qwen3.8-flash-next'))).toBe('moe_hybrid');
+    expect(archClassOf(loadModel('qwen3-coder-next'))).toBe('moe_hybrid');
+    // Qwen 3.8 Flash Next is read from its model type: 512 experts and a table lookup per token measure twice a hybrid's fixed cost
+    expect(archClassOf(loadModel('qwen3.8-flash-next'))).toBe('flash_next');
     expect(archClassOf(glm)).toBe('moe_latent');
     expect(archClassOf(loadModel('glm-5.2'))).toBe('moe_latent');
     expect(archClassOf(loadModel('kimi-k3'))).toBe('moe_latent');
@@ -273,8 +275,35 @@ describe('fixed-cost model (METHODOLOGY §6.1; dormant until factors.speed_model
     expect(onSpark.runtimeApplied).toBe('gguf');
     expect(onSpark.runtimeFactor).toBe(1);
     expect(onSpark.notes.join(' ')).toMatch(/MLX runs only on Apple silicon/);
+    // a small mixture takes the expert-layer rule instead of the group factor (METHODOLOGY §6.2, 0.17)
     const small = estimateSpeed({ model: oss, quant: quantByLabel(oss, 'MLX-8bit'), machine: m4max40, contextTokens: 4096, kvBits: 16, factors: floor });
-    expect(small.runtimeFactor).toBe(sm.mlx.overhead_factor.small_active_moe_m4plus.value);
+    const el = sm.mlx.expert_layer!;
+    expect(small.runtimeFactor).toBe(1);
+    expect(small.expertLayers).toBe(24);
+    expect(small.expertLayerMs).toBe(el.ms_per_layer.M4.value);
+    expect(small.notes.join(' ')).toMatch(/24 expert layers and the chip generation/);
+  });
+
+  it('the expert-layer rule: the rate of the generation, borrowed where a generation has too few rows, and the group factor where a model has no layer count', () => {
+    const el = sm.mlx.expert_layer!;
+    const gens = Object.keys(el.ms_per_layer).map((k) => Number(k.slice(1))).sort((a, b) => a - b);
+    const newest = gens[gens.length - 1];
+    expect(expertLayerRate(el, 'M9 Max')).toBe(el.ms_per_layer[`M${newest}`].value);
+    expect(expertLayerRate(el, 'Custom chip')).toBe(el.ms_per_layer[`M${gens[0]}`].value);
+    // the M6 has a single row, so it takes the M5's rate
+    if (!el.ms_per_layer.M6) expect(expertLayerRate(el, 'M6')).toBe(el.ms_per_layer.M5.value);
+    // the GPU bin does not enter: both M1 Ultra bins on the same 800 GB/s get one estimate
+    const ultra = machineById('mac-studio-m1-ultra');
+    const q = quantByLabel(oss, 'MLX-8bit');
+    const a = estimateSpeed({ model: oss, quant: q, machine: ultra, contextTokens: 4096, kvBits: 16, factors: floor });
+    const b = estimateSpeed({ model: oss, quant: q, machine: { ...ultra, gpu_cores: [64] }, contextTokens: 4096, kvBits: 16, factors: floor });
+    expect(a.tokS).toBe(b.tokS);
+    expect(a.expertLayerMs).toBe(el.ms_per_layer.M1.value);
+    // without a layer count the group factor still applies
+    const noLayers = { ...oss, architecture: { ...oss.architecture!, layers: 0, moe_layers: null } };
+    const fallback = estimateSpeed({ model: noLayers, quant: q, machine: m4max40, contextTokens: 4096, kvBits: 16, factors: floor });
+    expect(fallback.runtimeFactor).toBe(sm.mlx.overhead_factor.small_active_moe_m4plus.value);
+    expect(fallback.expertLayers).toBeUndefined();
   });
 
   it('the M5 generation pays its own MLX long-context cost: the M5 Max ladder is met, and the Ultra keeps its bandwidth lead at 256K', () => {
@@ -304,6 +333,38 @@ describe('fixed-cost model (METHODOLOGY §6.1; dormant until factors.speed_model
     expect(ultraFar.tokS! / maxFar.tokS!).toBeLessThan(2);
     expect(maxFar.tokS!).toBeGreaterThan(9);
     expect(ultraFar.tokS!).toBeGreaterThan(17);
+  });
+
+  it('a sparse-attention model reads its budget on MLX, so Flash Next writes near the oMLX ladder to 128K; GGUF keeps the whole context', async () => {
+    const { attendedTokens, sparseBudgetOf } = await import('./speed');
+    const flash = loadModel('qwen3.8-flash-next');
+    const coder = loadModel('qwen3-coder-next');
+    expect(sparseBudgetOf(flash.architecture)).toBe(2048);
+    // the same 12-of-48 attention layout without an index reads the whole context
+    expect(sparseBudgetOf(coder.architecture)).toBeNull();
+    expect(attendedTokens(131072, 'mlx', 2048)).toBe(2048);
+    expect(attendedTokens(1024, 'mlx', 2048)).toBe(1024);
+    expect(attendedTokens(131072, 'gguf', 2048)).toBe(131072);
+    const m5max = machineById('macbook-pro-m5-max-40c');
+    const mlx4 = quantByLabel(flash, 'MLX-4bit');
+    const at = (contextTokens: number, quant = mlx4) => estimateSpeed({ model: flash, quant, machine: m5max, contextTokens, kvBits: 16, factors: floor });
+    const [s4, s32, s128] = [at(4096), at(32768), at(131072)];
+    // oMLX on the oQ4e build (MTP off): 68.9 at 4K, 68.5 at 32K, 62.4 at 128K; the mlx-community file reads a little more per token
+    for (const s of [s4, s32, s128]) {
+      expect(s.tokS!).toBeGreaterThan(55);
+      expect(s.tokS!).toBeLessThan(72);
+    }
+    expect(s128.tokS! / s4.tokS!).toBeGreaterThan(0.85);
+    const index = sm.mlx.index_ms_per_32k!.m5plus.value;
+    expect(s128.attnMs!).toBeCloseTo(index * 4 + sm.mlx.attention_ms_per_32k.m5plus.value * (2048 / 32768), 6);
+    expect(s128.gbPerToken).toBeCloseTo(s32.gbPerToken, 9);
+    expect(s128.notes.join(' ')).toMatch(/sparse attention/);
+    // llama.cpp is charged the whole cache, and says so
+    const gguf = at(131072, quantByLabel(flash, 'Q4_K_M'));
+    expect(gguf.gbPerToken - at(4096, quantByLabel(flash, 'Q4_K_M')).gbPerToken).toBeGreaterThan(3);
+    expect(gguf.notes.join(' ')).toMatch(/whole context/);
+    // the pre-M5 chips take an index cost, assumed from the M5 one until a ladder exists
+    expect(sm.mlx.index_ms_per_32k!.pre_m5.value).toBeGreaterThanOrEqual(index);
   });
 
   it('a chip with no profile gets no number; the multiplier branch is untouched by the block', () => {

@@ -7,8 +7,11 @@ import type { Factors, Machine } from '../../../lib/llm-sizer/engine/types';
 import { defaultState } from '../../../lib/llm-sizer/app/defaults';
 import { machineGroups, slimFactors, slimMachine } from '../../../lib/llm-sizer/app/machines';
 import { decodeState } from '../../../lib/llm-sizer/app/url';
+import { ROUTES_VIEW_DEFAULT } from '../../../lib/llm-sizer/app/state';
 import machinesFile from '../../../../public/data/llm-sizer/machines.json';
 import factorsFile from '../../../../public/data/llm-sizer/factors.json';
+import routesData from '../../../../public/data/llm-sizer/routes-128gb.json';
+import type { RoutesFile } from '../../../lib/llm-sizer/app/routes';
 import { getLiveExports } from '../../../lib/llm-sizer/adapters/db';
 import { SITE } from '../../../lib/llm-sizer/adapters/site';
 import type { ModelDetail } from '../../../lib/llm-sizer/engine/types';
@@ -21,7 +24,11 @@ const present = params.get('present') === '1';
 const reveal = params.get('reveal') === '1';
 // views built but not offered yet show with ?tiles=all, so they can be checked on production before the flip
 const showHidden = params.get('tiles') === 'all';
-const decoded = decodeState(shared, defaultState(), { knownGroups: new Set(machineGroups(machines).map((g) => g.id)) });
+// `?view=128gb` is the short link the "Every way to get 128GB" video points at: the default table, opened on that comparison
+const entryView = !shared && params.get('view') === '128gb' ? ROUTES_VIEW_DEFAULT : null;
+const decoded = entryView
+  ? { state: { ...defaultState(), view: entryView }, notices: [] as string[], ok: true }
+  : decodeState(shared, defaultState(), { knownGroups: new Set(machineGroups(machines).map((g) => g.id)) });
 const notices = decoded.notices;
 const catalogDate = formatDate(machinesFile.data_as_of);
 const islandMachines = machines.map(slimMachine);
@@ -31,7 +38,9 @@ const shareUrl = shared && decoded.ok ? `${Astro.site?.origin ?? ''}${Astro.url.
 const ogImage = shared && decoded.ok ? `/api/llm-sizer/image.png?s=${encodeURIComponent(shared)}&size=og` : undefined;
 // The records for the initial columns come with the page, so the first paint is the complete table (the island
 // fetches as before if the database is unavailable).
-const chipsModel = decoded.state.view.kind === 'chips' ? [decoded.state.view.model] : [];
+const chipsModel = decoded.state.view.kind === 'chips' || decoded.state.view.kind === 'routes' ? [decoded.state.view.model] : [];
+// the 128 GB comparison's data comes with the page only when the link opens on it (the video's link does)
+const initialRoutes = decoded.state.view.kind === 'routes' ? (routesData as unknown as RoutesFile) : undefined;
 const columnIds = [...new Set([...decoded.state.columns.map((c) => c.id), ...chipsModel].filter((id) => !id.startsWith('custom-')))];
 let initialRecords: Record<string, ModelDetail> = {};
 try {
@@ -75,7 +84,7 @@ const description = 'Pick your Mac, add the open AI models you want to run, and 
           <p class="mt-3 text-xs uppercase tracking-[0.2em] text-[var(--color-light)] reveal delay-300">Machine catalog: {machineCount} configurations · updated {catalogDate} · <a href="/tools/llm-sizer/about" class="underline underline-offset-2 hover:text-[var(--color-text)]">how the numbers are made</a></p>
         </section>
         <section class="max-w-7xl mx-auto px-6 pb-24">
-          <LlmSizer client:load initial={decoded.state} machines={islandMachines} factors={islandFactors} initialRecords={initialRecords} notices={notices} showHidden={showHidden} machinesAsOf={machinesFile.data_as_of} />
+          <LlmSizer client:load initial={decoded.state} machines={islandMachines} factors={islandFactors} initialRecords={initialRecords} notices={notices} showHidden={showHidden} machinesAsOf={machinesFile.data_as_of} initialRoutes={initialRoutes} />
         </section>
       </main>
       <footer class="py-12 border-t border-[var(--color-border)] relative z-10">

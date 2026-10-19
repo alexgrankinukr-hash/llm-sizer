@@ -4,7 +4,7 @@
  */
 import { CONTEXT_CHIPS, MEMORY_POLICY, Q8_REPACK_BITS, REF_4BIT, REF_8BIT, REF_MLX_4BIT, QUANTIZER_PREFERENCE, type MemoryPolicy } from './constants';
 import { findFixes, nominalBits } from './fix';
-import { availableMemory, breakdown, isSpecialBuild, neededMemory, verdictFor } from './memory';
+import { availableMemory, breakdown, isSpecialBuild, loaderOn, neededMemory, tableOnSsdGb, verdictFor } from './memory';
 import { estimatePrefill } from './prefill';
 import { archClassOf, estimateSpeed, speedSource } from './speed';
 import { clusterOf, dispatchCaveat } from './cluster';
@@ -12,8 +12,8 @@ import type { CellFlag, CellResult, Factors, Machine, ModelDetail, Quant, Runtim
 
 export * from './types';
 export * from './constants';
-export { availableMemory, breakdown, buffersGb, defaultCap, isSpecialBuild, kvBytesPerToken, kvCacheBytes, neededMemory, ramDecimalGb, residentGb, scratchGb, verdictFor } from './memory';
-export { accelerations, activeParams, archClassOf, chipKey, estimateSpeed, feelsLike, floorMs, isMoe, mlxContextGroupOf, mlxGroupOf, quantFamilyOf, resolveChipProfile, resolveEfficiency, runtimeFactor, speedModelKind, speedSource, tierOf } from './speed';
+export { availableMemory, breakdown, buffersGb, defaultCap, isSpecialBuild, kvBytesPerToken, kvCacheBytes, loaderOn, neededMemory, ngramTableShare, ramDecimalGb, residentGb, scratchGb, tableOnSsdGb, verdictFor } from './memory';
+export { accelerations, activeParams, archClassOf, attendedTokens, chipKey, estimateSpeed, feelsLike, floorMs, isMoe, mlxContextGroupOf, mlxGroupOf, quantFamilyOf, resolveChipProfile, resolveEfficiency, runtimeFactor, sparseBudgetOf, speedModelKind, speedSource, tierOf } from './speed';
 export { describeFix, fixCandidates, findFixes, nominalBits } from './fix';
 export { clusterMs, clusterOf, dispatchCaveat, linkClassOf, prefillClusterFactor, tensorAllowed, tensorCapable, termStatus } from './cluster';
 export type { Cluster } from './cluster';
@@ -97,10 +97,16 @@ export function evaluateCell(model: ModelDetail, machine: Machine, settings: Set
     if (settings.runtime === 'mlx' && quant.format !== 'mlx') flags.push('no-mlx-file');
     if ((nominalBits(quant.label) ?? 0) >= 8 && quant.bits !== null && quant.bits < Q8_REPACK_BITS) flags.push('q8-is-repack');
   } else flags.push('ssd-build');
+  // the n-gram table on the SSD is a fact about the build the cell reports: the ask, or the fix's build
+  const loader = loaderOn(machine);
+  const tableFlag = (q: Quant | SpecialBuild) => {
+    if (tableOnSsdGb(q, arch, loader) > 0) flags.push('table-on-ssd');
+  };
 
-  const need = neededMemory(quant, arch, ctx, settings.kvBits, availability.availableGb, policy, cluster);
+  const need = neededMemory(quant, arch, ctx, settings.kvBits, availability.availableGb, policy, cluster, undefined, loader);
   const v = verdictFor(need);
   if (v !== 'no') {
+    tableFlag(quant);
     const speed = estimateSpeed({ model, quant, machine, contextTokens: ctx, kvBits: settings.kvBits, factors, cluster });
     const prefill = estimatePrefill({ model, quant, machine, memoryGb: settings.memoryGb, runtime: settings.runtime, contextTokens: ctx, factors, cluster });
     return { verdict: v, availability, need, quant, fix: null, alternatives: [], belowFloor: null, nearestMiss: null, speed, prefill, breakdown: breakdown(settings.memoryGb, availability, need), flags, contextTokens: ctx };
@@ -109,6 +115,7 @@ export function evaluateCell(model: ModelDetail, machine: Machine, settings: Set
   const found = findFixes(model, machine, settings, quant, ctx, policy);
   if (found.fix) {
     const fixQuant = found.fix.changes.reduce<Quant | SpecialBuild>((q, c) => (c.kind === 'quant' ? c.quant : c.kind === 'ssdPaged' ? c.build : q), quant);
+    tableFlag(fixQuant);
     const speed = estimateSpeed({ model, quant: fixQuant, machine, contextTokens: found.fix.contextTokens, kvBits: settings.kvBits, factors, cluster });
     if (speed.tokS !== null) speed.notes.unshift('speed shown for the configuration that fits'); // a build with no number keeps its own note first
     const prefill = estimatePrefill({ model, quant: fixQuant, machine, memoryGb: settings.memoryGb, runtime: settings.runtime, contextTokens: found.fix.contextTokens, factors, cluster });
@@ -128,6 +135,7 @@ export function evaluateCell(model: ModelDetail, machine: Machine, settings: Set
       contextTokens: found.fix.contextTokens,
     };
   }
+  tableFlag(quant);
   const speed = estimateSpeed({ model, quant, machine, contextTokens: ctx, kvBits: settings.kvBits, factors, cluster });
   if (speed.tokS !== null) speed.notes.unshift('does not fit; speed shown for information only');
   return { verdict: 'no-fit', availability, need, quant, fix: null, alternatives: [], belowFloor: found.belowFloor, nearestMiss: found.nearestMiss, speed, prefill: null, breakdown: breakdown(settings.memoryGb, availability, need), flags, contextTokens: ctx };

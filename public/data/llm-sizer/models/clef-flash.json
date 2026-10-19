@@ -351,19 +351,6 @@
    "first_seen": "2026-10-03"
   },
   {
-   "repo": "ggml-org/Clef-Flash-GGUF",
-   "url": "https://huggingface.co/ggml-org/Clef-Flash-GGUF",
-   "format": "gguf",
-   "label": "BF16",
-   "bits": 15.44,
-   "size_gb": 18.16,
-   "size_bytes": 18164488352,
-   "quantizer": "ggml-org",
-   "file_count": 1,
-   "qat": false,
-   "first_seen": "2026-10-03"
-  },
-  {
    "repo": "bartowski/Cloudflare_clef-flash-GGUF",
    "url": "https://huggingface.co/bartowski/Cloudflare_clef-flash-GGUF",
    "format": "gguf",
@@ -372,6 +359,19 @@
    "size_gb": 18.16,
    "size_bytes": 18164488352,
    "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-03"
+  },
+  {
+   "repo": "ggml-org/Clef-Flash-GGUF",
+   "url": "https://huggingface.co/ggml-org/Clef-Flash-GGUF",
+   "format": "gguf",
+   "label": "BF16",
+   "bits": 15.44,
+   "size_gb": 18.16,
+   "size_bytes": 18164488352,
+   "quantizer": "ggml-org",
    "file_count": 1,
    "qat": false,
    "first_seen": "2026-10-03"
@@ -418,6 +418,6 @@
   "last_checked": "2026-10-11T09:53:50.605281+00:00",
   "last_changed": "2026-10-03T09:03:11.400012+00:00"
  },
- "generated_at": "2026-10-16T08:04:08+00:00",
- "sha": "87fb82b62bb647de"
+ "generated_at": "2026-10-19T08:44:16+00:00",
+ "sha": "5956cf5f8afa7e86"
 }

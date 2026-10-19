@@ -6,7 +6,8 @@ import { analytics as liveAnalytics, silentAnalytics } from '../../lib/llm-sizer
 import { tableLayout } from '../../lib/llm-sizer/app/layout';
 import { machineGroups, pooledGb } from '../../lib/llm-sizer/app/machines';
 import { evaluateMatrix } from '../../lib/llm-sizer/app/matrix';
-import { modelView, reducer, type Action, type AppState, type CustomModel, type View } from '../../lib/llm-sizer/app/state';
+import { modelView, reducer, ROUTES_VIEW_DEFAULT, type Action, type AppState, type CustomModel, type View } from '../../lib/llm-sizer/app/state';
+import type { RoutesFile } from '../../lib/llm-sizer/app/routes';
 import { encodeState } from '../../lib/llm-sizer/app/url';
 import { SITE } from '../../lib/llm-sizer/adapters/site';
 import { pickSections, resolvePick, syntheticSheetTarget } from '../../lib/llm-sizer/app/machine-fit';
@@ -23,6 +24,7 @@ import { MemoryView } from './MemoryView';
 import { MachineFitView, type FitTarget } from './MachineFitView';
 import { MachineMapView, type MapTarget } from './MachineMapView';
 import { ChipGridView, type ChipsView, type ChipTarget } from './ChipGridView';
+import { RoutesView, type RoutesViewState } from './RoutesView';
 import { ShareExport } from './ShareExport';
 import { SettingsPanel } from './SettingsPanel';
 import { isHiddenView, ViewTiles, type ViewKind } from './ViewTiles';
@@ -45,6 +47,8 @@ export interface LlmSizerProps {
   showHidden?: boolean;
   /** the machine catalog's data date: the buying map's list prices are "as of" it */
   machinesAsOf?: string;
+  /** the 128 GB comparison's data, rendered with the page when the link opens on that view (fetched on demand otherwise) */
+  initialRoutes?: RoutesFile;
 }
 
 const LOCAL_KEY = 'llm-sizer.custom';
@@ -79,7 +83,7 @@ type OpenCell =
   /** a synthesised cell: from the machine view's grid, the every-chip grid, or the buying map (which already is the "which machine" answer) */
   | { kind: 'fit'; origin: 'machine' | 'chips' | 'buying'; target: { cell: MatrixCell; row: MatrixRow; column: MatrixColumn }; ref: { modelId: string; bucket: Bucket; ctx: number } };
 
-export default function LlmSizer({ initial, machines, factors, notices = [], initialRecords, present = false, reveal = false, showHidden = false, machinesAsOf }: LlmSizerProps) {
+export default function LlmSizer({ initial, machines, factors, notices = [], initialRecords, present = false, reveal = false, showHidden = false, machinesAsOf, initialRoutes }: LlmSizerProps) {
   const analytics = present ? silentAnalytics : liveAnalytics;
   const [state, rawDispatch] = useReducer(reducer, initial);
   const [interactions, setInteractions] = useState(0);
@@ -104,6 +108,8 @@ export default function LlmSizer({ initial, machines, factors, notices = [], ini
   const lastRow = useRef<string | null>('row' in initial.view ? initial.view.row : null);
   /** the every-chip grid as the visitor left it, so coming back to the tile restores the model and settings */
   const lastChips = useRef<ChipsView | null>(initial.view.kind === 'chips' ? initial.view : null);
+  /** the same for the 128 GB comparison */
+  const lastRoutes = useRef<RoutesViewState | null>(initial.view.kind === 'routes' ? initial.view : null);
 
   // the local mirror of custom entries and the panel flags (the URL wins on conflicts)
   useEffect(() => {
@@ -132,6 +138,7 @@ export default function LlmSizer({ initial, machines, factors, notices = [], ini
   useEffect(() => {
     if ('row' in state.view) lastRow.current = state.view.row;
     if (state.view.kind === 'chips') lastChips.current = state.view;
+    if (state.view.kind === 'routes') lastRoutes.current = state.view;
   }, [state.view]);
 
   // URL sync: throttled, only when the encoded state changed, other params preserved
@@ -215,7 +222,9 @@ export default function LlmSizer({ initial, machines, factors, notices = [], ini
               ? { kind: 'machine', row: resolvePick(lastRow.current, groups, state, matrix.rows)?.key ?? row, expanded: false }
               : kind === 'chips'
                 ? (lastChips.current ?? chipsViewFor(matrix.columns[column] ?? matrix.columns[0] ?? null, DEFAULT_MODELS[0]))
-                : modelView(column, view);
+                : kind === 'routes'
+                  ? (lastRoutes.current ?? ROUTES_VIEW_DEFAULT)
+                  : modelView(column, view);
     dispatch({ type: 'SET_VIEW', view: next });
     analytics.viewSelected(kind);
   }
@@ -316,6 +325,20 @@ export default function LlmSizer({ initial, machines, factors, notices = [], ini
           setSettingsOpen(true);
           analytics.settingsOpened();
         }}
+      />
+    ) : view.kind === 'routes' ? (
+      <RoutesView
+        state={state}
+        view={view}
+        factors={factors}
+        machines={machines}
+        columns={matrix.columns}
+        records={records}
+        seed={initialRecords}
+        initialRoutes={initialRoutes}
+        index={index.status === 'ready' ? index.index : null}
+        analytics={analytics}
+        onView={(next) => dispatch({ type: 'SET_VIEW', view: next })}
       />
     ) : view.kind === 'model' ? (
       modelColumn ? (

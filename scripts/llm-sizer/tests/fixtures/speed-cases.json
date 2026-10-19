@@ -4,6 +4,7 @@
   {
    "id": "llamacpp-15396-m4max-001",
    "chip": "M4 Max",
+   "moe_layers": 24,
    "platform": "apple",
    "bandwidth_gbs": 546,
    "profile": {
@@ -21,6 +22,7 @@
    "mlx_group": "small_active_moe_m4plus",
    "mlx_ctx": "pre_m5",
    "attention": "gqa",
+   "sparse_budget": null,
    "gb_per_token": 2.096083,
    "expected_ms": 10.127,
    "expected_tok_s": 98.75
@@ -28,6 +30,7 @@
   {
    "id": "spark-b7941-gpt-oss-120b-011",
    "chip": "DGX Spark",
+   "moe_layers": 36,
    "platform": "cuda",
    "bandwidth_gbs": 273,
    "profile": {
@@ -45,6 +48,7 @@
    "mlx_group": "small_active_moe_pre_m4",
    "mlx_ctx": "pre_m5",
    "attention": "gqa",
+   "sparse_budget": null,
    "gb_per_token": 3.97471,
    "expected_ms": 19.683,
    "expected_tok_s": 50.81
@@ -52,6 +56,7 @@
   {
    "id": "spark-b7941-qwen2.5-coder-7b-025",
    "chip": "DGX Spark",
+   "moe_layers": null,
    "platform": "cuda",
    "bandwidth_gbs": 273,
    "profile": {
@@ -69,6 +74,7 @@
    "mlx_group": "dense",
    "mlx_ctx": "pre_m5",
    "attention": "gqa",
+   "sparse_budget": null,
    "gb_per_token": 9.014524,
    "expected_ms": 37.539,
    "expected_tok_s": 26.64
@@ -76,6 +82,7 @@
   {
    "id": "zachrattner-m1ultra-qwen27b-q4km-032",
    "chip": "M1 Ultra",
+   "moe_layers": null,
    "platform": "apple",
    "bandwidth_gbs": 800,
    "profile": {
@@ -93,6 +100,7 @@
    "mlx_group": "dense",
    "mlx_ctx": "pre_m5",
    "attention": "gqa",
+   "sparse_budget": null,
    "gb_per_token": 17.078719,
    "expected_ms": 39.179,
    "expected_tok_s": 25.52
@@ -100,6 +108,7 @@
   {
    "id": "antek-m4max-qwen35-042",
    "chip": "M4 Max",
+   "moe_layers": 40,
    "platform": "apple",
    "bandwidth_gbs": 546,
    "profile": {
@@ -117,6 +126,7 @@
    "mlx_group": "small_active_moe_m4plus",
    "mlx_ctx": "pre_m5",
    "attention": "gqa",
+   "sparse_budget": null,
    "gb_per_token": 1.872743,
    "expected_ms": 14.723,
    "expected_tok_s": 67.92
@@ -124,6 +134,7 @@
   {
    "id": "fioravanti-m3ultra-qwen397-4bit-046",
    "chip": "M3 Ultra",
+   "moe_layers": 60,
    "platform": "apple",
    "bandwidth_gbs": 819,
    "profile": {
@@ -141,13 +152,15 @@
    "mlx_group": "moe_other",
    "mlx_ctx": "pre_m5",
    "attention": "gqa",
+   "sparse_budget": null,
    "gb_per_token": 9.560829,
-   "expected_ms": 23.347,
-   "expected_tok_s": 42.83
+   "expected_ms": 23.444,
+   "expected_tok_s": 42.65
   },
   {
    "id": "mlx3209-m3ultra-qwen32b-058",
    "chip": "M3 Ultra",
+   "moe_layers": null,
    "platform": "apple",
    "bandwidth_gbs": 819,
    "profile": {
@@ -165,13 +178,15 @@
    "mlx_group": "dense",
    "mlx_ctx": "pre_m5",
    "attention": "gqa",
+   "sparse_budget": null,
    "gb_per_token": 35.629869,
-   "expected_ms": 70.503,
-   "expected_tok_s": 14.18
+   "expected_ms": 70.303,
+   "expected_tok_s": 14.22
   },
   {
    "id": "hiesch-m3max-gemma26-071",
    "chip": "M3 Max",
+   "moe_layers": 30,
    "platform": "apple",
    "bandwidth_gbs": 400,
    "profile": {
@@ -189,6 +204,7 @@
    "mlx_group": "small_active_moe_pre_m4",
    "mlx_ctx": "pre_m5",
    "attention": "gqa",
+   "sparse_budget": null,
    "gb_per_token": 2.625623,
    "expected_ms": 15.297,
    "expected_tok_s": 65.37
@@ -196,6 +212,7 @@
   {
    "id": "omlx-32bf9vtv-m5max-qwen27-079",
    "chip": "M5 Max",
+   "moe_layers": null,
    "platform": "apple",
    "bandwidth_gbs": 614,
    "profile": {
@@ -213,13 +230,15 @@
    "mlx_group": "dense",
    "mlx_ctx": "m5plus",
    "attention": "gqa",
+   "sparse_budget": null,
    "gb_per_token": 20.349467,
-   "expected_ms": 41.58,
-   "expected_tok_s": 24.05
+   "expected_ms": 41.38,
+   "expected_tok_s": 24.17
   },
   {
    "id": "omlx-u79n8shx-m5max-nemotron-081",
    "chip": "M5 Max",
+   "moe_layers": 40,
    "platform": "apple",
    "bandwidth_gbs": 614,
    "profile": {
@@ -237,9 +256,270 @@
    "mlx_group": "moe_other",
    "mlx_ctx": "m5plus",
    "attention": "gqa",
+   "sparse_budget": null,
    "gb_per_token": 7.018435,
-   "expected_ms": 19.282,
-   "expected_tok_s": 51.86
+   "expected_ms": 19.245,
+   "expected_tok_s": 51.96
+  },
+  {
+   "id": "omlx-30onqu30-m5max-codernext-122",
+   "chip": "M5 Max",
+   "moe_layers": 48,
+   "platform": "apple",
+   "bandwidth_gbs": 614,
+   "profile": {
+    "t0_ms": 0.53,
+    "b_eff_ratio": 0.84
+   },
+   "active_params_b": 3.56,
+   "bits": 4.5,
+   "kv_bytes_per_token_8bit": 12288,
+   "kv_bits": 16,
+   "context_tokens": 4096,
+   "quant_label": "MLX-4bit",
+   "runtime": "mlx",
+   "arch_class": "moe_hybrid",
+   "mlx_group": "small_active_moe_m4plus",
+   "mlx_ctx": "m5plus",
+   "attention": "gqa",
+   "sparse_budget": null,
+   "gb_per_token": 2.103163,
+   "expected_ms": 11.557,
+   "expected_tok_s": 86.53
+  },
+  {
+   "id": "omlx-30onqu30-m5max-codernext-126",
+   "chip": "M5 Max",
+   "moe_layers": 48,
+   "platform": "apple",
+   "bandwidth_gbs": 614,
+   "profile": {
+    "t0_ms": 0.53,
+    "b_eff_ratio": 0.84
+   },
+   "active_params_b": 3.56,
+   "bits": 4.5,
+   "kv_bytes_per_token_8bit": 12288,
+   "kv_bits": 16,
+   "context_tokens": 131072,
+   "quant_label": "MLX-4bit",
+   "runtime": "mlx",
+   "arch_class": "moe_hybrid",
+   "mlx_group": "small_active_moe_m4plus",
+   "mlx_ctx": "m5plus",
+   "attention": "gqa",
+   "sparse_budget": null,
+   "gb_per_token": 5.223725,
+   "expected_ms": 20.32,
+   "expected_tok_s": 49.21
+  },
+  {
+   "id": "omlx-r0jivd3q-m5max-gptoss120-132",
+   "chip": "M5 Max",
+   "moe_layers": 36,
+   "platform": "apple",
+   "bandwidth_gbs": 614,
+   "profile": {
+    "t0_ms": 0.53,
+    "b_eff_ratio": 0.84
+   },
+   "active_params_b": 5.1,
+   "bits": 4.34,
+   "kv_bytes_per_token_8bit": 18432,
+   "kv_bits": 16,
+   "context_tokens": 4096,
+   "quant_label": "MLX-MXFP4-Q8",
+   "runtime": "mlx",
+   "arch_class": "moe",
+   "mlx_group": "small_active_moe_m4plus",
+   "mlx_ctx": "m5plus",
+   "attention": "gqa",
+   "sparse_budget": null,
+   "gb_per_token": 2.917745,
+   "expected_ms": 11.289,
+   "expected_tok_s": 88.58
+  },
+  {
+   "id": "omlx-community-m5max-flashnext-139",
+   "chip": "M5 Max",
+   "moe_layers": 48,
+   "platform": "apple",
+   "bandwidth_gbs": 614,
+   "profile": {
+    "t0_ms": 0.53,
+    "b_eff_ratio": 0.84
+   },
+   "active_params_b": 6.67,
+   "bits": 4.72,
+   "kv_bytes_per_token_8bit": 12288,
+   "kv_bits": 16,
+   "context_tokens": 4096,
+   "quant_label": "MLX-oQ4e",
+   "runtime": "mlx",
+   "arch_class": "flash_next",
+   "mlx_group": "moe_other",
+   "mlx_ctx": "m5plus",
+   "attention": "gqa",
+   "sparse_budget": 2048,
+   "gb_per_token": 3.985632,
+   "expected_ms": 16.843,
+   "expected_tok_s": 59.37
+  },
+  {
+   "id": "omlx-kciie4ga-m4max-flashnext-140",
+   "chip": "M4 Max",
+   "moe_layers": 48,
+   "platform": "apple",
+   "bandwidth_gbs": 546,
+   "profile": {
+    "t0_ms": 4.18,
+    "b_eff_ratio": 0.904
+   },
+   "active_params_b": 6.67,
+   "bits": 4.72,
+   "kv_bytes_per_token_8bit": 12288,
+   "kv_bits": 16,
+   "context_tokens": 4096,
+   "quant_label": "MLX-oQ4e",
+   "runtime": "mlx",
+   "arch_class": "flash_next",
+   "mlx_group": "moe_other",
+   "mlx_ctx": "pre_m5",
+   "attention": "gqa",
+   "sparse_budget": 2048,
+   "gb_per_token": 3.985632,
+   "expected_ms": 20.387,
+   "expected_tok_s": 49.05
+  },
+  {
+   "id": "strata-mac-m5max-flashnext-llamacpp-148",
+   "chip": "M5 Max",
+   "moe_layers": 48,
+   "platform": "apple",
+   "bandwidth_gbs": 614,
+   "profile": {
+    "t0_ms": 0.53,
+    "b_eff_ratio": 0.84
+   },
+   "active_params_b": 6.67,
+   "bits": 4.95,
+   "kv_bytes_per_token_8bit": 12288,
+   "kv_bits": 16,
+   "context_tokens": 512,
+   "quant_label": "UD-Q4_K_XL",
+   "runtime": "gguf",
+   "arch_class": "flash_next",
+   "mlx_group": "moe_other",
+   "mlx_ctx": "m5plus",
+   "attention": "gqa",
+   "sparse_budget": 2048,
+   "gb_per_token": 4.139645,
+   "expected_ms": 21.663,
+   "expected_tok_s": 46.16
+  },
+  {
+   "id": "omlx-h79f7jd8-m510-gptoss20-173",
+   "chip": "M5",
+   "moe_layers": 24,
+   "platform": "apple",
+   "bandwidth_gbs": 153,
+   "profile": {
+    "t0_ms": 5.75,
+    "b_eff_ratio": 0.97
+   },
+   "active_params_b": 3.6,
+   "bits": 4.63,
+   "kv_bytes_per_token_8bit": 12288,
+   "kv_bits": 16,
+   "context_tokens": 4096,
+   "quant_label": "MLX-MXFP4-Q8",
+   "runtime": "mlx",
+   "arch_class": "moe",
+   "mlx_group": "small_active_moe_m4plus",
+   "mlx_ctx": "m5plus",
+   "attention": "gqa",
+   "sparse_budget": null,
+   "gb_per_token": 2.184163,
+   "expected_ms": 18.501,
+   "expected_tok_s": 54.05
+  },
+  {
+   "id": "omlx-dko8sn9a-m612-gptoss20-178",
+   "chip": "M6",
+   "moe_layers": 24,
+   "platform": "apple",
+   "bandwidth_gbs": 170,
+   "profile": {
+    "t0_ms": 5.75,
+    "b_eff_ratio": 0.94
+   },
+   "active_params_b": 3.6,
+   "bits": 4.63,
+   "kv_bytes_per_token_8bit": 12288,
+   "kv_bits": 16,
+   "context_tokens": 4096,
+   "quant_label": "MLX-MXFP4-Q8",
+   "runtime": "mlx",
+   "arch_class": "moe",
+   "mlx_group": "small_active_moe_m4plus",
+   "mlx_ctx": "m5plus",
+   "attention": "gqa",
+   "sparse_budget": null,
+   "gb_per_token": 2.184163,
+   "expected_ms": 17.452,
+   "expected_tok_s": 57.3
+  },
+  {
+   "id": "omlx-1e4kajnv-m1ultra48-codernext-180",
+   "chip": "M1 Ultra",
+   "moe_layers": 48,
+   "platform": "apple",
+   "bandwidth_gbs": 800,
+   "profile": {
+    "t0_ms": 5.78,
+    "b_eff_ratio": 0.799
+   },
+   "active_params_b": 3.56,
+   "bits": 4.5,
+   "kv_bytes_per_token_8bit": 12288,
+   "kv_bits": 16,
+   "context_tokens": 4096,
+   "quant_label": "MLX-4bit",
+   "runtime": "mlx",
+   "arch_class": "moe_hybrid",
+   "mlx_group": "small_active_moe_pre_m4",
+   "mlx_ctx": "pre_m5",
+   "attention": "gqa",
+   "sparse_budget": null,
+   "gb_per_token": 2.103163,
+   "expected_ms": 20.494,
+   "expected_tok_s": 48.8
+  },
+  {
+   "id": "omlx-community-m5max-flashnext-155",
+   "chip": "M5 Max",
+   "moe_layers": 48,
+   "platform": "apple",
+   "bandwidth_gbs": 614,
+   "profile": {
+    "t0_ms": 0.53,
+    "b_eff_ratio": 0.84
+   },
+   "active_params_b": 6.67,
+   "bits": 4.72,
+   "kv_bytes_per_token_8bit": 12288,
+   "kv_bits": 16,
+   "context_tokens": 131072,
+   "quant_label": "MLX-oQ4e",
+   "runtime": "mlx",
+   "arch_class": "flash_next",
+   "mlx_group": "moe_other",
+   "mlx_ctx": "m5plus",
+   "attention": "gqa",
+   "sparse_budget": 2048,
+   "gb_per_token": 3.985632,
+   "expected_ms": 16.843,
+   "expected_tok_s": 59.37
   }
  ]
 }

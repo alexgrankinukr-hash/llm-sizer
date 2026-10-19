@@ -19,7 +19,7 @@
  "gated": "false",
  "notes": [
   "architecture read from config, but the model family is unfamiliar — treat cache math as approximate",
-  "3B activated parameters per the model card (the config-derived estimate was 4.0B)."
+  "3.56B parameters read per generated token, counted from the model's tensors: 1.51B of routed experts (10 of 512) and 2.05B that every token passes through, the 0.31B output layer included. The model card's 3B is the A3B in the name: it leaves out the output layer and rounds 3.25B down."
  ],
  "drafts": {
   "dflash": "z-lab/Qwen3-Coder-Next-DFlash",
@@ -1242,7 +1242,7 @@
  },
  "generated_at": "2026-09-05T07:35:58+00:00",
  "params_total": 79674391296,
- "params_active": 3000000000,
+ "params_active": 3560000000,
  "superseded_by": null,
  "special_builds": [],
  "four_bit_native": false,

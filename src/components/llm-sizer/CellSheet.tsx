@@ -14,6 +14,17 @@ import { prefillCoresOf } from '../../lib/llm-sizer/engine/prefill';
 
 
 /** How a pool's speed was made from one machine's, for the sheet's "how this number is made" line. */
+/** The fixed-cost model's parts, in words: the read, the fixed cost (the chip's, or the expert layers' on MLX) and the context. */
+function madeOf(speed: CellResultSpeed): string | null {
+  if (speed.modelKind !== 'floor' || speed.readMs === undefined || speed.bEffGbs === undefined || speed.t0Ms === undefined) return null;
+  const read = `made of ${speed.readMs.toFixed(1)} ms to read ${speed.gbPerToken.toFixed(1)} GB per token at ${Math.round(speed.bEffGbs)} GB/s effective`;
+  const fixed =
+    speed.expertLayerMs !== undefined && speed.expertLayers
+      ? `${(speed.expertLayers * speed.expertLayerMs).toFixed(1)} ms for its ${speed.expertLayers} expert layers on MLX (${speed.expertLayerMs.toFixed(2)} ms each on this chip generation)`
+      : `${speed.t0Ms.toFixed(1)} ms of chip fixed cost${speed.archCostMs ? `, ${speed.archCostMs.toFixed(1)} ms for the architecture` : ''}${speed.runtimeFactor !== 1 ? ` (×${speed.runtimeFactor} on MLX)` : ''}`;
+  return `${read}, ${fixed}${speed.attnMs ? `, ${speed.attnMs.toFixed(1)} ms for the context` : ''}`;
+}
+
 function clusterClause(c: NonNullable<CellResultSpeed['cluster']>): string {
   const basis = c.source === 'fitted' ? `fitted on ${c.n} published cluster measurements` : 'assumed';
   if (c.split === 'layer') return `one machine's ${c.singleMs.toFixed(1)} ms per token for the whole model plus ${c.hopMs} ms per extra machine (a layer split; ${basis})`;
@@ -212,7 +223,7 @@ export function CellSheet(props: CellSheetProps) {
               <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                 <span className="font-heading text-[22px] leading-none">{formatTokS(speed.tokS)}</span>
                 {speed.feelsLike && <span className="text-[var(--color-muted)]">{speed.feelsLike.description}</span>}
-                <span className="lls-sheet-estimate" title={`${eff.text}${speed.modelKind === 'floor' && speed.readMs !== undefined && speed.bEffGbs !== undefined && speed.t0Ms !== undefined ? ` · made of ${speed.readMs.toFixed(1)} ms to read ${speed.gbPerToken.toFixed(1)} GB per token at ${Math.round(speed.bEffGbs)} GB/s effective, ${speed.t0Ms.toFixed(1)} ms of chip fixed cost${speed.archCostMs ? `, ${speed.archCostMs.toFixed(1)} ms for the architecture` : ''}${speed.runtimeFactor !== 1 ? ` (×${speed.runtimeFactor} on MLX)` : ''}${speed.attnMs ? `, ${speed.attnMs.toFixed(1)} ms for the context` : ''}` : ''}`}>
+                <span className="lls-sheet-estimate" title={`${eff.text}${madeOf(speed) ? ` · ${madeOf(speed)}` : ''}`}>
                   <Src link={src?.speed ?? null}>estimate</Src>
                   <InfoIcon size={12} />
                 </span>
@@ -227,11 +238,7 @@ export function CellSheet(props: CellSheetProps) {
                 <summary className="cursor-pointer select-none">how this number is made</summary>
                 <p className="mt-1">
                   <Src link={src?.efficiency ?? null}>{eff.text}</Src>
-                  {speed.modelKind === 'floor' && speed.readMs !== undefined && speed.bEffGbs !== undefined && speed.t0Ms !== undefined ? (
-                    <>
-                      {' '}· made of {speed.readMs.toFixed(1)} ms to read {speed.gbPerToken.toFixed(1)} GB per token at {Math.round(speed.bEffGbs)} GB/s effective, {speed.t0Ms.toFixed(1)} ms of chip fixed cost{speed.archCostMs ? `, ${speed.archCostMs.toFixed(1)} ms for the architecture` : ''}{speed.runtimeFactor !== 1 ? ` (×${speed.runtimeFactor} on MLX)` : ''}{speed.attnMs ? `, ${speed.attnMs.toFixed(1)} ms for the context` : ''}
-                    </>
-                  ) : null}
+                  {madeOf(speed) ? ` · ${madeOf(speed)}` : null}
                   {speed.cluster ? ` · then, across ${speed.cluster.machines} linked machines, ${clusterClause(speed.cluster)}` : ''}
                 </p>
               </details>

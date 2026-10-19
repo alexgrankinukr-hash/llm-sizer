@@ -20,20 +20,22 @@ import sys
 from collections import defaultdict
 
 from common import PUBLIC_DATA_DIR, log
-from speed_model import (ARCH_CLASSES, MLX_CONTEXT_GROUPS, MLX_GROUPS, arch_class, decode_ms, gb_per_token, legacy_tok_s, log_err, mlx_context_group,
-                         mlx_group, platform_of, quant_family, read_factor)
+from speed_model import (ARCH_CLASSES, EXPERT_LAYER_GROUPS, MLX_CONTEXT_GROUPS, MLX_GROUPS, arch_class, attended_tokens, decode_ms, gb_per_token,
+                         generation_number, legacy_tok_s, log_err, mlx_context_group, mlx_expert_ms, mlx_group, platform_of, quant_family, read_factor,
+                         sparse_budget, table_on_ssd_gb)
 
 # ---- gate and provisional values (METHODOLOGY §6.1) ---------------------------------------------------------
 GATE_HOLDOUT_MEDIAN = math.log(1.25)      # median |ln(pred/meas)| on held-out A/B rows
 GATE_NO_WORSE = math.log(1.30)            # no A/B row may get worse than the multiplier model by more than this
 MIN_ROWS_TO_FIT = 2                       # a class or group with fewer rows keeps its provisional value, labelled assumed
-PROVISIONAL_COST_MS = {"dense": 0.0, "moe": 3.0, "moe_hybrid": 7.0, "moe_latent": 17.0, "deepseek_v4": 30.0}
+PROVISIONAL_COST_MS = {"dense": 0.0, "moe": 3.0, "moe_hybrid": 7.0, "moe_latent": 17.0, "deepseek_v4": 30.0, "flash_next": 12.0}
 PROVISIONAL_MLX = {"dense": 1.0, "small_active_moe_m4plus": 0.5, "small_active_moe_pre_m4": 1.3, "moe_other": 0.9}
 PROVISIONAL_READ_KQUANT = 1.25
 # latent-attention decode has no clean long-context measurement yet (the one anecdote ran under memory pressure);
 # until one exists the slope is the modest one measured on hybrid models, and the About page says so
 PROVISIONAL_ATTN = {"gqa": 0.0, "mla": 5.0, "latent": 5.0}
 PROVISIONAL_MLX_ATTN = 4.0                # per 32K, before any MLX long-context row is fitted; the M5 group falls back to the pre-M5 fit
+PROVISIONAL_MLX_INDEX = 0.5               # per 32K, a sparse model's index pass before any of its long-context MLX rows is fitted
 CLAMP_READ = (1.0, 1.4)
 CLAMP_MLX = (0.3, 1.6)
 SHORT_CONTEXT = 8192
@@ -182,10 +184,12 @@ def prepare(rows: list[dict], profiles: dict, assumed: dict, tiers: dict) -> lis
         cls = arch_class(arch, arch.get("arch_cost_class"))
         rt = "mlx" if r["runtime"] in ("mlx", "ollama-mlx") else "gguf"
         fam = quant_family(r["quant_label"], "mlx" if rt == "mlx" else "gguf")
-        gb = gb_per_token(r["active_params_b"], r["bits"], arch["kv_bytes_per_token_8bit"], r.get("kv_bits", 16), r["context_tokens"])
-        out.append({**r, "_profile": prof, "_profile_source": src, "_cls": cls, "_rt": rt, "_fam": fam, "_gb": gb, "_platform": platform_of(r["chip"]),
+        budget = sparse_budget(arch)
+        gb = gb_per_token(r["active_params_b"], r["bits"], arch["kv_bytes_per_token_8bit"], r.get("kv_bits", 16), attended_tokens(r["context_tokens"], rt, budget))
+        out.append({**r, "_profile": prof, "_profile_source": src, "_cls": cls, "_rt": rt, "_fam": fam, "_gb": gb, "_platform": platform_of(r["chip"]), "_budget": budget,
                     "_group": mlx_group(cls, r["active_params_b"], r["chip"]), "_mlx_ctx": mlx_context_group(r["chip"]), "_attn": arch.get("attention") or "gqa",
-                    "_is_moe": (arch.get("experts_total") or 0) > 1, "_meas_ms": 1000.0 / r["tg"]})
+                    "_is_moe": (arch.get("experts_total") or 0) > 1, "_meas_ms": 1000.0 / r["tg"],
+                    "_moe_layers": (arch.get("moe_layers") or arch.get("layers")) if (arch.get("experts_total") or 0) > 1 else None})
     return out
 
 
@@ -207,6 +211,31 @@ def fitted(values: list[float], provisional: float, clamp: tuple[float, float] |
     return {"value": provisional, "n": len(values), "source": "assumed"}
 
 
+def decode_row(r: dict, sm: dict) -> float:
+    """decode_ms for a prepared row."""
+    return decode_ms(r["_profile"], r["bandwidth_gbs"], r["_gb"], r["_fam"], r["_cls"], r["_rt"], r["_group"], r["_attn"], r["context_tokens"], sm,
+                     r["_platform"], r["_mlx_ctx"], r["chip"], r["_moe_layers"], r["_budget"])
+
+
+def fit_expert_layer(train: list[dict], sm: dict) -> dict:
+    """The expert-layer rule for small mixtures on MLX: ms per expert layer per chip generation, the median over the
+    short-context MLX rows of those groups of (measured − read − context cost) ÷ expert layers. A generation with fewer
+    than MIN_ROWS_TO_FIT rows has no rate of its own and borrows the previous generation's (speed_model.py:expert_layer_rate)."""
+    by: dict[str, list[float]] = defaultdict(list)
+    for r in train:
+        if r["_rt"] != "mlx" or r["_group"] not in EXPERT_LAYER_GROUPS or r["context_tokens"] > SHORT_CONTEXT or not r["_moe_layers"]:
+            continue
+        g = generation_number(r["chip"])
+        if g is None:
+            continue
+        read = r["_gb"] / (r["_profile"]["b_eff_ratio"] * r["bandwidth_gbs"]) * 1000
+        ctx = sm["mlx"]["attention_ms_per_32k"][r["_mlx_ctx"]]["value"] * r["context_tokens"] / 32768
+        by[f"M{g}"].append((r["_meas_ms"] - read - ctx) / r["_moe_layers"])
+    rates = {g: fitted(v, 0.0, nd=3) for g, v in sorted(by.items(), key=lambda kv: int(kv[0][1:]))}
+    return {"ms_per_layer": {g: t for g, t in rates.items() if t["source"] == "fitted"}, "n": sum(len(v) for v in by.values()),
+            "rows_by_generation": {g: len(v) for g, v in sorted(by.items(), key=lambda kv: int(kv[0][1:]))}, "groups": list(EXPERT_LAYER_GROUPS)}
+
+
 def fit_speed_model(profiles: dict, assumed: dict, tiers: dict, validation: dict, legacy: dict | None) -> tuple[dict, dict]:
     """Coordinate-descent fit of the architecture costs and runtime factors on the train split; evaluation on every split.
     Returns (speed_model block for factors.json, report dict)."""
@@ -218,7 +247,8 @@ def fit_speed_model(profiles: dict, assumed: dict, tiers: dict, validation: dict
         "architecture_cost_ms": {c: {"value": PROVISIONAL_COST_MS[c], "n": 0, "source": "assumed"} for c in ARCH_CLASSES},
         "attention_ms_per_32k": {a: {"value": PROVISIONAL_ATTN[a], "n": 0, "source": "assumed"} for a in ("gqa", "mla", "latent")},
         "mlx": {"overhead_factor": {g: {"value": PROVISIONAL_MLX[g], "n": 0, "source": "assumed"} for g in MLX_GROUPS},
-                "attention_ms_per_32k": {g: {"value": PROVISIONAL_MLX_ATTN, "n": 0, "source": "assumed"} for g in MLX_CONTEXT_GROUPS}},
+                "attention_ms_per_32k": {g: {"value": PROVISIONAL_MLX_ATTN, "n": 0, "source": "assumed"} for g in MLX_CONTEXT_GROUPS},
+                "index_ms_per_32k": {g: {"value": PROVISIONAL_MLX_INDEX, "n": 0, "source": "assumed"} for g in MLX_CONTEXT_GROUPS}},
     }
     sm["read_factor"]["gguf_kquant"] = {"value": PROVISIONAL_READ_KQUANT, "n": 0, "source": "assumed"}
     sm["architecture_cost_ms"]["dense"] = {"value": 0.0, "n": 0, "source": "definition"}
@@ -277,26 +307,52 @@ def fit_speed_model(profiles: dict, assumed: dict, tiers: dict, validation: dict
                 if t0 + cost > 0:
                     vals.append((r["_meas_ms"] - read1) / (t0 + cost))
         sm["mlx"]["overhead_factor"]["dense"] = fitted(vals, 1.0, CLAMP_MLX)
+        # 4b. small mixtures on MLX: the expert-layer rule (the group factors above stay as the fallback for a model
+        #     without a layer count)
+        sm["mlx"]["expert_layer"] = fit_expert_layer(train, sm)
         # 5. MLX attention cost per 32K, per chip generation: MLX rows past the short context. The M5 GPU generation
         #    pays a different long-context cost than M1 to M4 (the oMLX M5 Max ladders), so each group is fitted on
-        #    its own rows; a group with too few rows takes the pre-M5 value and says so.
+        #    its own rows; a group with too few rows takes the pre-M5 value and says so. Sparse-attention rows read
+        #    their budget, not the context, and fit the index term below instead.
         for ctx_group in MLX_CONTEXT_GROUPS:
             vals = []
             for r in train:
-                if r["_rt"] == "mlx" and r["context_tokens"] > SHORT_CONTEXT and r["_mlx_ctx"] == ctx_group:
+                if r["_rt"] == "mlx" and r["context_tokens"] > SHORT_CONTEXT and r["_mlx_ctx"] == ctx_group and r["_budget"] is None:
                     t0, read1, cost, units = parts(r)
-                    fixed = (t0 + cost) * sm["mlx"]["overhead_factor"][r["_group"]]["value"]
+                    expert = mlx_expert_ms(sm, r["chip"], r["_moe_layers"]) if r["_group"] in EXPERT_LAYER_GROUPS else None
+                    fixed = expert if expert is not None else (t0 + cost) * sm["mlx"]["overhead_factor"][r["_group"]]["value"]
                     attn = sm["attention_ms_per_32k"][r["_attn"] if r["_attn"] in sm["attention_ms_per_32k"] else "gqa"]["value"] * units
                     vals.append(max(0.0, (r["_meas_ms"] - read1 - fixed - attn) / units))
             sm["mlx"]["attention_ms_per_32k"][ctx_group] = fitted(vals, PROVISIONAL_MLX_ATTN, nd=1)
         if sm["mlx"]["attention_ms_per_32k"]["m5plus"]["source"] == "assumed":
             pre = sm["mlx"]["attention_ms_per_32k"]["pre_m5"]
             sm["mlx"]["attention_ms_per_32k"]["m5plus"] = {"value": pre["value"], "n": 0, "source": "assumed", "note": "no M5-generation MLX row past 8K yet; the pre-M5 value applies"}
+        # 6. a sparse-attention model's index pass per 32K of the whole context on MLX, per chip generation: its MLX
+        #    rows past the short context, after the read (over the budget), the fixed cost and the attention over the
+        #    budget. A group with no rows takes the other's value scaled by the two groups' attention costs, assumed.
+        index = sm["mlx"]["index_ms_per_32k"]
+        attn_mlx = sm["mlx"]["attention_ms_per_32k"]
+        for ctx_group in MLX_CONTEXT_GROUPS:
+            vals = []
+            for r in train:
+                if r["_rt"] == "mlx" and r["context_tokens"] > SHORT_CONTEXT and r["_mlx_ctx"] == ctx_group and r["_budget"] is not None:
+                    t0, read1, cost, units = parts(r)
+                    expert = mlx_expert_ms(sm, r["chip"], r["_moe_layers"]) if r["_group"] in EXPERT_LAYER_GROUPS else None
+                    fixed = expert if expert is not None else (t0 + cost) * sm["mlx"]["overhead_factor"][r["_group"]]["value"]
+                    attended = attended_tokens(r["context_tokens"], "mlx", r["_budget"]) / 32768
+                    attn = (sm["attention_ms_per_32k"][r["_attn"] if r["_attn"] in sm["attention_ms_per_32k"] else "gqa"]["value"] + attn_mlx[ctx_group]["value"]) * attended
+                    vals.append(max(0.0, (r["_meas_ms"] - read1 - fixed - attn) / units))
+            index[ctx_group] = fitted(vals, PROVISIONAL_MLX_INDEX)
+        for ctx_group, other in (("pre_m5", "m5plus"), ("m5plus", "pre_m5")):
+            if index[ctx_group]["source"] == "assumed" and index[other]["source"] == "fitted":
+                scale = attn_mlx[ctx_group]["value"] / attn_mlx[other]["value"] if attn_mlx[other]["value"] > 0 else 1.0
+                index[ctx_group] = {"value": round(index[other]["value"] * scale, 2), "n": 0, "source": "assumed",
+                                    "note": f"no sparse-attention MLX row past 8K on this generation; the {other} value × {scale:.2f}, the ratio of the two generations' MLX attention costs"}
 
     # ---- evaluation ---------------------------------------------------------------------------------------------
     evaluated = []
     for r in rows:
-        pred_ms = decode_ms(r["_profile"], r["bandwidth_gbs"], r["_gb"], r["_fam"], r["_cls"], r["_rt"], r["_group"], r["_attn"], r["context_tokens"], sm, r["_platform"], r["_mlx_ctx"])
+        pred_ms = decode_row(r, sm)
         pred = 1000.0 / pred_ms
         old = None
         if legacy:
@@ -368,14 +424,18 @@ def memory_residuals(validation: dict, policy: dict) -> list[dict]:
             weights = r["active_params_b"] * r["bits"] / 8 if (a.get("experts_total") or 0) <= 1 else None
         if weights is None:
             continue
+        mlx = r["runtime"] in ("mlx", "ollama-mlx")
+        # the n-gram table of an MLX file stays on the SSD, as the engine counts it (memory.ts:neededMemory)
+        table = 0.0 if r.get("table_in_memory") else table_on_ssd_gb(weights, "mlx" if mlx else "gguf", a)
+        weights -= table
         cache = a["kv_bytes_per_token_8bit"] * (r.get("kv_bits", 16) / 8) * r["context_tokens"] / 1e9
         buffers = max(policy["bufferMinGb"], policy.get("bufferBaseGb", 0.0) + policy["bufferPct"] * weights)
         if policy.get("bufferCapGb"):
             buffers = min(policy["bufferCapGb"], buffers)
-        scratch = policy["mlxScratchGbPer1k"] * max(0, r["context_tokens"] - policy["mlxScratchFromTokens"]) / 1024 if r["runtime"] in ("mlx", "ollama-mlx") else 0.0
+        scratch = policy["mlxScratchGbPer1k"] * max(0, r["context_tokens"] - policy["mlxScratchFromTokens"]) / 1024 if mlx else 0.0
         pred = weights + cache + buffers + scratch
         out.append({"id": r["id"], "split": r["split"], "context": r["context_tokens"], "measured_gb": r["peak_gb"], "predicted_gb": round(pred, 1),
-                    "delta_gb": round(pred - r["peak_gb"], 1)})
+                    "delta_gb": round(pred - r["peak_gb"], 1), "ssd_gb": round(table, 1)})
     return out
 
 
@@ -404,6 +464,12 @@ def render_report(sm: dict, report: dict, profiles: dict, tiers: dict, bin_check
         L.append(f"| MLX fixed-cost factor {k} | {v['value']} | {v.get('n', '')} | {v['source']} | {v.get('range', '')} |")
     for k, v in sm["mlx"]["attention_ms_per_32k"].items():
         L.append(f"| MLX attention cost {k} (ms per 32K) | {v['value']} | {v.get('n', '')} | {v['source']} | {v.get('range', '')} |")
+    el = sm["mlx"].get("expert_layer") or {}
+    for k, v in (el.get("ms_per_layer") or {}).items():
+        L.append(f"| MLX small mixtures: ms per expert layer, {k} | {v['value']} | {v.get('n', '')} | {v['source']} | {v.get('range', '')} |")
+    for k, v in sm["mlx"]["index_ms_per_32k"].items():
+        L.append(f"| MLX sparse-attention index {k} (ms per 32K) | {v['value']} | {v.get('n', '')} | {v['source']} | {v.get('range', '')} |")
+
     g = report["gate"]
     L.append("\n## Errors (|ln(predicted ÷ measured)|, shown as a factor)\n")
     for name, s, m in (("train", report["train"], report["train_multiplier"]), ("holdout", report["holdout"], report["holdout_multiplier"])):
@@ -437,16 +503,22 @@ def emit_cases(profiles: dict, assumed: dict, tiers: dict, sm: dict, validation:
              "antek-m4max-qwen35-042", "fioravanti-m3ultra-qwen397-4bit-046", "mlx3209-m3ultra-qwen32b-058", "rentamac-m3ultra-kimi-gguf-097",
              "rentamac-m5max-dsv4-bench-093", "kizai-m3ultra-glm52-090", "hiesch-m3max-gemma26-071", "spark-b7941-qwen2.5-coder-7b-025",
              # the M5-generation MLX context cost: a 64K row on the M5 Max and the pre-M5 sweep row at the same depth
-             "omlx-32bf9vtv-m5max-qwen27-079", "omlx-u79n8shx-m5max-nemotron-081"]
+             "omlx-32bf9vtv-m5max-qwen27-079", "omlx-u79n8shx-m5max-nemotron-081",
+             # 0.16: the n-gram-table class on both runtimes and the refitted small-mixture factor on the M5 Max
+             "omlx-community-m5max-flashnext-139", "strata-mac-m5max-flashnext-llamacpp-148", "omlx-30onqu30-m5max-codernext-122", "omlx-r0jivd3q-m5max-gptoss120-132",
+             # 0.17: the expert-layer rule on a base chip, a smaller GPU bin, the M5 generation at long context and a generation with too few rows of its own
+             "omlx-h79f7jd8-m510-gptoss20-173", "omlx-1e4kajnv-m1ultra48-codernext-180", "omlx-30onqu30-m5max-codernext-126", "omlx-dko8sn9a-m612-gptoss20-178",
+             # 0.17.3: sparse attention, the M5 index term at 128K and the pre-M5 one (assumed) on a short row
+             "omlx-community-m5max-flashnext-155", "omlx-kciie4ga-m4max-flashnext-140"]
     cases = []
     for r in rows:
         if r["id"] not in picks:
             continue
-        ms = decode_ms(r["_profile"], r["bandwidth_gbs"], r["_gb"], r["_fam"], r["_cls"], r["_rt"], r["_group"], r["_attn"], r["context_tokens"], sm, r["_platform"], r["_mlx_ctx"])
-        cases.append({"id": r["id"], "chip": r["chip"], "platform": r["_platform"], "bandwidth_gbs": r["bandwidth_gbs"], "profile": {"t0_ms": r["_profile"]["t0_ms"], "b_eff_ratio": r["_profile"]["b_eff_ratio"]},
+        ms = decode_row(r, sm)
+        cases.append({"id": r["id"], "chip": r["chip"], "moe_layers": r["_moe_layers"], "platform": r["_platform"], "bandwidth_gbs": r["bandwidth_gbs"], "profile": {"t0_ms": r["_profile"]["t0_ms"], "b_eff_ratio": r["_profile"]["b_eff_ratio"]},
                       "active_params_b": r["active_params_b"], "bits": r["bits"], "kv_bytes_per_token_8bit": r["arch"]["kv_bytes_per_token_8bit"], "kv_bits": r.get("kv_bits", 16),
                       "context_tokens": r["context_tokens"], "quant_label": r["quant_label"], "runtime": r["_rt"], "arch_class": r["_cls"], "mlx_group": r["_group"], "mlx_ctx": r["_mlx_ctx"],
-                      "attention": r["_attn"], "gb_per_token": round(r["_gb"], 6), "expected_ms": round(ms, 3), "expected_tok_s": round(1000 / ms, 2)})
+                      "attention": r["_attn"], "sparse_budget": r["_budget"], "gb_per_token": round(r["_gb"], 6), "expected_ms": round(ms, 3), "expected_tok_s": round(1000 / ms, 2)})
     with open(path, "w") as f:
         json.dump({"schema": "llm-sizer/speed-cases v1 — parity fixtures emitted by fit_speed.py --emit-cases; the engine's speed-parity test must reproduce expected_ms", "cases": cases}, f, indent=1)
     log(f"wrote {len(cases)} parity cases to {path}")

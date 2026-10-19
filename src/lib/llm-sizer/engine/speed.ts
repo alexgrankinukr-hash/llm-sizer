@@ -7,10 +7,10 @@
  *    + a context term; tok/s = 1000 ÷ ms. scripts/llm-sizer/speed_model.py mirrors it function for function.
  *  - multiplier model, anything else: bandwidth × efficiency × runtime factor ÷ bytes per token.
  */
-import { BYTES_PER_GB, MLX_DENSE_SPLIT_B, MLX_FADE_TOKENS, SMALL_ACTIVE_B } from './constants';
+import { BYTES_PER_GB, MLX_DENSE_SPLIT_B, MLX_FADE_TOKENS, SMALL_ACTIVE_B, SPARSE_ATTENTION } from './constants';
 import { isSpecialBuild, kvBytesPerToken } from './memory';
 import { clusterMs, linkClassOf, termStatus, type Cluster } from './cluster';
-import type { MlxContextGroup, Acceleration, ArchClass, ClusterSpeed, Factors, KvBits, Machine, MlxGroup, ModelDetail, Platform, Quant, QuantFamily, Runtime, SpecialBuild, Speed, SpeedModel } from './types';
+import type { MlxContextGroup, Acceleration, ArchClass, Architecture, ClusterSpeed, ExpertLayerTerms, Factors, KvBits, Machine, MlxGroup, ModelDetail, Platform, Quant, QuantFamily, Runtime, SpecialBuild, Speed, SpeedModel } from './types';
 
 /** `M5 Max (40-core GPU)` → `M5 Max`: the chip name without its bin. */
 export function chipKey(chip: string): string {
@@ -136,7 +136,7 @@ const PLAIN_FAMILIES: Record<string, QuantFamily> = {
   F16: 'f16', BF16: 'f16', FP16: 'f16', F32: 'f16',
   MXFP4: 'mxfp4', MXFP4_MOE: 'mxfp4', NVFP4: 'mxfp4', FP4: 'mxfp4',
 };
-export const ARCH_CLASSES: readonly ArchClass[] = ['dense', 'moe', 'moe_hybrid', 'moe_latent', 'deepseek_v4'];
+export const ARCH_CLASSES: readonly ArchClass[] = ['dense', 'moe', 'moe_hybrid', 'moe_latent', 'deepseek_v4', 'flash_next'];
 const CONTEXT_UNIT = 32768;
 
 /** mlx | q4_0 | q8_0 | f16 | mxfp4 | gguf_kquant (speed_model.py:quant_family). */
@@ -147,12 +147,14 @@ export function quantFamilyOf(quant: Quant | SpecialBuild): QuantFamily {
   return PLAIN_FAMILIES[label] ?? 'gguf_kquant';
 }
 
-/** dense | moe | moe_hybrid | moe_latent | deepseek_v4 (speed_model.py:arch_class). A hand-set class on the record wins. */
+/** dense | moe | moe_hybrid | moe_latent | deepseek_v4 | flash_next (speed_model.py:arch_class). A hand-set class on the record wins. */
 export function archClassOf(model: Pick<ModelDetail, 'architecture'>): ArchClass {
   const a = model.architecture;
   const override = a?.arch_cost_class;
   if (override && (ARCH_CLASSES as readonly string[]).includes(override)) return override as ArchClass;
   if (!a) return 'dense';
+  // the n-gram-table architecture (Qwen 3.8 Flash Next): 512 experts and a table lookup per token, its own fixed cost
+  if ((a.model_type ?? '').startsWith('qwen4_exp')) return 'flash_next';
   if ((a.experts_total ?? 0) <= 1) return 'dense';
   if (a.attention === 'mla' || a.attention === 'latent') return 'moe_latent';
   if ((a.linear_layers ?? 0) > 0) return 'moe_hybrid';
@@ -184,13 +186,61 @@ export function mlxGroupOf(cls: ArchClass, activeB: number, machine: Pick<Machin
   return 'moe_other';
 }
 
+/** The groups whose MLX fixed cost is the expert-layer rule (speed_model.py:EXPERT_LAYER_GROUPS). */
+export const EXPERT_LAYER_GROUPS: readonly MlxGroup[] = ['small_active_moe_m4plus', 'small_active_moe_pre_m4'];
+/** ms per expert layer for the chip generation (speed_model.py:expert_layer_rate): its own value; a generation without rows of its own takes the previous one's, a newer one the newest, an unreadable one the oldest (the slowest). */
+export function expertLayerRate(el: ExpertLayerTerms, chip: string): number | null {
+  const gens = Object.keys(el.ms_per_layer).map((k) => Number(k.slice(1))).sort((a, b) => a - b);
+  if (!gens.length) return null;
+  const g = generationNumber(chip);
+  if (g !== null && el.ms_per_layer[`M${g}`]) return el.ms_per_layer[`M${g}`].value;
+  if (g !== null && g > gens[gens.length - 1]) return el.ms_per_layer[`M${gens[gens.length - 1]}`].value;
+  const older = g !== null ? gens.filter((x) => x < g) : [];
+  return el.ms_per_layer[`M${older.length ? older[older.length - 1] : gens[0]}`].value;
+}
+
+/** The MLX fixed cost of a small mixture, or null when the factors or the model lack what the rule needs (speed_model.py:mlx_expert_ms). */
+export function mlxExpertMs(sm: SpeedModel, chip: string, moeLayers: number | null | undefined): { ms: number; perLayer: number } | null {
+  const el = sm.mlx.expert_layer;
+  if (!el || !moeLayers) return null;
+  const rate = expertLayerRate(el, chip);
+  return rate === null ? null : { ms: moeLayers * rate, perLayer: rate };
+}
+
+/** The layers that carry experts: the config's MoE layer count, else every layer. */
+export function expertLayersOf(model: Pick<ModelDetail, 'architecture'>): number | null {
+  const a = model.architecture;
+  if (!a || (a.experts_total ?? 0) <= 1) return null;
+  return a.moe_layers ?? a.layers ?? null;
+}
+
+/** The cached tokens a sparse-attention model's attention reads per generated token (constants.ts:SPARSE_ATTENTION), or null when it reads the whole context (speed_model.py:sparse_budget). */
+export function sparseBudgetOf(arch: Pick<Architecture, 'model_type'> | null | undefined): number | null {
+  const type = arch?.model_type ?? '';
+  return SPARSE_ATTENTION.find((s) => type.startsWith(s.modelTypePrefix))?.budgetTokens ?? null;
+}
+
+/**
+ * The context the attention layers read per generated token (speed_model.py:attended_tokens): the whole context, or a
+ * sparse model's budget under MLX, whose engines run the index. GGUF keeps the whole context: no long-context llama.cpp
+ * run shows it using the index.
+ */
+export function attendedTokens(contextTokens: number, runtime: Runtime, sparseBudget: number | null): number {
+  return runtime === 'mlx' && sparseBudget !== null ? Math.min(contextTokens, sparseBudget) : contextTokens;
+}
+
 export interface FloorParts {
   readMs: number;
   fixedMs: number;
+  /** the context term: attention over the attended tokens, plus a sparse model's index pass over the whole context */
   attnMs: number;
+  /** the index pass alone (0 unless a sparse model runs on MLX) */
+  indexMs: number;
   ms: number;
   archCostMs: number;
   mlxFactor: number;
+  /** set when the expert-layer rule set the fixed cost */
+  expertLayerMs?: number;
 }
 
 /** A read factor applies on the platforms it was fitted on (`platforms`); absent means everywhere (speed_model.py:read_factor). */
@@ -200,7 +250,10 @@ export function readFactor(sm: SpeedModel, family: QuantFamily, platform: Platfo
   return t.platforms === undefined || t.platforms.includes(platform) ? t.value : 1;
 }
 
-/** Milliseconds per generated token under the fixed-cost model (speed_model.py:decode_ms). */
+/**
+ * Milliseconds per generated token under the fixed-cost model (speed_model.py:decode_ms). `gbPerToken` must count the
+ * cache over `attendedTokens(contextTokens, runtime, sparseBudget)`.
+ */
 export function floorMs(
   profile: Pick<ChipProfile, 't0Ms' | 'bEffRatio'>,
   bandwidthGbs: number,
@@ -214,17 +267,23 @@ export function floorMs(
   sm: SpeedModel,
   platform: Platform = 'apple',
   mlxCtx: MlxContextGroup = 'pre_m5',
+  expert: { chip: string; moeLayers: number | null | undefined } | null = null,
+  sparseBudget: number | null = null,
 ): FloorParts {
   const bEff = profile.bEffRatio * bandwidthGbs;
   const readMs = (gbPerToken / bEff) * 1000 * readFactor(sm, family, platform);
   const isMlx = runtime === 'mlx';
-  const archCostMs = sm.architecture_cost_ms[cls]?.value ?? 0;
-  const mlxFactor = isMlx ? (sm.mlx.overhead_factor[group]?.value ?? 1) : 1;
-  const fixedMs = (profile.t0Ms + archCostMs) * mlxFactor;
+  const rule = isMlx && expert && EXPERT_LAYER_GROUPS.includes(group) ? mlxExpertMs(sm, expert.chip, expert.moeLayers) : null;
+  const archCostMs = rule ? 0 : (sm.architecture_cost_ms[cls]?.value ?? 0);
+  const mlxFactor = rule ? 1 : isMlx ? (sm.mlx.overhead_factor[group]?.value ?? 1) : 1;
+  const fixedMs = rule ? rule.ms : (profile.t0Ms + archCostMs) * mlxFactor;
   const attnKey = attention && attention in sm.attention_ms_per_32k ? attention : 'gqa';
   const mlxCtxMs = isMlx ? (sm.mlx.attention_ms_per_32k[mlxCtx] ?? sm.mlx.attention_ms_per_32k.pre_m5).value : 0;
-  const attnMs = ((sm.attention_ms_per_32k[attnKey]?.value ?? 0) + mlxCtxMs) * (contextTokens / CONTEXT_UNIT);
-  return { readMs, fixedMs, attnMs, ms: readMs + fixedMs + attnMs, archCostMs, mlxFactor };
+  const attended = attendedTokens(contextTokens, runtime, sparseBudget);
+  // a sparse model's index scores every cached token before the attention reads its budget
+  const indexMs = isMlx && sparseBudget !== null ? (sm.mlx.index_ms_per_32k?.[mlxCtx]?.value ?? 0) * (contextTokens / CONTEXT_UNIT) : 0;
+  const attnMs = ((sm.attention_ms_per_32k[attnKey]?.value ?? 0) + mlxCtxMs) * (attended / CONTEXT_UNIT) + indexMs;
+  return { readMs, fixedMs, attnMs, indexMs, ms: readMs + fixedMs + attnMs, archCostMs, mlxFactor, ...(rule ? { expertLayerMs: rule.perLayer } : {}) };
 }
 
 function accelerationEntry(factors: Factors, key: string): { min: number; median: number; max: number } | null {
@@ -352,7 +411,7 @@ export function estimateSpeed({ model, quant, machine, contextTokens, kvBits, fa
 
 /** The fixed-cost branch of `estimateSpeed`. */
 function estimateFloor(
-  { model, quant, machine, contextTokens, kvBits, factors, cluster = null }: Omit<SpeedInput, 'memoryGb'> & { quant: Quant },
+  { model, quant, machine, contextTokens, kvBits, factors, cluster = null }: SpeedInput & { quant: Quant },
   active: number | null,
   bits: number | null,
   accel: Acceleration[],
@@ -365,6 +424,7 @@ function estimateFloor(
   const activeB = (active ?? 0) / BYTES_PER_GB;
   const group = mlxGroupOf(cls, activeB, machine);
   const family = quantFamilyOf(quant);
+  const sparseBudget = sparseBudgetOf(model.architecture);
   const base: Speed = { tokS: null, gbPerToken: 0, efficiency: null, efficiencySource: profile?.source ?? 'none', runtimeFactor: 1, runtimeApplied: runtime, feelsLike: null, accelerations: accel, notes, modelKind: 'floor', archClass: cls };
 
   if (active === null || bits === null) {
@@ -372,7 +432,7 @@ function estimateFloor(
     return base;
   }
   const weightsBytes = (active * bits) / 8;
-  const cacheBytes = kvBytesPerToken(model.architecture, kvBits) * contextTokens;
+  const cacheBytes = kvBytesPerToken(model.architecture, kvBits) * attendedTokens(contextTokens, runtime, sparseBudget);
   const gbPerToken = (weightsBytes + cacheBytes) / BYTES_PER_GB;
   base.gbPerToken = gbPerToken;
 
@@ -384,9 +444,18 @@ function estimateFloor(
   if (runtime === 'gguf' && quant.format === 'mlx') notes.push('MLX runs only on Apple silicon; GGUF speed shown');
   if (machine.bandwidth_gbs <= 0 || gbPerToken <= 0) return base;
 
-  const parts = floorMs(profile, machine.bandwidth_gbs, gbPerToken, family, cls, runtime, group, model.architecture?.attention, contextTokens, sm, machine.platform, mlxContextGroupOf(machine));
-  if (runtime === 'mlx' && parts.mlxFactor < 1) notes.push('MLX trims the fixed cost per token on this model');
-  if (runtime === 'mlx' && parts.mlxFactor > 1) notes.push('MLX adds fixed cost per token on this model');
+  const expertLayers = expertLayersOf(model);
+  const parts = floorMs(profile, machine.bandwidth_gbs, gbPerToken, family, cls, runtime, group, model.architecture?.attention, contextTokens, sm, machine.platform, mlxContextGroupOf(machine), { chip: machine.chip, moeLayers: expertLayers }, sparseBudget);
+  if (parts.expertLayerMs !== undefined) notes.push(`on MLX a small mixture's fixed cost follows its ${expertLayers} expert layers and the chip generation (${parts.expertLayerMs.toFixed(2)} ms per layer)`);
+  else if (runtime === 'mlx' && parts.mlxFactor < 1) notes.push('MLX trims the fixed cost per token on this model');
+  else if (runtime === 'mlx' && parts.mlxFactor > 1) notes.push('MLX adds fixed cost per token on this model');
+  if (sparseBudget !== null && contextTokens > sparseBudget) {
+    notes.push(
+      runtime === 'mlx'
+        ? `sparse attention: each word reads the ${sparseBudget.toLocaleString('en-US')} cached tokens its index picks, not the whole context, so MLX writing barely slows as the context grows`
+        : 'charged for reading the whole context: no long-context llama.cpp run shows it using the model\'s sparse-attention index',
+    );
+  }
   let tokS = parts.ms > 0 ? 1000 / parts.ms : null;
   let clusterInfo: ClusterSpeed | undefined;
   if (cluster && tokS !== null) {
@@ -404,6 +473,7 @@ function estimateFloor(
     readMs: parts.readMs,
     archCostMs: parts.archCostMs,
     attnMs: parts.attnMs,
+    ...(parts.expertLayerMs !== undefined ? { expertLayers: expertLayers ?? undefined, expertLayerMs: parts.expertLayerMs } : {}),
     ...(clusterInfo ? { cluster: clusterInfo } : {}),
   };
 }

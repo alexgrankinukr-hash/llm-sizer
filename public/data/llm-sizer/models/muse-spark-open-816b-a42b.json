@@ -1,0 +1,288 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "muse-spark-open-816b-a42b",
+ "name": "Muse-Spark-Open-816B-A42B",
+ "provider": "meta-models",
+ "hf_repo": "meta-models/Muse-Spark-Open-816B-A42B",
+ "url": "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B",
+ "variant": "instruct",
+ "released": "2026-09-15",
+ "params_total": 822036529664,
+ "params_active": 822036529664,
+ "params_active_source": "dense",
+ "context_max": null,
+ "native_bits": null,
+ "license": {
+  "name": "other",
+  "url": null,
+  "commercial": null,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "muse_spark",
+  "image-text-to-text",
+  "facebook",
+  "meta",
+  "pytorch",
+  "muse",
+  "muse-spark",
+  "conversational",
+  "en",
+  "eval-results",
+  "endpoints_compatible",
+  "deploy:sagemaker"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "manual",
+ "status": "needs_token",
+ "superseded_by": null,
+ "notes": [
+  "config.json unavailable (gated or missing); architecture assumed conventional"
+ ],
+ "four_bit_native": false,
+ "architecture": null,
+ "quants": [
+  {
+   "repo": "unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "url": "https://huggingface.co/unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "format": "gguf",
+   "label": "UD-IQ1_S",
+   "bits": 1.71,
+   "size_gb": 175.64,
+   "size_bytes": 175639574392,
+   "quantizer": "unsloth",
+   "file_count": 5,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "url": "https://huggingface.co/unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "format": "gguf",
+   "label": "UD-IQ1_M",
+   "bits": 2.03,
+   "size_gb": 208.93,
+   "size_bytes": 208925571064,
+   "quantizer": "unsloth",
+   "file_count": 6,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "url": "https://huggingface.co/unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "format": "gguf",
+   "label": "UD-IQ2_XXS",
+   "bits": 2.2,
+   "size_gb": 225.57,
+   "size_bytes": 225568569304,
+   "quantizer": "unsloth",
+   "file_count": 6,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "url": "https://huggingface.co/unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "format": "gguf",
+   "label": "UD-IQ2_S",
+   "bits": 2.68,
+   "size_gb": 275.5,
+   "size_bytes": 275497564280,
+   "quantizer": "unsloth",
+   "file_count": 7,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "ggml-org/Muse-Spark-Open-816B-A42B-GGUF",
+   "url": "https://huggingface.co/ggml-org/Muse-Spark-Open-816B-A42B-GGUF",
+   "format": "gguf",
+   "label": "Q2_K",
+   "bits": 2.96,
+   "size_gb": 304.08,
+   "size_bytes": 304080474208,
+   "quantizer": "ggml-org",
+   "file_count": 22,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "url": "https://huggingface.co/unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "format": "gguf",
+   "label": "UD-Q2_K_XL",
+   "bits": 3.03,
+   "size_gb": 311.23,
+   "size_bytes": 311225649368,
+   "quantizer": "unsloth",
+   "file_count": 8,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "url": "https://huggingface.co/unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "format": "gguf",
+   "label": "UD-IQ3_XXS",
+   "bits": 3.31,
+   "size_gb": 340.35,
+   "size_bytes": 340350896376,
+   "quantizer": "unsloth",
+   "file_count": 8,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "url": "https://huggingface.co/unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "format": "gguf",
+   "label": "UD-Q3_K_XL",
+   "bits": 3.91,
+   "size_gb": 401.48,
+   "size_bytes": 401483491832,
+   "quantizer": "unsloth",
+   "file_count": 10,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "mlx-community/Muse-Spark-Open-816B-A42B-3bit",
+   "url": "https://huggingface.co/mlx-community/Muse-Spark-Open-816B-A42B-3bit",
+   "format": "mlx",
+   "label": "MLX-3bit",
+   "bits": 4.24,
+   "size_gb": 436.14,
+   "size_bytes": 436144269791,
+   "quantizer": "mlx-community",
+   "file_count": 90,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "ggml-org/Muse-Spark-Open-816B-A42B-GGUF",
+   "url": "https://huggingface.co/ggml-org/Muse-Spark-Open-816B-A42B-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_S",
+   "bits": 4.57,
+   "size_gb": 470.07,
+   "size_bytes": 470069227350,
+   "quantizer": "ggml-org",
+   "file_count": 22,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "url": "https://huggingface.co/unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "format": "gguf",
+   "label": "UD-Q4_K_XL",
+   "bits": 4.92,
+   "size_gb": 505.5,
+   "size_bytes": 505502231288,
+   "quantizer": "unsloth",
+   "file_count": 12,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "mlx-community/Muse-Spark-Open-816B-A42B-4bit",
+   "url": "https://huggingface.co/mlx-community/Muse-Spark-Open-816B-A42B-4bit",
+   "format": "mlx",
+   "label": "MLX-4bit",
+   "bits": 5.18,
+   "size_gb": 532.78,
+   "size_bytes": 532781033893,
+   "quantizer": "mlx-community",
+   "file_count": 100,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "unsloth/Muse-Spark-Open-816B-A42B-NVFP4",
+   "url": "https://huggingface.co/unsloth/Muse-Spark-Open-816B-A42B-NVFP4",
+   "format": "safetensors",
+   "label": "NVFP4",
+   "bits": 5.19,
+   "size_gb": 533.01,
+   "size_bytes": 533011023472,
+   "quantizer": "unsloth",
+   "file_count": 127,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "ggml-org/Muse-Spark-Open-816B-A42B-GGUF",
+   "url": "https://huggingface.co/ggml-org/Muse-Spark-Open-816B-A42B-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 8.48,
+   "size_gb": 871.65,
+   "size_bytes": 871648188873,
+   "quantizer": "ggml-org",
+   "file_count": 10,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "ggml-org/Muse-Spark-Open-816B-A42B-GGUF",
+   "url": "https://huggingface.co/ggml-org/Muse-Spark-Open-816B-A42B-GGUF",
+   "format": "gguf",
+   "label": "BF16",
+   "bits": 15.96,
+   "size_gb": 1640.26,
+   "size_bytes": 1640264556374,
+   "quantizer": "ggml-org",
+   "file_count": 22,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "meta-models/Muse-Spark-Open-816B-A42B",
+   "url": "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.0,
+   "size_gb": 1644.33,
+   "size_bytes": 1644333393864,
+   "quantizer": "official",
+   "file_count": 65,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  }
+ ],
+ "reference": {
+  "q4": {
+   "repo": "unsloth/Muse-Spark-Open-816B-A42B-GGUF",
+   "label": "UD-Q4_K_XL"
+  },
+  "q8": {
+   "repo": "ggml-org/Muse-Spark-Open-816B-A42B-GGUF",
+   "label": "Q8_0"
+  },
+  "mlx4": {
+   "repo": "mlx-community/Muse-Spark-Open-816B-A42B-4bit",
+   "label": "MLX-4bit"
+  },
+  "native": {
+   "repo": "meta-models/Muse-Spark-Open-816B-A42B",
+   "label": "BF16"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": null,
+  "dspark": null
+ },
+ "timestamps": {
+  "first_seen": "2026-10-18T07:57:03.988910+00:00",
+  "last_checked": "2026-10-18T07:57:03.988910+00:00",
+  "last_changed": "2026-10-18T07:57:03.988910+00:00"
+ },
+ "generated_at": "2026-10-19T08:44:16+00:00",
+ "sha": "32f1757d42115206"
+}

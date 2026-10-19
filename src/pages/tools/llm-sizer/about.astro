@@ -77,8 +77,10 @@ const ms = (t?: FittedTerm, digits = 1) => (t ? `${t.value.toFixed(digits)} ms` 
 const m5UltraProfile = m5Ultra?.b_eff_ratio !== undefined && m5Ultra.t0_ms !== undefined ? `${Math.round(m5Ultra.b_eff_ratio * 100)} % of its 1,200 GB/s and ${m5Ultra.t0_ms.toFixed(1)} ms of fixed cost per token` : 'assumed';
 const termRows = (rec: Record<string, FittedTerm> | undefined, names: Record<string, string>, unit: string) =>
   Object.entries(rec ?? {}).map(([k, t]) => ({ name: names[k] ?? k.replace(/_/g, ' '), value: unit === 'ms' ? `${t.value.toFixed(1)} ms` : `×${t.value.toFixed(2)}`, n: t.n ?? null, source: t.source, range: t.range ? `${t.range[0]} – ${t.range[1]}` : '', platforms: t.platforms?.join(', ') ?? '' }));
-const classNames: Record<string, string> = { dense: 'dense', moe: 'mixture of experts', moe_hybrid: 'mixture of experts with linear-attention layers', moe_latent: 'mixture of experts with latent attention', deepseek_v4: 'DeepSeek V4' };
-const groupNames: Record<string, string> = { dense: 'dense', small_active_moe_m4plus: 'mixture under 6B active, M4 and newer', small_active_moe_pre_m4: 'mixture under 6B active, M1 to M3', moe_other: 'other mixtures of experts' };
+const classNames: Record<string, string> = { dense: 'dense', moe: 'mixture of experts', moe_hybrid: 'mixture of experts with linear-attention layers', moe_latent: 'mixture of experts with latent attention', deepseek_v4: 'DeepSeek V4', flash_next: 'Qwen 3.8 Flash Next (n-gram table)' };
+const groupNames: Record<string, string> = { dense: 'dense', small_active_moe_m4plus: 'mixture under 6B active, M4 and newer (only without a layer count)', small_active_moe_pre_m4: 'mixture under 6B active, M1 to M3 (only without a layer count)', moe_other: 'other mixtures of experts' };
+const expertRates = Object.entries(sm?.mlx.expert_layer?.ms_per_layer ?? {});
+const expertText = expertRates.length ? expertRates.map(([g, t]) => `${t.value.toFixed(2)} ms on the ${g}`).join(', ') : '?';
 const familyNames: Record<string, string> = { q4_0: 'Q4_0 / Q5_0 (plain)', q8_0: 'Q8_0 / FP8', f16: 'F16 / BF16', mxfp4: 'MXFP4 / NVFP4', mlx: 'MLX files', gguf_kquant: 'GGUF K-quant and IQ files' };
 
 // Efficiency table: one row per chip in the catalog (measured, assumed or tier), in catalog order.
@@ -143,7 +145,7 @@ const faqs: Faq[] = [
   {
     id: 'ssd-build',
     q: 'Can I run Qwen 3.8 Flash Next on a 64 GB Mac?',
-    html: `<p>Yes, with a build that keeps its n-gram table on the SSD. Flash Next is a 125B mixture of experts plus a 51B-parameter lookup table that is read once per token at one address, so the table can stay on disk while the experts stay in memory. The community builds that do this need 46 to 56 GB of memory instead of 123 GB. Pick one in the column's build list ("Q4 · engram on SSD · 45.8 GB in memory"), or press "SSD build" on the Which machine? map; the memory bar shows the part on the SSD beside it. The tool does not estimate their speed: the only published figure is 36 tok/s on an M5 Max with 64 GB, and one run on one chip cannot be carried to the others. Section 5 of the methodology has the sizes and the runtime requirements.</p>`,
+    html: `<p>Yes, with a build that keeps its n-gram table on the SSD. Flash Next is a 125B mixture of experts plus a 51B-parameter lookup table that is read once per token at one address, so the table can stay on disk while the experts stay in memory. The community builds that do this need 46 to 56 GB of memory instead of 123 GB. Pick one in the column's build list ("Q4 · engram on SSD · 45.8 GB in memory"), or press "SSD build" on the Which machine? map; the memory bar shows the part on the SSD beside it. The tool does not estimate their speed: the only published figure is 36 tok/s on an M5 Max with 64 GB, and one run on one chip cannot be carried to the others. On a 128 GB Mac you don't need them: oMLX, MTPLX and mlx-serve leave the table on the SSD for any MLX file, so with MLX on, the 111.5 GB 4-bit file needs about 87 GB at 32K and runs, with a speed estimate. Section 5 of the methodology has the sizes and the runtime requirements.</p>`,
   },
   {
     id: 'ring',
@@ -158,7 +160,7 @@ const faqs: Faq[] = [
   {
     id: 'mlx',
     q: 'Why is MLX faster than GGUF?',
-    html: `<p>It is not always faster, and where it is, the gain is in the fixed cost per token rather than the read. Measured runs put MLX at ${pct(mlxGroups?.dense)} of the fixed cost on dense models (a wash), about ${pct(mlxGroups?.small_active_moe_m4plus)} on small mixtures of experts on the M4 generation and newer (one measurement: 71 to 130 tok/s), ${pct(mlxGroups?.moe_other)} on other mixtures, and ${pct(mlxGroups?.small_active_moe_pre_m4)} on small mixtures on the M1 to M3 chips, where it is slower. Part of the dense "MLX lead" people report is llama.cpp's K-quant files reading about 25 % slower than plain formats on Metal. MLX also pays a long-context cost on top of the cache re-read: about ${ms(sm?.mlx.attention_ms_per_32k.pre_m5)} per token per 32K of context on the M1 to M4 chips, which is why llama.cpp catches up there at very long context, and about ${ms(sm?.mlx.attention_ms_per_32k.m5plus)} on the M5 generation, whose GPU carries the neural accelerators (fitted on the M5 Max ladders; the M5 Ultra inherits it unmeasured). The switch is in the speed view; the factors and their sources are in <a href="#${A.runtime}">section 6.2</a>.</p>`,
+    html: `<p>It is not always faster, and where it is, the gain is in the fixed cost per token rather than the read. Measured runs put MLX at ${pct(mlxGroups?.dense)} of the fixed cost on dense models (a wash), ${pct(mlxGroups?.moe_other)} on the bigger mixtures of experts, where it is faster, and on small mixtures (under 6B active) its fixed cost does not follow the chip's llama.cpp one at all: it is set by the model's expert layers and the chip generation, ${expertText} per expert layer (fitted on oMLX community runs since 0.17). Part of the dense "MLX lead" people report is llama.cpp's K-quant files reading about 25 % slower than plain formats on Metal. MLX also pays a long-context cost on top of the cache re-read: about ${ms(sm?.mlx.attention_ms_per_32k.pre_m5)} per token per 32K of context on the M1 to M4 chips, which is why llama.cpp catches up there at very long context, and about ${ms(sm?.mlx.attention_ms_per_32k.m5plus)} on the M5 generation, whose GPU carries the neural accelerators (fitted on the M5 Max ladders; the M5 Ultra inherits it unmeasured). The switch is in the speed view; the factors and their sources are in <a href="#${A.runtime}">section 6.2</a>.</p>`,
   },
   {
     id: 'estimate',
@@ -335,8 +337,15 @@ const description = 'Every number in LLM Sizer, and where it comes from: the mem
                 {termRows(mlxGroups, groupNames, 'x').map((r) => (
                   <tr><td>{r.name}</td><td class="whitespace-nowrap">{r.value}</td><td>{r.n ?? '—'}</td><td>{r.source}</td><td class="whitespace-nowrap">{r.range}</td></tr>
                 ))}
+                {expertRates.map(([g, t]) => (
+                  <tr><td>mixture under 6B active: per expert layer, {g}</td><td class="whitespace-nowrap">{t.value.toFixed(2)} ms</td><td>{t.n ?? '—'}</td><td>{t.source}</td><td class="whitespace-nowrap">{t.range ? `${t.range[0]} – ${t.range[1]}` : ''}</td></tr>
+                ))}
                 {sm && <tr><td>MLX context cost per 32K, M1 to M4</td><td class="whitespace-nowrap">{ms(sm.mlx.attention_ms_per_32k.pre_m5)}</td><td>{sm.mlx.attention_ms_per_32k.pre_m5.n ?? '—'}</td><td>{sm.mlx.attention_ms_per_32k.pre_m5.source}</td><td class="whitespace-nowrap">{sm.mlx.attention_ms_per_32k.pre_m5.range ? `${sm.mlx.attention_ms_per_32k.pre_m5.range[0]} – ${sm.mlx.attention_ms_per_32k.pre_m5.range[1]}` : ''}</td></tr>}
                 {sm && <tr><td>MLX context cost per 32K, M5 and newer</td><td class="whitespace-nowrap">{ms(sm.mlx.attention_ms_per_32k.m5plus)}</td><td>{sm.mlx.attention_ms_per_32k.m5plus.n ?? '—'}</td><td>{sm.mlx.attention_ms_per_32k.m5plus.source}</td><td class="whitespace-nowrap">{sm.mlx.attention_ms_per_32k.m5plus.range ? `${sm.mlx.attention_ms_per_32k.m5plus.range[0]} – ${sm.mlx.attention_ms_per_32k.m5plus.range[1]}` : ''}</td></tr>}
+                {sm?.mlx.index_ms_per_32k && (['pre_m5', 'm5plus'] as const).map((g) => {
+                  const t = sm.mlx.index_ms_per_32k![g];
+                  return <tr><td>MLX sparse-attention index per 32K, {g === 'pre_m5' ? 'M1 to M4' : 'M5 and newer'} (Flash Next)</td><td class="whitespace-nowrap">{ms(t, 2)}</td><td>{t.n ?? '—'}</td><td>{t.source}</td><td class="whitespace-nowrap">{t.range ? `${t.range[0]} – ${t.range[1]}` : ''}</td></tr>;
+                })}
               </tbody>
             </table>
             <h4 class="font-medium mt-8 mb-2">Read factors and context cost</h4>

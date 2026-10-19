@@ -121,6 +121,14 @@ export function LayersIcon({ size = 16 }: { size?: number }) {
     </svg>
   );
 }
+/** Routes side by side: bars of three lengths (the 128 GB comparison's tile). */
+export function RoutesIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg {...base({ size })}>
+      <path d="M4 6h16M4 12h10M4 18h13" />
+    </svg>
+  );
+}
 export function GripIcon({ size = 14 }: { size?: number }) {
   return (
     <svg {...base({ size })} fill="currentColor" stroke="none">

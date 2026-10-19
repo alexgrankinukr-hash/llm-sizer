@@ -68,6 +68,13 @@ describe('slim island props', () => {
       expect(lean.speed_model?.kind).toBe(factors.speed_model.kind);
       expect(lean.speed_model?.architecture_cost_ms.moe_latent.value).toBe(factors.speed_model.architecture_cost_ms.moe_latent.value);
       expect(lean.speed_model?.mlx.overhead_factor.dense.value).toBe(factors.speed_model.mlx.overhead_factor.dense.value);
+      // the expert-layer rule survives the slimming, so a small mixture on MLX gets the same speed in the browser
+      expect(lean.speed_model?.mlx.expert_layer?.ms_per_layer).toEqual(slimFactors(factors).speed_model?.mlx.expert_layer?.ms_per_layer);
+      for (const [g, t] of Object.entries(factors.speed_model.mlx.expert_layer?.ms_per_layer ?? {})) expect(lean.speed_model?.mlx.expert_layer?.ms_per_layer[g].value, g).toBe(t.value);
+      const oss = loadModel('gpt-oss-120b');
+      const m5max = full.find((m) => m.id === 'mac-studio-m5-max-40c')!;
+      const mlxSettings = { memoryGb: 128, workApps: 0, override: false as const, contextTokens: 4096, kvBits: 16 as const, runtime: 'mlx' as const, qualityFloorBits: 2 };
+      expect(evaluateCell(oss, slim.find((m) => m.id === m5max.id)!, mlxSettings, lean).speed.tokS).toBe(evaluateCell(oss, m5max, mlxSettings, factors).speed.tokS);
       expect(JSON.stringify(lean.speed_model).includes('_formula')).toBe(false);
       expect(lean.efficiency.by_chip['M4 Max'].b_eff_ratio).toBe(factors.efficiency.by_chip['M4 Max'].b_eff_ratio);
       expect(lean.efficiency.by_tier.pro.t0_ms).toBe(factors.efficiency.by_tier.pro.t0_ms);
@@ -87,6 +94,12 @@ describe('slim island props', () => {
     expect(evaluateCell(qwen, studio(slim), mlx, lean).prefill).toEqual(evaluateCell(qwen, studio(full), mlx, factors).prefill);
     const fn = loadModel('qwen3.8-flash-next');
     expect(evaluateCell(fn, studio(slim), { ...settings, memoryGb: 128 }, lean).prefill?.d0).toBe(evaluateCell(fn, studio(full), { ...settings, memoryGb: 128 }, factors).prefill?.d0);
+    // writing speed keeps the sparse-attention index term: Flash Next on MLX at 128K is the same number in the browser
+    expect(lean.speed_model?.mlx.index_ms_per_32k?.m5plus.value).toBe(factors.speed_model?.mlx.index_ms_per_32k?.m5plus.value);
+    const fnMlx = { ...settings, memoryGb: 128, contextTokens: 131072, runtime: 'mlx' as const, quant: fn.quants.find((q) => q.format === 'mlx') };
+    const fnSlim = evaluateCell(fn, studio(slim), fnMlx, lean).speed;
+    expect(fnSlim?.tokS).toBeCloseTo(evaluateCell(fn, studio(full), fnMlx, factors).speed!.tokS!, 9);
+    expect(fnSlim?.tokS).toBeGreaterThan(55);
   });
 });
 

@@ -35,7 +35,9 @@ export type View =
   /** one machine at one memory size against the whole catalog; `row` may name any catalog or custom machine, not only a table row */
   | { kind: 'machine'; row: string; expanded: boolean }
   /** one model at one build and context on every Apple chip: writing or reading, at each chip's biggest memory or the smallest that runs it */
-  | { kind: 'chips'; model: string; bucket: Bucket; ctx: number; mode: 'write' | 'read'; memory: MemoryPick };
+  | { kind: 'chips'; model: string; bucket: Bucket; ctx: number; mode: 'write' | 'read'; memory: MemoryPick }
+  /** one model at one build and context on every way to get about 128 GB: Macs, boxes, a gaming PC with system memory, cards */
+  | { kind: 'routes'; model: string; bucket: Bucket; ctx: number };
 
 export type CustomModel = ({ mode: 'quick' } & CustomModelQuickInput) | ({ mode: 'full' } & CustomModelFullInput);
 
@@ -161,6 +163,9 @@ export function clampMinTokS(tokS: number): number {
 }
 
 /** The buying map for a column: keeps the build and the minimum speed when the visitor is already on the map. */
+/** Where the 128 GB comparison opens: the model the video is about, at 4-bit, in a short chat (the length published runs use). */
+export const ROUTES_VIEW_DEFAULT: Extract<View, { kind: 'routes' }> = { kind: 'routes', model: 'qwen3.8-flash-next', bucket: 'Q4', ctx: 4096 };
+
 export function modelView(column: number, current?: View): View {
   if (current?.kind === 'model') return { kind: 'model', column, build: current.build, minTokS: current.minTokS };
   return { kind: 'model', column, build: 'column', minTokS: 0 };

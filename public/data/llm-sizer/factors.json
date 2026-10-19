@@ -427,9 +427,9 @@
  },
  "speed_model": {
   "kind": "floor",
-  "_formula": "ms per token = GB read per token ÷ (b_eff_ratio × spec bandwidth) × 1000 × read_factor[quant family] (the K-quant factor on the platforms it lists: Apple silicon) + (t0_ms + architecture_cost_ms[class]) × mlx overhead_factor[group] (GGUF: 1) + (attention_ms_per_32k[attention] + mlx attention_ms_per_32k[chip generation: pre_m5 | m5plus]) × context ÷ 32768; tok/s = 1000 ÷ ms",
-  "_classes": "dense | moe (mixture of experts) | moe_hybrid (mixture of experts with linear-attention layers) | moe_latent (mixture of experts with MLA or latent attention) | deepseek_v4 (per-model override)",
-  "_groups": "MLX overhead groups: dense | small_active_moe_m4plus (under 6B active, M4 generation and newer) | small_active_moe_pre_m4 | moe_other. MLX context-cost groups: pre_m5 (M1 to M4, and any chip whose generation is not known) | m5plus (M5 and newer)",
+  "_formula": "ms per token = GB read per token ÷ (b_eff_ratio × spec bandwidth) × 1000 × read_factor[quant family] (the K-quant factor on the platforms it lists: Apple silicon) + (t0_ms + architecture_cost_ms[class]) × mlx overhead_factor[group] (GGUF: 1); on MLX a mixture under 6B active instead + expert layers × mlx expert_layer.ms_per_layer[chip generation; one without rows takes the previous generation's] + (attention_ms_per_32k[attention] + mlx attention_ms_per_32k[chip generation: pre_m5 | m5plus]) × attended ÷ 32768 + mlx index_ms_per_32k[chip generation] × context ÷ 32768 (sparse-attention models on MLX); tok/s = 1000 ÷ ms. attended = the context, or a sparse-attention model's budget on MLX (constants.ts:SPARSE_ATTENTION, 2,048 for Flash Next); the cache in GB read per token counts the attended tokens",
+  "_classes": "dense | moe (mixture of experts) | moe_hybrid (mixture of experts with linear-attention layers) | moe_latent (mixture of experts with MLA or latent attention) | deepseek_v4 (per-model override) | flash_next (the n-gram-table architecture, Qwen 3.8 Flash Next)",
+  "_groups": "MLX overhead groups: dense | small_active_moe_m4plus (under 6B active, M4 generation and newer) | small_active_moe_pre_m4 | moe_other; the two small_active groups take the expert-layer rule wherever the model has a layer count, and their overhead factors only where it has none. MLX context-cost groups: pre_m5 (M1 to M4, and any chip whose generation is not known) | m5plus (M5 and newer)",
   "read_factor": {
    "q4_0": {
     "value": 1.0,
@@ -501,6 +501,15 @@
      13.3,
      32.7
     ]
+   },
+   "flash_next": {
+    "value": 11.1,
+    "n": 3,
+    "source": "fitted",
+    "range": [
+     10.1,
+     11.5
+    ]
    }
   },
   "attention_ms_per_32k": {
@@ -532,32 +541,36 @@
      ]
     },
     "small_active_moe_m4plus": {
-     "value": 0.5,
-     "n": 1,
-     "source": "assumed"
-    },
-    "small_active_moe_pre_m4": {
-     "value": 1.2,
-     "n": 3,
+     "value": 1.07,
+     "n": 20,
      "source": "fitted",
      "range": [
-      0.95,
-      1.56
+      0.42,
+      2.48
+     ]
+    },
+    "small_active_moe_pre_m4": {
+     "value": 1.18,
+     "n": 30,
+     "source": "fitted",
+     "range": [
+      0.67,
+      2.95
      ]
     },
     "moe_other": {
-     "value": 0.77,
-     "n": 10,
+     "value": 0.78,
+     "n": 13,
      "source": "fitted",
      "range": [
       0.54,
-      1.18
+      1.33
      ]
     }
    },
    "attention_ms_per_32k": {
     "pre_m5": {
-     "value": 6.4,
+     "value": 6.3,
      "n": 14,
      "source": "fitted",
      "range": [
@@ -566,34 +579,113 @@
      ]
     },
     "m5plus": {
-     "value": 0.8,
-     "n": 4,
+     "value": 0.7,
+     "n": 7,
      "source": "fitted",
      "range": [
       0.0,
       1.0
      ]
     }
+   },
+   "index_ms_per_32k": {
+    "pre_m5": {
+     "value": 0.0,
+     "n": 0,
+     "source": "assumed",
+     "note": "no sparse-attention MLX row past 8K on this generation; the m5plus value × 9.00, the ratio of the two generations' MLX attention costs"
+    },
+    "m5plus": {
+     "value": 0.0,
+     "n": 3,
+     "source": "fitted",
+     "range": [
+      0.0,
+      0.0
+     ]
+    }
+   },
+   "expert_layer": {
+    "ms_per_layer": {
+     "M1": {
+      "value": 0.342,
+      "n": 9,
+      "source": "fitted",
+      "range": [
+       0.242,
+       0.599
+      ]
+     },
+     "M2": {
+      "value": 0.332,
+      "n": 10,
+      "source": "fitted",
+      "range": [
+       0.211,
+       0.823
+      ]
+     },
+     "M3": {
+      "value": 0.213,
+      "n": 11,
+      "source": "fitted",
+      "range": [
+       0.159,
+       0.336
+      ]
+     },
+     "M4": {
+      "value": 0.161,
+      "n": 9,
+      "source": "fitted",
+      "range": [
+       0.104,
+       0.328
+      ]
+     },
+     "M5": {
+      "value": 0.154,
+      "n": 10,
+      "source": "fitted",
+      "range": [
+       0.134,
+       0.477
+      ]
+     }
+    },
+    "n": 50,
+    "rows_by_generation": {
+     "M1": 9,
+     "M2": 10,
+     "M3": 11,
+     "M4": 9,
+     "M5": 10,
+     "M6": 1
+    },
+    "groups": [
+     "small_active_moe_m4plus",
+     "small_active_moe_pre_m4"
+    ]
    }
   },
   "validation": {
-   "holdout_rule": "family == gemma-4, or contributor == omlx with no row past 8K, by submission_id; the two oMLX M5 Max submissions that run past 8K (Qwen 3.8 27B to 64K, Nemotron 3 Super at 32K) train the M5-generation MLX context cost, the only long-context M5 rows there are",
-   "n_train": 79,
-   "n_holdout": 13,
-   "train_median_err": 0.049,
+   "holdout_rule": "family == gemma-4, or contributor == omlx with no row past 8K, by submission_id; the two oMLX M5 Max submissions that run past 8K (Qwen 3.8 27B to 64K, Nemotron 3 Super at 32K) train the M5-generation MLX context cost, the only long-context M5 rows there are; since 0.16 the oMLX community rows (contributor omlx-community, 2026-10) train on the chips of the 128 GB comparison (M5 Max, M4 Max, M2 Ultra) and hold out on the others (M5 Pro, M3 Ultra, the 64-core M1 Ultra, M5 Ultra), whole submissions; the 48-core M1 Ultra and the one plain M5 Ultra Flash Next session are report rows; since 0.17 the oMLX community rows scraped on 2026-10-19 (one row per model, chip and GPU bin, the median of the plain sessions within 10 % of that group's median, every run id in the note; a group validation.json already covers at 4K is not added) train on gpt-oss-20b, gpt-oss-120b and Qwen3-Coder-Next and hold out whole families, Qwen3.6-35B-A3B and Gemma 4, and every M5 Ultra row",
+   "n_train": 137,
+   "n_holdout": 64,
+   "train_median_err": 0.067,
    "train_p90_err": 0.256,
-   "holdout_median_err": 0.133,
-   "holdout_p90_err": 0.199,
-   "multiplier_holdout_median_err": 0.263,
-   "multiplier_train_median_err": 0.281,
+   "holdout_median_err": 0.118,
+   "holdout_p90_err": 0.346,
+   "multiplier_holdout_median_err": 0.95,
+   "multiplier_train_median_err": 0.683,
    "gate": {
     "holdout_median_max": 0.223,
     "no_worse_than_multiplier_by": 0.262,
-    "holdout_median": 0.133,
+    "holdout_median": 0.118,
     "rows_worse": [],
     "passed": true
    },
-   "fitted_at": "2026-09-05"
+   "fitted_at": "2026-10-19"
   },
   "bin_checks": [
    {
@@ -793,14 +885,14 @@
     ]
    },
    "flash_next": {
-    "factor": 0.31,
+    "factor": 0.34,
     "n": 1,
     "range": [
-     0.31,
-     0.31
+     0.34,
+     0.34
     ],
     "examples": [
-     "Qwen 3.8 Flash Next on M5 Max 40-core at an empty context: 966 tok/s (0.31 of the dense rate)"
+     "Qwen 3.8 Flash Next on M5 Max 40-core at an empty context: 966 tok/s (0.34 of the dense rate)"
     ]
    },
    "moe_latent": {

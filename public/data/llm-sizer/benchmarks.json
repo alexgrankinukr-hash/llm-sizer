@@ -1923,7 +1923,7 @@
    "model_id": "qwen3.8-flash-next",
    "quant": "UD-IQ4_XS",
    "runtime": "llama.cpp-gguf",
-   "params_active_b": 6.0,
+   "params_active_b": 6.67,
    "arch_class": "flash_next",
    "attention_layers": 12,
    "layers": 48,

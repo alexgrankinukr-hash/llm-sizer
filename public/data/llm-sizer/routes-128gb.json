@@ -1,0 +1,336 @@
+{
+  "schema": "llm-sizer/routes v1 — every way to get about 128 GB of memory for local AI, for the comparison view (METHODOLOGY §6.6). Hand-curated: prices, memory speeds, the memory the AI can use and every published measurement, each with its date and source. Prices move weekly: edit `price`, `boxes` and `prices_checked`, nothing else needs to change. Speeds marked plain ran with no speed-up (no MTP, no draft model); speed-up numbers are kept apart and never compared with plain ones. `facts` on a measurement are what the tool needs to compute its own estimate for the same build (active parameters in billions, bits per weight over the total parameters as the catalog counts them, the architecture class) so the calibration table can be rebuilt from this file. Sizes are decimal GB unless a note says GiB.",
+  "data_as_of": "2026-10-19",
+  "prices_checked": "2026-10-18",
+  "answer": { "words": 1000, "tokens": 1330 },
+  "document": { "pages": 50, "tokens": 32000 },
+  "contexts": [4096, 32768, 131072],
+  "default_model": "qwen3.8-flash-next",
+  "featured_models": ["qwen3.8-flash-next", "qwen3.8-27b", "gpt-oss-120b"],
+  "model_facts": {
+    "_note": "cache bytes per token at 8-bit, the attention design, the layers that carry experts and (where the engine keys a rule on it, such as Flash Next's sparse attention) the model type of the comparison's models, from their catalog records; the calibration table needs them for the measured runs' builds",
+    "qwen3.8-flash-next": { "kv8": 12288, "attention": "gqa", "moe_layers": 48, "model_type": "qwen4_exp_text" },
+    "gpt-oss-120b": { "kv8": 18432, "attention": "gqa", "moe_layers": 36 },
+    "qwen3.8-27b": { "kv8": 32768, "attention": "gqa" }
+  },
+  "ngram_tables": {
+    "qwen3.8-flash-next": {
+      "note": "Qwen 3.8 Flash Next is a 125B model with about 6.7B parameters used per token, plus a 51B-parameter n-gram table (51 of its 180B parameters) that is read a few rows at a time. Mac engines (oMLX, MTPLX, mlx-serve) and vLLM can leave it on the SSD or in system memory, so the 106 GB oQ4e build uses about 80 GB of memory on a Mac (oMLX peaks of 69 to 79 GiB); plain llama.cpp files keep it inside the weights and need the whole file in memory.",
+      "source": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+    }
+  },
+  "profiles": {
+    "strix-halo-vulkan": {
+      "name": "Strix Halo (Ryzen AI Max+ 395), llama.cpp Vulkan",
+      "platform": "rocm",
+      "chip": "Strix Halo",
+      "bandwidth_gbs": 256,
+      "note": "Fitted on one owner's llama-bench rows (Beelink GTR9 Pro, 128 GB, Linux, Vulkan/RADV): two dense models for the read and the mixtures with the tool's own architecture costs. The three models of the comparison are not in the fit; they are its check.",
+      "rows": [
+        { "model": "Qwen3 0.6B", "quant": "Q8_0", "active_b": 0.596, "bits": 8.58, "cls": "dense", "tg": 266, "source": "https://github.com/hogeheer499-commits/strix-halo-guide/blob/main/BENCHMARKS.md", "date": "2026-05", "note": "0.64 GB file, tg128" },
+        { "model": "Llama 3.1 70B", "quant": "Q4_K_M", "active_b": 70.55, "bits": 4.82, "cls": "dense", "tg": 4.8, "source": "https://github.com/hogeheer499-commits/strix-halo-guide/blob/main/BENCHMARKS.md", "date": "2026-05", "note": "Ollama on Vulkan, 4.7 to 4.9; 42.5 GB file" },
+        { "model": "Qwen3-Coder 30B-A3B", "quant": "UD-Q4_K_XL", "active_b": 3.3, "bits": 4.63, "cls": "moe", "tg": 96.76, "source": "https://github.com/hogeheer499-commits/strix-halo-guide/blob/main/BENCHMARKS.md", "date": "2026-05-07", "note": "llama.cpp b9049, 17.7 GB file" },
+        { "model": "Gemma 4 26B-A4B", "quant": "UD-Q4_K_XL", "active_b": 4.0, "bits": 5.27, "cls": "moe", "tg": 74.8, "source": "https://github.com/hogeheer499-commits/strix-halo-guide/blob/main/BENCHMARKS.md", "date": "2026-06-11" },
+        { "model": "Llama 4 Scout 109B", "quant": "Q4_K_M", "active_b": 17.0, "bits": 4.81, "cls": "moe", "tg": 18.32, "source": "https://github.com/hogeheer499-commits/strix-halo-guide/blob/main/BENCHMARKS.md", "date": "2026-05", "note": "llama.cpp b8933, 65.4 GB" },
+        { "model": "Qwen3.6 35B-A3B", "quant": "Q4_0", "active_b": 3.0, "bits": 4.64, "cls": "moe_hybrid", "tg": 81.3, "source": "https://github.com/hogeheer499-commits/strix-halo-guide/blob/main/BENCHMARKS.md", "date": "2026-05", "note": "llama.cpp b9049" },
+        { "model": "Qwen3-Next 80B-A3B", "quant": "UD-Q4_K_XL", "active_b": 3.56, "bits": 4.63, "cls": "moe_hybrid", "tg": 62.09, "source": "https://github.com/hogeheer499-commits/strix-halo-guide/blob/main/BENCHMARKS.md", "date": "2026-08-30", "note": "llama.cpp b10687, 46.1 GB" },
+        { "model": "Nemotron 3 Super 120B-A12B", "quant": "UD-IQ4_XS", "active_b": 12.0, "bits": 4.3, "cls": "moe_hybrid", "tg": 18.5, "source": "https://github.com/hogeheer499-commits/strix-halo-guide/blob/main/BENCHMARKS.md", "date": "2026-06", "note": "18.24 to 18.93 over three builds, 64.5 GB" }
+      ]
+    },
+    "rtx-pro-6000-cuda": {
+      "name": "RTX PRO 6000 Blackwell (96 GB), llama.cpp CUDA",
+      "platform": "cuda",
+      "chip": "RTX PRO 6000",
+      "bandwidth_gbs": 1792,
+      "note": "Fitted on llama.cpp's own benchmark threads: a 7B dense model and gpt-oss-20b. gpt-oss-120b on the same card is the check.",
+      "rows": [
+        { "model": "Llama 2 7B", "quant": "Q4_0", "active_b": 6.74, "bits": 4.54, "cls": "dense", "tg": 274.2, "source": "https://github.com/ggml-org/llama.cpp/discussions/15013", "date": "2026", "note": "tg128, flash attention off" },
+        { "model": "gpt-oss-20b", "quant": "MXFP4", "active_b": 3.6, "bits": 4.63, "cls": "moe", "tg": 286.91, "source": "https://github.com/ggml-org/llama.cpp/discussions/15396", "date": "2025-08", "note": "tg128, build a6d3cfe" }
+      ]
+    }
+  },
+  "routes": [
+    {
+      "id": "gaming-pc-64",
+      "group": "pc",
+      "name": "Your gaming PC + 64 GB of RAM",
+      "detail": "a 12 GB card (RTX 5070) and 64 GB of DDR5; the model's experts sit in the PC's memory",
+      "condition": "new",
+      "price": { "usd": 815, "usd_high": 915, "what": "the 64 GB DDR5 kit; $1,580 to $1,750 with an RTX 5070 ($839.99)", "as_of": "2026-10-18", "grade": "directional", "sources": ["https://www.tomshardware.com/pc-components/ram/ram-price-index-2026-lowest-price-on-ddr5-and-ddr4-memory-of-all-capacities", "https://gpuprix.com/us/gpus/geforce-rtx-5070"] },
+      "memory_speed": { "gbs": 672, "text": "672 GB/s on the card · about 90 GB/s for the PC's memory", "note": "DDR5-5600 in two channels; the experts in system memory read at that speed, not the card's", "source": "https://www.techpowerup.com/gpu-specs/geforce-rtx-5070.c4218" },
+      "usable": { "gb": 72.6, "text": "about 73 GB: 12 on the card and 61 of the PC's 64", "note": "card memory less 1 GB, system memory less about 8 GB for Windows", "source": null },
+      "speed": {
+        "rule": "offload",
+        "card": { "name": "RTX 5070", "vram_gb": 11.9, "bandwidth_gbs": 672 },
+        "ram": { "gb": 60.7, "bandwidth_gbs": 90 },
+        "none_reason": "No plain run of these models on a 12 to 16 GB card with the experts in system memory is published, so the share of the PC's memory speed they reach is unknown. The published numbers are Strata's, with its speed-up on."
+      },
+      "measured": [
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q2", "kind": "speedup", "write": 94, "context": 4096, "engine": "Strata 0.1.26, MTP on", "build": "Q2_0 (Strata pack)", "variant": "RTX 5070 12 GB, Ryzen 5 7600, 64 GB DDR5-5200", "read": { "tok_s": 2650, "context": 32768, "engine": "Strata" }, "date": "2026-09", "grade": "engine authors", "sources": ["https://github.com/Niko1221/Strata/blob/main/docs/MODELS.md"], "note": "76 at 128K" },
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q3", "kind": "speedup", "write": 53, "write_range": [53, 62], "context": 4096, "engine": "Strata 0.1.26, MTP on", "build": "IQ3_S (62 for IQ3_XXS)", "variant": "RTX 5070 12 GB, 64 GB DDR5-5200", "read": { "tok_s": 1620, "context": 32768, "engine": "Strata" }, "date": "2026-09", "grade": "engine authors", "sources": ["https://github.com/Niko1221/Strata/blob/main/docs/MODELS.md"] },
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q4", "kind": "speedup", "label": "Strata, part on the SSD", "write": 7.8, "write_range": [7, 8.5], "context": 4096, "engine": "Strata, MTP on", "build": "UD-Q4_K_XL, part of it streamed from the SSD", "variant": "RTX 5070 12 GB, RAM budget 40 GiB", "date": "2026-09", "grade": "engine authors", "sources": ["https://github.com/Niko1221/Strata/blob/main/docs/UNSLOTH_Q4.md"], "note": "the 4-bit file does not fit 64 GB, so the rest streams from the SSD" }
+      ]
+    },
+    {
+      "id": "gaming-pc-128",
+      "group": "pc",
+      "name": "Your gaming PC + 128 GB of RAM",
+      "detail": "a 16 GB card (RTX 5060 Ti) and 128 GB of DDR5; the model's experts sit in the PC's memory",
+      "condition": "new",
+      "price": { "usd": 2339, "what": "the 128 GB DDR5 kit; about $3,100 with an RTX 5060 Ti 16 GB ($765.99)", "as_of": "2026-10-16", "grade": "directional", "sources": ["https://www.tomshardware.com/pc-components/ram/ram-price-index-2026-lowest-price-on-ddr5-and-ddr4-memory-of-all-capacities", "https://gpuprix.com/us/gpus/geforce-rtx-5060-ti-16gb"] },
+      "memory_speed": { "gbs": 448, "text": "448 GB/s on the card · about 90 GB/s for the PC's memory", "note": "DDR5-5600 in two channels", "source": "https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5060-family/" },
+      "usable": { "gb": 145.6, "text": "about 146 GB: 16 on the card and 129 of the PC's 128 GB (137 decimal)", "note": "card memory less 1 GB, system memory less about 8 GB for Windows", "source": null },
+      "speed": {
+        "rule": "offload",
+        "card": { "name": "RTX 5060 Ti 16 GB", "vram_gb": 16.2, "bandwidth_gbs": 448 },
+        "ram": { "gb": 129.4, "bandwidth_gbs": 90 },
+        "none_reason": "No plain run of these models on a 12 to 16 GB card with the experts in system memory is published, and nobody has published the 4-bit Flash Next copy on a 12 to 16 GB card at all."
+      },
+      "measured": [
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q3", "kind": "speedup", "write": 48.2, "write_range": [47.7, 48.2], "context": 3800, "engine": "Strata, MTP on, WSL2", "build": "IQ3_S", "variant": "RTX 5060 Ti 16 GB, Ryzen 7 3700X, 128 GB", "read": { "tok_s": 598, "context": 19200, "engine": "Strata" }, "date": "2026-10-09", "grade": "community", "sources": ["https://github.com/Niko1221/Strata/blob/main/docs/COMMUNITY_BENCHMARKS.md"] }
+      ]
+    },
+    {
+      "id": "strix-halo",
+      "group": "box",
+      "name": "Strix Halo mini PC",
+      "detail": "Ryzen AI Max+ 395 with 128 GB of shared memory",
+      "condition": "new",
+      "boxes": [
+        { "name": "Framework Desktop", "usd": 3449, "stock": "out of stock", "as_of": "2026-10-18", "source": "https://frame.work/products/desktop-diy-amd-aimax300/configuration/new" },
+        { "name": "GMKtec EVO-X2", "usd": 3499.99, "stock": "available", "as_of": "2026-10-19", "source": "https://www.gmktec.com/products/amd-ryzen%E2%84%A2-ai-max-395-evo-x2-ai-mini-pc" },
+        { "name": "Minisforum MS-S1 MAX", "usd": 3879, "stock": "ships mid-October", "as_of": "2026-10-18", "source": "https://store.minisforum.com/products/minisforum-ms-s1-max-mini-pc" }
+      ],
+      "price": { "usd": 3449, "usd_high": 3879, "what": "the box, 128 GB", "as_of": "2026-10-18", "grade": "official", "sources": ["https://frame.work/products/desktop-diy-amd-aimax300/configuration/new", "https://www.gmktec.com/products/amd-ryzen%E2%84%A2-ai-max-395-evo-x2-ai-mini-pc", "https://store.minisforum.com/products/minisforum-ms-s1-max-mini-pc"] },
+      "memory_speed": { "gbs": 256, "text": "256 GB/s", "source": "https://www.amd.com/en/products/processors/laptop/ryzen/ai-300-series/amd-ryzen-ai-max-plus-395.html" },
+      "usable": { "gb": 120.3, "text": "about 120 GB on Linux · 96 on Windows", "note": "Linux: the GPU's share can be raised (Strata's maintainers boot with 112 GiB); Windows: AMD's Variable Graphics Memory, up to 96 GB", "alt": { "gb": 96, "text": "96 GB on Windows", "when": "on Windows" }, "source": "https://github.com/Niko1221/Strata/blob/main/docs/STRIX_HALO.md" },
+      "speed": { "rule": "profile", "profile": "strix-halo-vulkan", "runtime": "gguf" },
+      "measured": [
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q4", "kind": "plain", "write": 27.9, "write_range": [27.16, 28.61], "context": 128, "engine": "llama.cpp Vulkan (b10687 and b11146)", "build": "unsloth UD-IQ4_XS (93.7 GB)", "facts": { "active_b": 6.67, "bits": 4.16, "quant_label": "UD-IQ4_XS", "cls": "flash_next", "runtime": "gguf" }, "date": "2026-09-26", "grade": "measured", "sources": ["https://github.com/hogeheer499-commits/strix-halo-guide/blob/main/BENCHMARKS.md"], "note": "tg128; reading 395 to 508 tok/s at a 512-token prompt" },
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q4", "kind": "speedup", "write": 53.6, "write_range": [50.5, 54.1], "context": 8192, "engine": "Strata (--spec 4 --mtp)", "build": "UD-IQ4_XS and UD-Q4_K_XL", "read": { "tok_s_range": [1100, 1320], "context": 32768, "engine": "Strata" }, "date": "2026-10", "grade": "engine authors", "sources": ["https://github.com/Niko1221/Strata/blob/main/docs/STRIX_HALO.md"], "note": "42.6 to 50.7 at 128K" },
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q3", "kind": "speedup", "write": 59.1, "context": 8192, "engine": "Strata (--spec 4 --mtp)", "build": "IQ3_S", "date": "2026-10", "grade": "engine authors", "sources": ["https://github.com/Niko1221/Strata/blob/main/docs/STRIX_HALO.md"] },
+        { "model_id": "gpt-oss-120b", "bucket": "Q4", "kind": "plain", "write": 55.57, "context": 128, "engine": "llama.cpp Vulkan b9049", "build": "MXFP4", "facts": { "active_b": 5.1, "bits": 4.34, "quant_label": "MXFP4", "cls": "moe", "runtime": "gguf" }, "read": { "tok_s": 478, "context": 32768, "engine": "llama.cpp Vulkan" }, "date": "2026-05-07", "grade": "measured", "sources": ["https://github.com/hogeheer499-commits/strix-halo-guide/blob/main/BENCHMARKS.md"], "note": "56.14 on b11146 (Sep 26)" },
+        { "model_id": "qwen3.8-27b", "bucket": "Q4", "kind": "plain", "write": 12.9, "context": 4096, "engine": "Ollama", "build": "Q4_K_M", "facts": { "active_b": 27.78, "bits": 4.84, "quant_label": "Q4_K_M", "cls": "dense", "runtime": "gguf" }, "date": "2026-09-26", "grade": "measured", "sources": ["https://github.com/hogeheer499-commits/strix-halo-guide/blob/main/BENCHMARKS.md"] },
+        { "model_id": "qwen3.8-27b", "bucket": "Q4", "kind": "speedup", "write": 22.7, "context": 4096, "engine": "Ollama, MTP on", "build": "Q4_K_M", "date": "2026-09-26", "grade": "measured", "sources": ["https://github.com/hogeheer499-commits/strix-halo-guide/blob/main/BENCHMARKS.md"] }
+      ],
+      "misses": {
+        "flash_next": "The file the owner ran is an IQ4_XS build, and on this box's Vulkan backend IQ files read slower than the other files the profile is fitted on: Nemotron 3 Super in UD-IQ4_XS misses by the same amount. The tool has no read factor for IQ files on AMD yet."
+      }
+    },
+    {
+      "id": "mac-studio-m1-ultra",
+      "group": "mac",
+      "name": "Mac Studio M1 Ultra",
+      "detail": "2022, 48- or 64-core GPU, 128 GB",
+      "condition": "used",
+      "price": { "usd": 3850, "usd_high": 4600, "what": "eBay sold listings, 10 Sep to 6 Oct", "as_of": "2026-10-06", "grade": "directional", "sources": ["https://macpro-la.com/blogs/news/mac-studio-price-guide-2026"] },
+      "memory_speed": { "gbs": 800, "text": "800 GB/s", "source": "https://support.apple.com/en-us/111900" },
+      "usable": { "gb": 115.4, "text": "107.5 GiB (115.4 GB) on macOS 26", "note": "macOS 26 hands the GPU 84 % of a 128 GB Mac with no Terminal change", "source": null },
+      "speed": { "rule": "engine", "machine": "mac-studio-m1-ultra", "memory_gb": 128, "runtime": "mlx" },
+      "measured": [
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q4", "kind": "plain", "write": 36.4, "write_range": [32.0, 40.1], "n": 3, "context": 4096, "engine": "oMLX 0.7, MTP off", "build": "Jundot oQ4e-mtp (106.3 GB)", "variant": "48-core GPU", "facts": { "active_b": 6.67, "bits": 4.72, "quant_label": "MLX-oQ4e", "cls": "flash_next", "runtime": "mlx" }, "read": { "tok_s": 475, "context": 32768, "engine": "oMLX" }, "date": "2026-10-16", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/b5dxzeiv", "https://omlx.ai/benchmarks/performance/imybwgxe", "https://omlx.ai/benchmarks/performance/tupyj86x", "https://omlx.ai/benchmarks/performance/prj1zcnn"], "note": "Three sessions on 16 Oct. The heavier oQ4e-fp16-mtp build writes about 25 on the same chip (24.7 at 1K, ud1u9tqj)." },
+        { "model_id": "gpt-oss-120b", "bucket": "Q4", "kind": "plain", "write": 40.4, "write_range": [39.0, 41.8], "n": 2, "context": 4096, "engine": "oMLX", "build": "MXFP4-Q8", "variant": "48-core GPU", "facts": { "active_b": 5.1, "bits": 4.34, "quant_label": "MLX-MXFP4-Q8", "cls": "moe", "runtime": "mlx" }, "date": "2026-04-05", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/e0v31yzj", "https://omlx.ai/benchmarks/performance/hkn2zsot"], "note": "Two runs from March and April 2026, the only published 48-core runs of this model. The 64-core GPU wrote 42.2 to 47.6 in the same weeks (96zmuedm, dbobson0) and 53.1 in October (u4dn11ad): oMLX got faster in between, so the two GPUs differ by about a tenth, not a quarter." },
+        { "model_id": "qwen3.8-27b", "bucket": "Q4", "kind": "plain", "write": 23.7, "n": 4, "context": 4096, "engine": "oMLX", "build": "MLX 4-bit", "variant": "48-core GPU", "facts": { "active_b": 27.78, "bits": 4.62, "quant_label": "MLX-4bit", "cls": "dense", "runtime": "mlx" }, "date": "2026-10-14", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/hpsa2yel", "https://omlx.ai/benchmarks/performance/w21xxfst", "https://omlx.ai/benchmarks/performance/lad5o68b", "https://omlx.ai/benchmarks/performance/810b58pt"], "note": "the 64-core GPU writes 28.7 (four submissions)" }
+      ],
+      "misses": {
+        "flash_next": "800 GB/s on paper, but this chip writes mixtures of experts well below its memory speed on either GPU: the tool's M1 Ultra profile is fitted on a small dense model in llama.cpp, and on MLX every expert layer costs this generation more than twice what it costs an M4 or M5.",
+        "mixtures": "The 48-core M1 Ultra writes mixtures of experts 5 to 10 % slower than the 64-core in runs from the same weeks (gpt-oss-20b 82 against 89, Qwen3-Coder-Next 46 against 49), and both below the tool's profile, which is fitted on a small dense model.",
+        "dense": "The 48-core M1 Ultra writes about a fifth slower than the tool's profile, which comes from the community table's faster rows."
+      }
+    },
+    {
+      "id": "mac-studio-m2-ultra",
+      "group": "mac",
+      "name": "Mac Studio M2 Ultra",
+      "detail": "2023, 60- or 76-core GPU, 128 GB",
+      "condition": "used",
+      "price": { "usd": 4199, "usd_high": 5399, "what": "eBay sold listings, 10 Sep to 6 Oct", "as_of": "2026-10-06", "grade": "directional", "sources": ["https://macpro-la.com/blogs/news/mac-studio-price-guide-2026"] },
+      "memory_speed": { "gbs": 800, "text": "800 GB/s", "source": "https://support.apple.com/en-us/111835" },
+      "usable": { "gb": 115.4, "text": "107.5 GiB (115.4 GB) on macOS 26", "note": "macOS 26 hands the GPU 84 % of a 128 GB Mac with no Terminal change", "source": null },
+      "speed": { "rule": "engine", "machine": "mac-studio-m2-ultra", "memory_gb": 128, "runtime": "mlx" },
+      "measured": [
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q4", "kind": "plain", "write": 64.4, "context": 4096, "engine": "oMLX 0.7, MTP off", "build": "Jundot oQ4e-mtp (106.3 GB)", "variant": "76-core GPU, the 192 GB version of the same chip", "facts": { "active_b": 6.67, "bits": 4.72, "quant_label": "MLX-oQ4e", "cls": "flash_next", "runtime": "mlx" }, "read": { "tok_s": 799, "context": 32768, "engine": "oMLX" }, "date": "2026-10-18", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/40uwefn8", "https://omlx.ai/benchmarks/performance/x5aj3z89", "https://omlx.ai/benchmarks/performance/sv7lt4w7", "https://omlx.ai/benchmarks/performance/f86u8kft"], "note": "68.4 and 65.6 at 1K in two more sessions" },
+        { "model_id": "gpt-oss-120b", "bucket": "Q4", "kind": "plain", "write": 64.7, "write_range": [60.2, 68.7], "n": 3, "context": 4096, "engine": "oMLX", "build": "MXFP4-Q8", "variant": "76-core GPU, 192 GB", "facts": { "active_b": 5.1, "bits": 4.34, "quant_label": "MLX-MXFP4-Q8", "cls": "moe", "runtime": "mlx" }, "date": "2026-08-20", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/2n6y4zx1", "https://omlx.ai/benchmarks/performance/v0cfvvn2", "https://omlx.ai/benchmarks/performance/llmznqkq"] },
+        { "model_id": "qwen3.8-27b", "bucket": "Q4", "kind": "plain", "write": 34.7, "context": 4096, "engine": "oMLX", "build": "MLX 4-bit", "variant": "76-core GPU, 192 GB", "facts": { "active_b": 27.78, "bits": 4.62, "quant_label": "MLX-4bit", "cls": "dense", "runtime": "mlx" }, "date": "2026-10-14", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/cd4ly4cb"], "note": "the 60-core GPU writes 32.0 (ten submissions, 64 GB)" }
+            ],
+      "misses": {
+        "flash_next": "The estimate is 18 % under this run. Since 0.17.1 the tool counts the 6.67B parameters a Flash Next token reads (it counted 6B), and the fixed cost per token of the bigger mixtures on MLX is one factor fitted across six models; Flash Next on the M2 Ultra runs faster than that factor says (64 to 68 tok/s in three sessions)."
+      }
+    },
+    {
+      "id": "mac-studio-m4-max",
+      "group": "mac",
+      "name": "Mac Studio M4 Max",
+      "detail": "2025, 40-core GPU, 128 GB",
+      "condition": "used",
+      "price": { "usd": 3100, "usd_high": 3700, "what": "eBay sold listings, 10 Sep to 6 Oct", "as_of": "2026-10-06", "grade": "directional", "sources": ["https://macpro-la.com/blogs/news/mac-studio-price-guide-2026"] },
+      "memory_speed": { "gbs": 546, "text": "546 GB/s", "source": "https://support.apple.com/en-us/122211" },
+      "usable": { "gb": 115.4, "text": "107.5 GiB (115.4 GB) on macOS 26", "note": "macOS 26 hands the GPU 84 % of a 128 GB Mac with no Terminal change", "source": null },
+      "speed": { "rule": "engine", "machine": "mac-studio-m4-max-40c", "memory_gb": 128, "runtime": "mlx" },
+      "measured": [
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q4", "kind": "plain", "write": 50.0, "context": 4096, "engine": "oMLX 0.7, MTP off", "build": "Jundot oQ4e-mtp (106.3 GB)", "facts": { "active_b": 6.67, "bits": 4.72, "quant_label": "MLX-oQ4e", "cls": "flash_next", "runtime": "mlx" }, "read": { "tok_s": 762, "context": 32768, "engine": "oMLX" }, "date": "2026-10-18", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/kciie4ga", "https://omlx.ai/benchmarks/performance/r30a8ki7", "https://omlx.ai/benchmarks/performance/8w8983xq"], "note": "50.9 at 1K in the same session; an unnamed 4-bit build writes 60.4 at 32K (8w8983xq), the run the reading speed comes from" },
+        { "model_id": "gpt-oss-120b", "bucket": "Q4", "kind": "plain", "write": 79.7, "write_range": [75.7, 80.3], "n": 6, "context": 4096, "engine": "oMLX", "build": "MXFP4-Q8", "facts": { "active_b": 5.1, "bits": 4.34, "quant_label": "MLX-MXFP4-Q8", "cls": "moe", "runtime": "mlx" }, "date": "2026-10-04", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/nwgdugai", "https://omlx.ai/benchmarks/performance/sv48fwim", "https://omlx.ai/benchmarks/performance/akv3to3p", "https://omlx.ai/benchmarks/performance/2qe4h9vl"] },
+        { "model_id": "qwen3.8-27b", "bucket": "Q4", "kind": "plain", "write": 28.3, "n": 5, "context": 4096, "engine": "oMLX", "build": "MLX 4-bit", "facts": { "active_b": 27.78, "bits": 4.62, "quant_label": "MLX-4bit", "cls": "dense", "runtime": "mlx" }, "date": "2026-10-14", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/w51ihbql", "https://omlx.ai/benchmarks/performance/3idxu4ie", "https://omlx.ai/benchmarks/performance/6cba28r0", "https://omlx.ai/benchmarks/performance/7es9hfog", "https://omlx.ai/benchmarks/performance/td9v2uqt"] }
+      ]
+    },
+    {
+      "id": "mac-studio-m5-max",
+      "group": "mac",
+      "name": "Mac Studio M5 Max",
+      "detail": "40-core GPU, 128 GB, 512 GB SSD",
+      "condition": "new",
+      "price": { "usd": 5099, "what": "Apple's price", "as_of": "2026-10-18", "grade": "official", "sources": ["https://www.apple.com/shop/buy-mac/mac-studio/m5-max-chip-18-core-cpu-40-core-gpu-128gb-memory-512gb-storage"] },
+      "memory_speed": { "gbs": 614, "text": "614 GB/s", "source": "https://www.apple.com/mac-studio/specs/" },
+      "usable": { "gb": 115.4, "text": "107.5 GiB (115.4 GB) on macOS 26", "note": "macOS 26 hands the GPU 84 % of a 128 GB Mac with no Terminal change", "source": null },
+      "speed": { "rule": "engine", "machine": "mac-studio-m5-max-40c", "memory_gb": 128, "runtime": "mlx" },
+      "measured": [
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q4", "kind": "plain", "write": 68.9, "write_range": [63.7, 77.2], "n": 13, "context": 4096, "engine": "oMLX 0.7.0 to 0.7.1rc1, MTP off", "build": "Jundot oQ4e-mtp (106.3 GB)", "facts": { "active_b": 6.67, "bits": 4.72, "quant_label": "MLX-oQ4e", "cls": "flash_next", "runtime": "mlx" }, "read": { "tok_s_range": [2201, 2966], "context": 32768, "engine": "oMLX" }, "date": "2026-10-17", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/qq51guei", "https://omlx.ai/benchmarks/performance/1k1y4wtq", "https://omlx.ai/benchmarks/performance/udina6si", "https://omlx.ai/benchmarks/performance/irhexf6y"], "note": "median of 13 runs, 13 to 17 Oct, 12 of them 63.7 to 77.2; 68.6 at 32K, about 61 at 128K" },
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q4", "kind": "speedup", "write": 64.3, "write_range": [36.2, 107.9], "n": 25, "context": 4096, "engine": "oMLX, Lightning MTP", "build": "Jundot oQ4e-mtp", "date": "2026-10-18", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/6s0arzwp", "https://omlx.ai/benchmarks/performance/tbzzydoc"], "note": "MTP does not reliably help on the community runs; Strata measures 94 on short greedy prompts, MTPLX 73.5 on a coding task" },
+        { "model_id": "gpt-oss-120b", "bucket": "Q4", "kind": "plain", "write": 83.1, "write_range": [66.3, 90.3], "n": 12, "context": 4096, "engine": "oMLX", "build": "MXFP4-Q8", "facts": { "active_b": 5.1, "bits": 4.34, "quant_label": "MLX-MXFP4-Q8", "cls": "moe", "runtime": "mlx" }, "date": "2026-10-15", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/r0jivd3q", "https://omlx.ai/benchmarks/performance/gloe41js"], "note": "median of 12 runs, 9 Jul to 15 Oct; the two most recent read 89.4 and 90.2" },
+        { "model_id": "qwen3.8-27b", "bucket": "Q4", "kind": "plain", "write": 32.4, "write_range": [29.1, 32.9], "n": 3, "context": 4096, "engine": "oMLX", "build": "MLX 4-bit", "facts": { "active_b": 27.78, "bits": 4.62, "quant_label": "MLX-4bit", "cls": "dense", "runtime": "mlx" }, "date": "2026-10-18", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/pqcpywvj", "https://omlx.ai/benchmarks/performance/8tq5buyr", "https://omlx.ai/benchmarks/performance/w78z8qq6"] },
+        { "model_id": "qwen3.8-27b", "bucket": "Q4", "kind": "speedup", "write": 65.1, "write_range": [59.7, 95.1], "n": 6, "context": 4096, "engine": "oMLX, MTP", "build": "oQ4e-mtp", "date": "2026-10-18", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance"] }
+      ]
+    },
+    {
+      "id": "macbook-pro-m5-max",
+      "group": "mac",
+      "name": "MacBook Pro M5 Max",
+      "detail": "14-inch or 16-inch, 40-core GPU, 128 GB, 2 TB",
+      "condition": "new",
+      "boxes": [
+        { "name": "14-inch", "usd": 6699, "stock": "orderable", "as_of": "2026-10-18", "source": "https://www.apple.com/shop/buy-mac/macbook-pro/14-inch-space-black-standard-display-apple-m5-max-chip-18-core-cpu-40-core-gpu-128gb-memory-2tb-storage" },
+        { "name": "16-inch", "usd": 6999, "stock": "orderable", "as_of": "2026-10-18", "source": "https://www.apple.com/shop/buy-mac/macbook-pro/16-inch-space-black-standard-display-apple-m5-max-chip-18-core-cpu-40-core-gpu-128gb-memory-2tb-storage" }
+      ],
+      "price": { "usd": 6699, "usd_high": 6999, "what": "Apple's price, 14-inch / 16-inch", "as_of": "2026-10-18", "grade": "official", "sources": ["https://www.apple.com/shop/buy-mac/macbook-pro/14-inch-space-black-standard-display-apple-m5-max-chip-18-core-cpu-40-core-gpu-128gb-memory-2tb-storage"] },
+      "memory_speed": { "gbs": 614, "text": "614 GB/s", "source": "https://support.apple.com/en-us/126318" },
+      "usable": { "gb": 115.4, "text": "107.5 GiB (115.4 GB) on macOS 26", "note": "macOS 26 hands the GPU 84 % of a 128 GB Mac with no Terminal change", "source": null },
+      "speed": { "rule": "engine", "machine": "macbook-pro-m5-max-40c", "memory_gb": 128, "runtime": "mlx" },
+      "measured_from": "mac-studio-m5-max",
+      "measured_note": "the same chip as the Mac Studio M5 Max; oMLX does not record whether a run was a laptop, and a laptop may slow down sooner under a long, heavy load",
+      "measured": []
+    },
+    {
+      "id": "surface-laptop-ultra",
+      "group": "box",
+      "name": "Surface Laptop Ultra",
+      "detail": "NVIDIA RTX Spark (N1X), 128 GB, Windows on Arm",
+      "condition": "new",
+      "price": { "usd": 5899.99, "what": "Microsoft's price, 128 GB / 1 TB", "as_of": "2026-10-18", "grade": "official", "sources": ["https://www.microsoft.com/en-us/store/configure/surface-laptop-ultra/8wg5vqp0x4b8"] },
+      "memory_speed": { "gbs": 300, "text": "about 300 GB/s", "note": "LPDDR5X-9400 on a 256-bit bus; NVIDIA quotes 300 GB/s", "source": "https://www.storagereview.com/news/nvidia-rtx-spark-pre-orders-n1x-laptop-desktop-tdp-mxc-dgx-station-for-windows" },
+      "usable": { "gb": 62.5, "text": "64 GB by default · 96 after a setting change and a restart", "note": "62.5 GB measured usable at the default", "alt": { "gb": 96, "text": "96 GB after a setting change", "when": "after the setting change" }, "source": "https://www.storagereview.com/review/microsoft-surface-laptop-ultra-for-business-review-rtx-spark-n1x" },
+      "speed": { "rule": "none", "none_reason": "Nobody has published a writing speed for these models on an RTX Spark, and the tool has no measured profile for its GPU. Tom's Hardware timed an agent task in minutes (Qwen 3.8 27B: 18.9 minutes against 24.7 for an M5 Max MacBook Pro), not tokens a second." },
+      "measured": []
+    },
+    {
+      "id": "dgx-spark",
+      "group": "box",
+      "name": "NVIDIA DGX Spark or ASUS GX10",
+      "detail": "the same GB10 chip, 128 GB",
+      "condition": "new",
+      "boxes": [
+        { "name": "NVIDIA DGX Spark (4 TB)", "usd": 6950, "stock": "not confirmed", "as_of": "2026-10-02", "source": "https://www.guru3d.com/story/idia-launches-64gb-dgx-spark-desktop-ai-system-for/" },
+        { "name": "ASUS Ascent GX10 (1 TB)", "usd": 6059.99, "stock": "backordered", "as_of": "2026-10-18", "source": "https://www.cdw.com/product/asus-ascent-gx10-ai-supercomputer-nvidia-gb10-superchip-taa-compliant-dgx-s/8534235" }
+      ],
+      "price": { "usd": 6059.99, "usd_high": 6950, "what": "ASUS GX10 at CDW / NVIDIA's press price for the DGX Spark", "as_of": "2026-10-18", "grade": "directional", "sources": ["https://www.cdw.com/product/asus-ascent-gx10-ai-supercomputer-nvidia-gb10-superchip-taa-compliant-dgx-s/8534235", "https://www.theregister.com/a/5300622"] },
+      "memory_speed": { "gbs": 273, "text": "273 GB/s", "source": "https://www.nvidia.com/en-us/products/workstations/dgx-spark/" },
+      "usable": { "gb": 120, "text": "about 120 GB", "note": "119 to 122 GB visible to the AI; nearer 105 under vLLM's memory settings", "source": "https://forums.developer.nvidia.com/t/qwen3-8-flash-next-on-1-2-and-4-dgx-sparks-with-nvidias-official-nvfp4-quant-64-tok-s-peak-single-stream/382476" },
+      "speed": { "rule": "engine", "machine": "nvidia-dgx-spark", "memory_gb": 128, "runtime": "gguf" },
+      "measured": [
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q4", "kind": "plain", "write": 20, "context": 4096, "engine": "vLLM", "engine_family": "vllm", "build": "NVFP4", "facts": { "active_b": 6.67, "bits": 4.5, "quant_label": "NVFP4", "cls": "flash_next", "runtime": "vllm" }, "date": "2026-08-30", "grade": "anecdotal", "sources": ["https://forums.developer.nvidia.com/t/single-dgx-spark-qwen-3-8-flash-next-at-43tok-sec-in-coding/381859"], "note": "one sentence: \"I couldn't find a kernel that gives me more than 20tok/s before MTP\"" },
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q4", "kind": "speedup", "write": 32.5, "n": 40, "context": 4096, "engine": "vLLM nightly, MTP4", "build": "nvidia/Qwen3.8-Flash-Next-NVFP4, table on disk", "read": { "tok_s": 1650, "context": 32768, "engine": "vLLM", "note": "cold" }, "date": "2026-09-05", "grade": "measured", "sources": ["https://forums.developer.nvidia.com/t/qwen3-8-flash-next-on-1-2-and-4-dgx-sparks-with-nvidias-official-nvfp4-quant-64-tok-s-peak-single-stream/382476"], "note": "median over 40 real prompts; 21.7 on prose" },
+        { "model_id": "gpt-oss-120b", "bucket": "Q4", "kind": "plain", "write": 60.6, "context": 512, "engine": "llama.cpp CUDA", "build": "MXFP4", "facts": { "active_b": 5.1, "bits": 4.34, "quant_label": "MXFP4", "cls": "moe", "runtime": "gguf" }, "read": { "tok_s": 1027, "context": 32768, "engine": "llama.cpp" }, "date": "2026-02", "grade": "measured", "sources": ["https://github.com/ggml-org/llama.cpp/discussions/16578"], "note": "the llama.cpp maintainers' run at an empty context; 40.6 at 32K" },
+        { "model_id": "qwen3.8-27b", "bucket": "Q4", "kind": "plain", "write": 9.7, "context": 4096, "engine": "vLLM", "engine_family": "vllm", "build": "NVFP4", "facts": { "active_b": 27.78, "bits": 6.74, "quant_label": "NVFP4", "cls": "dense", "runtime": "vllm" }, "date": "2026-08-24", "grade": "measured", "sources": ["https://forums.developer.nvidia.com/t/comprehensive-qwen3-8-27b-study-on-dgx-sparks-quantization-speculative-decoding-and-tp-dp-scaling/381102"], "note": "emretoktas_openzeka on NVIDIA's forum, 128 tokens out" },
+        { "model_id": "qwen3.8-27b", "bucket": "Q4", "kind": "speedup", "write": 18.5, "context": 4096, "engine": "vLLM, MTP", "build": "NVFP4", "date": "2026-08-24", "grade": "measured", "sources": ["https://forums.developer.nvidia.com/t/comprehensive-qwen3-8-27b-study-on-dgx-sparks-quantization-speculative-decoding-and-tp-dp-scaling/381102"] }
+      ],
+      "misses": {
+        "flash_next": "The published plain runs use vLLM, which writes these models on the Spark well below what llama.cpp reaches on the same memory speed; the tool's Spark profile is llama.cpp's. Nobody has published llama.cpp on the Spark for Flash Next.",
+        "dense": "The published 27B run uses vLLM with an NVFP4 file; the tool's Spark profile is llama.cpp's, which has no run of this model to check against."
+      }
+    },
+    {
+      "id": "two-sparks-64",
+      "group": "multi",
+      "name": "Two linked 64 GB DGX Sparks",
+      "detail": "GB10 boxes from Acer, ASUS, Dell, Gigabyte, HP or MSI, joined by their 200 Gb/s ports",
+      "condition": "preorder",
+      "price": { "usd": 9998, "what": "2 × $4,999, on sale from 23 Oct", "as_of": "2026-10-02", "grade": "official", "sources": ["https://blogs.nvidia.com/blog/local-ai-dgx-spark-64gb-sync/"] },
+      "memory_speed": { "gbs": 273, "text": "273 GB/s in each box", "note": "a layer split reads one box at a time, so the pair writes at one box's speed less the link", "source": "https://www.nvidia.com/en-us/products/workstations/dgx-spark/" },
+      "usable": { "gb": 117.4, "text": "about 117 GB across the two", "note": "each 64 GB box less 8 GB, less 2 GB per box for the link (METHODOLOGY §4); NVIDIA lists about 56 GiB per box", "source": null },
+      "speed": { "rule": "cluster", "machine": "nvidia-dgx-spark", "memory_gb": 64, "machines": 2, "split": "layer", "runtime": "gguf" },
+      "measured": [],
+      "misses_from": "dgx-spark"
+    },
+    {
+      "id": "mac-studio-m5-ultra",
+      "group": "big",
+      "name": "Mac Studio M5 Ultra, 256 GB",
+      "detail": "there is no 128 GB M5 Ultra; 64-core GPU, 1 TB",
+      "condition": "new",
+      "price": { "usd": 9499, "what": "Apple's price; the 96 GB version is $5,499 and too tight for the regular 4-bit Flash Next copy", "as_of": "2026-10-18", "grade": "official", "sources": ["https://www.apple.com/shop/buy-mac/mac-studio/m5-ultra-chip-30-core-cpu-64-core-gpu-256gb-memory-1tb-storage"] },
+      "memory_speed": { "gbs": 1200, "text": "1.2 TB/s", "source": "https://www.apple.com/mac-studio/specs/" },
+      "usable": { "gb": 239.1, "text": "about 239 GB on macOS 26", "note": "macOS 26 hands the GPU 87 % of a 256 GB Mac", "source": null },
+      "speed": { "rule": "engine", "machine": "mac-studio-m5-ultra", "memory_gb": 256, "runtime": "mlx" },
+      "measured": [
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q4", "kind": "plain", "unsettled": true, "write": 42.3, "context": 4096, "engine": "oMLX, MTP off", "build": "Jundot oQ4e-mtp", "variant": "64-core GPU", "facts": { "active_b": 6.67, "bits": 4.72, "quant_label": "MLX-oQ4e", "cls": "flash_next", "runtime": "mlx" }, "date": "2026-10-18", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/pjh7qqai", "https://omlx.ai/benchmarks/performance/f6k9q114"], "note": "Plain runs disagree: one 64-core session writes 42.3 at 4K and 45.8 at 1K, an 80-core machine 124.1 at 1K. Too few to call." },
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q4", "kind": "speedup", "write": 115, "write_range": [109.1, 120.0], "context": 16384, "engine": "oMLX, Lightning MTP", "build": "oQ4e-mtp (an uncensored variant)", "variant": "64-core GPU", "read": { "tok_s_range": [3001, 3554], "context": 32768, "engine": "oMLX" }, "date": "2026-10-18", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/z0lc6ts9", "https://omlx.ai/benchmarks/performance/5qu03moy", "https://omlx.ai/benchmarks/performance/phgu7gqu", "https://omlx.ai/benchmarks/performance/lwysgfrt"], "note": "16K to 128K, likely one submitter" },
+        { "model_id": "gpt-oss-120b", "bucket": "Q4", "kind": "plain", "write": 99.7, "context": 4096, "engine": "oMLX", "build": "mxfp4-bf16", "variant": "64-core GPU", "facts": { "active_b": 5.1, "bits": 4.34, "quant_label": "MLX-MXFP4", "cls": "moe", "runtime": "mlx" }, "date": "2026-09-30", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/hiep24w0"], "note": "the 80-core GPU writes 107.5 to 108.6 (three runs)" },
+        { "model_id": "qwen3.8-27b", "bucket": "Q4", "kind": "plain", "write": 53.45, "n": 4, "context": 4096, "engine": "oMLX", "build": "MLX 4-bit", "variant": "64-core GPU, the 96 GB version", "facts": { "active_b": 27.78, "bits": 4.62, "quant_label": "MLX-4bit", "cls": "dense", "runtime": "mlx" }, "date": "2026-10-14", "grade": "measured", "sources": ["https://omlx.ai/benchmarks/performance/p1rvr4gg", "https://omlx.ai/benchmarks/performance/su9gq20t", "https://omlx.ai/benchmarks/performance/emx47h0e", "https://omlx.ai/benchmarks/performance/cdigoskn"] }
+      ],
+      "misses": {
+        "moe": "The only 4K run is the mxfp4-bf16 file, which keeps the attention and embeddings in bf16 and so reads more per token than its bits over the total parameters say; the M5 Max's MXFP4-Q8 file writes 90 at 8K on this chip (one session, en1xtexc). The M5 Ultra's profile is still an assumption: no row of the table the profiles are fitted on exists for it."
+      }
+    },
+    {
+      "id": "four-mi50",
+      "group": "big",
+      "name": "Four-card PC: 4 × AMD MI50 32 GB",
+      "detail": "used data-centre cards, 128 GB across four cards, plus a PC with four full-length slots",
+      "condition": "used",
+      "price": { "usd": 1200, "usd_high": 3300, "what": "four cards (eBay asking prices); one creator priced a whole build at $3,800 to $5,600", "as_of": "2026-10-18", "grade": "directional", "sources": ["https://www.ebay.com/itm/306045919612"] },
+      "memory_speed": { "gbs": 1024, "text": "1,024 GB/s on each card", "note": "a layer split reads one card at a time", "source": "https://www.techpowerup.com/gpu-specs/radeon-instinct-mi50.c3335" },
+      "usable": { "gb": 133.5, "text": "about 134 GB in four pools of 33", "note": "each 32 GB card less 1 GB", "source": null },
+      "speed": { "rule": "none", "none_reason": "No four-card run of these models is published, and the MI50 has no measured profile in the tool; splitting a model across cards adds memory, not speed, unless it runs in tensor parallel." },
+      "measured": []
+    },
+    {
+      "id": "four-r9700",
+      "group": "big",
+      "name": "Four-card PC: 4 × Radeon AI PRO R9700",
+      "detail": "new 32 GB cards, 128 GB across four, plus a PC with four full-length slots",
+      "condition": "new",
+      "price": { "usd": 6800, "what": "four cards at about $1,700 each (lowest new in stock)", "as_of": "2026-10-18", "grade": "directional", "sources": ["https://gpuprix.com/us/gpus/radeon-ai-pro-r9700"] },
+      "memory_speed": { "gbs": 640, "text": "640 GB/s on each card", "source": "https://www.amd.com/en/products/graphics/workstations/radeon-ai-pro/ai-9000-series/amd-radeon-ai-pro-r9700.html" },
+      "usable": { "gb": 133.5, "text": "about 134 GB in four pools of 33", "note": "each 32 GB card less 1 GB", "source": null },
+      "speed": { "rule": "none", "none_reason": "No four-card run of these models is published, and the R9700 has no measured profile in the tool. The closest published runs use one R9700 with system memory and Strata's speed-up." },
+      "measured": []
+    },
+    {
+      "id": "rtx-pro-6000",
+      "group": "big",
+      "name": "RTX PRO 6000 + 128 GB of RAM",
+      "detail": "one 96 GB workstation card in a PC with 128 GB of DDR5",
+      "condition": "new",
+      "price": { "usd": 18338, "what": "the card ($15,999, lowest new in stock) and a 128 GB DDR5 kit ($2,339), before the rest of the PC", "as_of": "2026-10-18", "grade": "directional", "sources": ["https://gpuprix.com/us/gpus/rtx-pro-6000-blackwell", "https://www.tomshardware.com/pc-components/ram/ram-price-index-2026-lowest-price-on-ddr5-and-ddr4-memory-of-all-capacities"] },
+      "memory_speed": { "gbs": 1792, "text": "about 1.8 TB/s on the card · about 90 GB/s for the PC's memory", "source": "https://www.nvidia.com/en-us/products/workstations/professional-desktop-gpus/rtx-pro-6000/" },
+      "usable": { "gb": 102.1, "text": "96 GB on the card + 129 GB of the PC's memory", "note": "96 GiB (103.1 GB) less 1 GB on the card; a model that does not fit on the card spills into the PC's memory and writes at its speed", "source": null },
+      "speed": {
+        "rule": "profile",
+        "profile": "rtx-pro-6000-cuda",
+        "runtime": "gguf",
+        "table_off_memory": true,
+        "card": { "name": "RTX PRO 6000", "vram_gb": 102.1, "bandwidth_gbs": 1792 },
+        "ram": { "gb": 129.4, "bandwidth_gbs": 90 },
+        "none_reason": "The model does not fit on the card, so part of it would run from the PC's memory, and no such run is published."
+      },
+      "measured": [
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q4", "kind": "plain", "write": 84.5, "write_range": [81, 88], "context": 4096, "engine": "vLLM", "engine_family": "vllm", "build": "primitive-ai NVFP4, the table in system memory", "facts": { "active_b": 6.67, "bits": 4.5, "quant_label": "NVFP4", "cls": "flash_next", "runtime": "vllm" }, "read": { "tok_s": 12000, "context": 32768, "engine": "vLLM" }, "date": "2026-08-28", "grade": "measured", "sources": ["https://forum.level1techs.com/t/qwen-3-8-flash-next-nvfp4-on-a-single-rtx-pro-6000-and-system-memory/254579"], "note": "one owner; \"you need to have 100GB spare system memory\"" },
+        { "model_id": "qwen3.8-flash-next", "bucket": "Q4", "kind": "speedup", "write": 146, "write_range": [120, 173], "context": 4096, "engine": "vLLM, MTP", "build": "primitive-ai NVFP4", "date": "2026-08-28", "grade": "measured", "sources": ["https://forum.level1techs.com/t/qwen-3-8-flash-next-nvfp4-on-a-single-rtx-pro-6000-and-system-memory/254579"] },
+        { "model_id": "gpt-oss-120b", "bucket": "Q4", "kind": "plain", "write": 196.31, "context": 128, "engine": "llama.cpp CUDA", "build": "MXFP4", "facts": { "active_b": 5.1, "bits": 4.34, "quant_label": "MXFP4", "cls": "moe", "runtime": "gguf" }, "read": { "tok_s": 4503, "context": 32768, "engine": "llama.cpp" }, "date": "2025-08", "grade": "measured", "sources": ["https://github.com/ggml-org/llama.cpp/discussions/15396"], "note": "tg128, build a6d3cfe; 170.6 on the Max-Q card" }
+      ],
+      "misses": {
+        "flash_next": "The published run uses vLLM; the card's profile is llama.cpp's, fitted on two small models, and the Flash Next fixed cost was measured on a Mac.",
+        "moe": "The card's profile rests on two small models; on gpt-oss-120b it reads high, so llama.cpp's own number is shown."
+      }
+    }
+  ]
+}

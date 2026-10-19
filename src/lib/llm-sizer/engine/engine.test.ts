@@ -223,6 +223,40 @@ describe('the matrix (METHODOLOGY §9 with the data\'s numbers)', () => {
     expect(cell.flags).toContain('q8-is-repack');
   });
 
+  it('Flash Next on a 128 GB M5 Max with MLX runs as Mac engines run it: the n-gram table on the SSD, about 80 GB in memory', () => {
+    const flash = loadModel('qwen3.8-flash-next');
+    const mlx = { runtime: 'mlx' as const };
+    const at32k = evaluateCell(flash, mbp, s(128, mlx), factors);
+    expect(at32k.verdict).toBe('runs');
+    expect(at32k.quant?.label).toBe('MLX-4bit');
+    expect(at32k.need.weightsGb).toBeCloseTo(79.96, 1);
+    expect(at32k.need.ssdGb).toBeCloseTo(31.56, 1);
+    expect(at32k.need.totalGb).toBeCloseTo(86.7, 1); // 80.7 GiB of the 107.5 GiB macOS gives the GPU
+    expect(at32k.availability.availableGb).toBeCloseTo(115.45, 1);
+    expect(at32k.flags).toContain('table-on-ssd');
+    expect(at32k.flags).not.toContain('ssd-build');
+    // the normal estimate: the speed rows it is fitted on ran with the table on the SSD
+    expect(at32k.speed.tokS!).toBeGreaterThan(45);
+    expect(at32k.speed.runtimeApplied).toBe('mlx');
+    expect(at32k.prefill?.tokS).not.toBeNull();
+    expect(evaluateCell(flash, mbp, s(128, { ...mlx, contextTokens: 8192 }), factors).need.totalGb).toBeCloseTo(82.5, 1);
+    expect(evaluateCell(flash, mbp, s(128, { ...mlx, contextTokens: 131072 }), factors).verdict).toBe('runs');
+    // the standard GGUF file keeps the table in its shards: 119 GB does not fit without the override
+    const gguf = evaluateCell(flash, mbp, s(128), factors);
+    expect(gguf.verdict).toBe('compromise');
+    expect(gguf.need.ssdGb).toBe(0);
+    expect(gguf.flags).not.toContain('table-on-ssd');
+    // a 64 GB Mac still needs the engram-on-SSD GGUF build, and the flag follows the build that runs
+    const small = evaluateCell(flash, mbp, s(64, mlx), factors);
+    expect(small.verdict).toBe('compromise');
+    expect(small.fix?.changes.some((c) => c.kind === 'ssdPaged')).toBe(true);
+    expect(small.flags).not.toContain('table-on-ssd');
+    // no MLX engine on a DGX Spark: the MLX file is counted whole there
+    const onSpark = evaluateCell(flash, spark, s(128, mlx), factors);
+    expect(onSpark.need.weightsGb).toBe(111.52);
+    expect(onSpark.flags).not.toContain('table-on-ssd');
+  });
+
   it('invariants over the fixes', () => {
     const rows = catalogRows(loadMachines(), { ...base, workApps: 16, contextTokens: 131072 });
     for (const id of ['glm-5.3-flash', 'glm-5.2', 'deepseek-v4-flash-0731', 'qwen3.8-flash-next']) {

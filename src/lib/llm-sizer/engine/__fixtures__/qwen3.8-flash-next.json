@@ -8,7 +8,7 @@
  "variant": "instruct",
  "released": "2026-08-24",
  "params_total": 179999981459,
- "params_active": 6000000000,
+ "params_active": 6670000000,
  "params_active_source": "override",
  "context_max": 262144,
  "native_bits": 16.0,
@@ -34,7 +34,7 @@
  "status": "active",
  "superseded_by": null,
  "notes": [
-  "125B main model plus a 51B-parameter n-gram table (38 to 54 GB at the community builds that keep it on the SSD); 6B parameters active per token (Qwen's release notes). With the table on the SSD the memory need is the resident part only."
+  "125B main model plus a 51B-parameter n-gram table (38 to 54 GB at the community builds that keep it on the SSD); 6.67B parameters read per generated token, counted from the model's tensors (Qwen's release notes say 6B, which leaves out the 0.64B output layer). With the table on the SSD the memory need is the resident part only."
  ],
  "four_bit_native": false,
  "architecture": {

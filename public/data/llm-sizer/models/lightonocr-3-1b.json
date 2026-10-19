@@ -1,0 +1,147 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "lightonocr-3-1b",
+ "name": "LightOnOCR-3-1B",
+ "provider": "lightonai",
+ "hf_repo": "lightonai/LightOnOCR-3-1B",
+ "url": "https://huggingface.co/lightonai/LightOnOCR-3-1B",
+ "variant": "instruct",
+ "released": "2026-10-07",
+ "params_total": 1005647872,
+ "params_active": 1005647872,
+ "params_active_source": "dense",
+ "context_max": 16384,
+ "native_bits": 16.0,
+ "license": {
+  "name": "apache-2.0",
+  "url": null,
+  "commercial": true,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "mistral3",
+  "text-generation",
+  "ocr",
+  "document-understanding",
+  "visual-grounding",
+  "vision-language",
+  "tables",
+  "forms",
+  "image-text-to-text",
+  "conversational",
+  "eval-results",
+  "endpoints_compatible"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "qwen3",
+  "attention": "gqa",
+  "layers": 28,
+  "kv_layers": 28,
+  "sliding_layers": 0,
+  "linear_layers": 0,
+  "kv_heads": 8,
+  "head_dim": 128,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": null,
+  "window_size": null,
+  "full_bytes_per_token_8bit": 57344,
+  "sliding_bytes_per_token_8bit": 0,
+  "linear_state_bytes": 0,
+  "hidden_size": 1024,
+  "experts_total": null,
+  "experts_active": null,
+  "experts_shared": null,
+  "moe_intermediate": null,
+  "moe_layers": null,
+  "accel_mtp": false,
+  "accel_dflash_repo": null,
+  "accel_dspark_repo": null,
+  "conventional_assumed": false,
+  "source": "config",
+  "config_sha": "72a6b32f4bd66fb4",
+  "notes": [],
+  "kv_cache_gb_at_128k_8bit": 7.52
+ },
+ "quants": [
+  {
+   "repo": "lightonai/LightOnOCR-3-1B",
+   "url": "https://huggingface.co/lightonai/LightOnOCR-3-1B",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.0,
+   "size_gb": 2.01,
+   "size_bytes": 2011367464,
+   "quantizer": "official",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "mlx-community/LightOnOCR-3-1B-mlx-4bit",
+   "url": "https://huggingface.co/mlx-community/LightOnOCR-3-1B-mlx-4bit",
+   "format": "mlx",
+   "label": "MLX-4bit",
+   "bits": 54.37,
+   "size_gb": 6.83,
+   "size_bytes": 6834390370,
+   "quantizer": "mlx-community",
+   "file_count": 3,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "mlx-community/LightOnOCR-3-1B-mlx-8bit",
+   "url": "https://huggingface.co/mlx-community/LightOnOCR-3-1B-mlx-8bit",
+   "format": "mlx",
+   "label": "MLX-8bit",
+   "bits": 56.74,
+   "size_gb": 7.13,
+   "size_bytes": 7132382936,
+   "quantizer": "mlx-community",
+   "file_count": 3,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  }
+ ],
+ "reference": {
+  "q4": {
+   "repo": "mlx-community/LightOnOCR-3-1B-mlx-4bit",
+   "label": "MLX-4bit"
+  },
+  "q8": {
+   "repo": "mlx-community/LightOnOCR-3-1B-mlx-8bit",
+   "label": "MLX-8bit"
+  },
+  "mlx4": {
+   "repo": "mlx-community/LightOnOCR-3-1B-mlx-4bit",
+   "label": "MLX-4bit"
+  },
+  "native": {
+   "repo": "lightonai/LightOnOCR-3-1B",
+   "label": "BF16"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": null,
+  "dspark": null
+ },
+ "timestamps": {
+  "first_seen": "2026-10-18T07:57:01.866257+00:00",
+  "last_checked": "2026-10-18T07:57:01.866257+00:00",
+  "last_changed": "2026-10-18T07:57:01.866257+00:00"
+ },
+ "generated_at": "2026-10-19T08:44:16+00:00",
+ "sha": "b138aeb8ec5fdfa2"
+}

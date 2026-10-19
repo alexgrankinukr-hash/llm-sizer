@@ -245,6 +245,23 @@ describe('the engram-on-SSD build in the machine view', () => {
     const studio = modelSummary(fn, pick('mac-studio-m5-ultra:256'), defaultState(), factors);
     expect(studio.best).toMatchObject({ kind: 'bucket', bucket: 'Q8' });
   });
+
+  it('with MLX a 128 GB M5 Max runs the plain Q4 file, its table on the SSD, at every context', () => {
+    const fn = loadModel('qwen3.8-flash-next');
+    const mlx = { ...defaultState(), runtime: 'mlx' as const };
+    for (const key of ['macbook-pro-m5-max:128', 'mac-studio-m5-max:128']) {
+      const summary = modelSummary(fn, pick(key), mlx, factors);
+      expect(summary.status, key).toBe('asked');
+      expect(summary.marker, key).toBe('run');
+      expect(summary.best, key).toMatchObject({ kind: 'bucket', bucket: 'Q4', verdict: 'runs', quant: { label: 'MLX-4bit' } });
+      expect(summary.best!.tokS!, key).toBeGreaterThan(45);
+      expect(summary.best!.result.need.totalGb, key).toBeCloseTo(86.7, 1);
+      expect(summary.best!.result.need.ssdGb, key).toBeCloseTo(31.56, 1);
+      expect(summary.longest, key).toMatchObject({ ctx: 131072, verdict: 'runs' });
+    }
+    // with GGUF the standard Q4 file keeps the table in memory: a 3-bit file is the best that runs
+    expect(modelSummary(fn, pick('mac-studio-m5-max:128'), defaultState(), factors).best).toMatchObject({ bucket: 'Q3' });
+  });
 });
 
 describe('linked pools in the machine view', () => {

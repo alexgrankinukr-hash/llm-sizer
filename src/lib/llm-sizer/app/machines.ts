@@ -234,7 +234,13 @@ export function slimFactors(f: Factors): Factors {
         read_factor: terms(sm.read_factor),
         architecture_cost_ms: terms(sm.architecture_cost_ms),
         attention_ms_per_32k: terms(sm.attention_ms_per_32k),
-        mlx: { overhead_factor: terms(sm.mlx.overhead_factor), attention_ms_per_32k: terms(sm.mlx.attention_ms_per_32k) as SpeedModel['mlx']['attention_ms_per_32k'] },
+        mlx: {
+          overhead_factor: terms(sm.mlx.overhead_factor),
+          attention_ms_per_32k: terms(sm.mlx.attention_ms_per_32k) as SpeedModel['mlx']['attention_ms_per_32k'],
+          // the expert-layer rule for small mixtures (0.17); without it the client would fall back to the group factor
+          ...(sm.mlx.expert_layer ? { expert_layer: { ms_per_layer: terms(sm.mlx.expert_layer.ms_per_layer) } } : {}),
+          ...(sm.mlx.index_ms_per_32k ? { index_ms_per_32k: terms(sm.mlx.index_ms_per_32k) as NonNullable<SpeedModel['mlx']['index_ms_per_32k']> } : {}),
+        },
         ...(sm.validation
           ? {
               validation: {

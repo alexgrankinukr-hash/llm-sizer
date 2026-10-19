@@ -10,6 +10,7 @@
  * Each section starts with its key letter; `(` prefixes an optional quantizer name. `b` is the budget in US
  * dollars, `p` the form-factor preference (`l` laptop, `d` desktop). An `m` section (the owned machine, 0.9.5 to 0.10.2) is ignored.
  * The every-chip view is `vchips*<model>*<bucket>*<context>`, then `r` for reading and `n` for the smallest memory that runs it.
+ * The 128 GB comparison is `vroutes*<model>*<bucket>*<context>`; `vroutes` alone opens it at its defaults.
  */
 import { BUCKET_RE, isBucketSetting, isLabelSetting, isSpecialSetting, SIMPLE_BUCKETS, type Bucket } from './quants';
 import type { KvBits, Platform, Runtime } from '../engine/types';
@@ -17,7 +18,10 @@ import { customMachine, customModelFull, customModelQuick, type CustomMachineInp
 import type { AppState, CustomModel, ModelColumn, View } from './state';
 import { clampBudget, clampMinTokS, MAX_COLUMNS, MAX_GROUPS, STATE_DEFAULTS } from './state';
 import { parseRowKey, type LinkedInfo } from './machines';
-import { normaliseLinked } from './state';
+import { normaliseLinked, ROUTES_VIEW_DEFAULT } from './state';
+
+/** the 128 GB comparison's fields in link order, at their defaults (dropped from the end of the link) */
+const ROUTES_DEFAULTS = [ROUTES_VIEW_DEFAULT.model, ROUTES_VIEW_DEFAULT.bucket, String(ROUTES_VIEW_DEFAULT.ctx / 1024)];
 
 const VERSION = '1';
 const SECTION = '~';
@@ -142,6 +146,12 @@ function encView(v: View): string | null {
   }
   if (v.kind === 'machine') return ['machine', encText(v.row), ...(v.expanded ? ['x'] : [])].join(FIELD);
   if (v.kind === 'chips') return ['chips', v.model, v.bucket, encCtx(v.ctx), ...(v.mode === 'read' ? ['r'] : []), ...(v.memory === 'min' ? ['n'] : [])].join(FIELD);
+  if (v.kind === 'routes') {
+    // the defaults drop off the end, so a link from the video can be as short as `vroutes`
+    const parts = ['routes', v.model, v.bucket, encCtx(v.ctx)];
+    while (parts.length > 1 && parts[parts.length - 1] === ROUTES_DEFAULTS[parts.length - 2]) parts.pop();
+    return parts.join(FIELD);
+  }
   return null;
 }
 
@@ -153,6 +163,11 @@ function decView(text: string): View {
     const bucket = SIMPLE_BUCKETS.includes(f[2] as Bucket) ? (f[2] as Bucket) : 'Q4';
     const flags = f.slice(4);
     return { kind: 'chips', model: f[1], bucket, ctx: decCtx(f[3] ?? '') ?? 32768, mode: flags.includes('r') ? 'read' : 'write', memory: flags.includes('n') ? 'min' : 'max' };
+  }
+  if (f[0] === 'routes') {
+    const model = f[1] && ID_RE.test(f[1]) ? f[1] : ROUTES_VIEW_DEFAULT.model;
+    const bucket = SIMPLE_BUCKETS.includes(f[2] as Bucket) ? (f[2] as Bucket) : ROUTES_VIEW_DEFAULT.bucket;
+    return { kind: 'routes', model, bucket, ctx: decCtx(f[3] ?? '') ?? ROUTES_VIEW_DEFAULT.ctx };
   }
   if (f[0] === 'model') {
     const column = num(f[1]);
@@ -275,6 +290,7 @@ export function decodeState(text: string | null | undefined, fallback: AppState,
   if (state.view.kind === 'model' && state.view.column >= state.columns.length) state.view = { kind: 'table' };
   if ((state.view.kind === 'speed' || state.view.kind === 'memory') && !state.groups.some((g) => 'row' in state.view && state.view.row.startsWith(`${g}:`))) state.view = { kind: 'table' };
   if (state.view.kind === 'chips' && state.view.model.startsWith('custom-') && !customModelIds.has(state.view.model)) state.view = { kind: 'table' };
+  if (state.view.kind === 'routes' && state.view.model.startsWith('custom-') && !customModelIds.has(state.view.model)) state.view = { ...state.view, model: ROUTES_VIEW_DEFAULT.model };
   if (state.view.kind === 'machine') {
     // any catalog machine may be picked, not only a table row; with the catalog known, a machine that is neither in it nor typed into the link falls back
     const p = parseRowKey(state.view.row);
@@ -286,6 +302,8 @@ export function decodeState(text: string | null | undefined, fallback: AppState,
   if (pref === 'l') state.formFactor = 'laptop';
   else if (pref === 'd') state.formFactor = 'desktop';
 
+  // a link that names only the 128 GB comparison (the video's short link) opens it over the default table
+  if (!state.groups.length && !state.columns.length && state.view.kind === 'routes') return { state: { ...fallback, view: state.view }, notices, ok: true };
   if (!state.groups.length && !state.columns.length) return { state: fallback, notices: notices.length ? notices : ['this link had nothing to show'], ok: false };
   return { state, notices, ok: true };
 }

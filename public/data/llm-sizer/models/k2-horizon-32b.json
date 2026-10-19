@@ -262,7 +262,7 @@
    "repo": "bartowski/K2-Horizon-32B-GGUF",
    "url": "https://huggingface.co/bartowski/K2-Horizon-32B-GGUF",
    "format": "gguf",
-   "label": "Q4_K_M",
+   "label": "IQ4_NL",
    "bits": 5.07,
    "size_gb": 22.04,
    "size_bytes": 22038839232,
@@ -275,7 +275,7 @@
    "repo": "bartowski/K2-Horizon-32B-GGUF",
    "url": "https://huggingface.co/bartowski/K2-Horizon-32B-GGUF",
    "format": "gguf",
-   "label": "IQ4_NL",
+   "label": "Q4_K_M",
    "bits": 5.07,
    "size_gb": 22.04,
    "size_bytes": 22038839232,
@@ -440,6 +440,6 @@
   "last_checked": "2026-10-08T10:22:00.476470+00:00",
   "last_changed": "2026-10-08T10:22:00.476470+00:00"
  },
- "generated_at": "2026-10-16T08:04:08+00:00",
- "sha": "ebb94117c3035d6a"
+ "generated_at": "2026-10-19T08:44:16+00:00",
+ "sha": "cfb77b6f68dadee7"
 }

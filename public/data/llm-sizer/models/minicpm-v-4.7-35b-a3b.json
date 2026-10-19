@@ -72,6 +72,227 @@
  },
  "quants": [
   {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "IQ2_XXS",
+   "bits": 2.45,
+   "size_gb": 10.79,
+   "size_bytes": 10792560832,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "IQ2_XS",
+   "bits": 2.56,
+   "size_gb": 11.26,
+   "size_bytes": 11264624832,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "IQ2_S",
+   "bits": 2.72,
+   "size_gb": 11.98,
+   "size_bytes": 11978909888,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "IQ2_M",
+   "bits": 3.01,
+   "size_gb": 13.23,
+   "size_bytes": 13233035456,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q2_K",
+   "bits": 3.14,
+   "size_gb": 13.84,
+   "size_bytes": 13838698688,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "IQ3_XXS",
+   "bits": 3.54,
+   "size_gb": 15.58,
+   "size_bytes": 15580903616,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q3_K_S",
+   "bits": 3.71,
+   "size_gb": 16.32,
+   "size_bytes": 16317921472,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "IQ3_XS",
+   "bits": 3.71,
+   "size_gb": 16.32,
+   "size_bytes": 16317921472,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q3_K_M",
+   "bits": 3.94,
+   "size_gb": 17.34,
+   "size_bytes": 17343559872,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q3_K_L",
+   "bits": 4.15,
+   "size_gb": 18.27,
+   "size_bytes": 18266306752,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "IQ3_M",
+   "bits": 4.31,
+   "size_gb": 18.96,
+   "size_bytes": 18957449408,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "IQ4_XS",
+   "bits": 4.52,
+   "size_gb": 19.89,
+   "size_bytes": 19886160064,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q4_0",
+   "bits": 4.53,
+   "size_gb": 19.94,
+   "size_bytes": 19942108608,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_S",
+   "bits": 4.76,
+   "size_gb": 20.95,
+   "size_bytes": 20946204864,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q4_1",
+   "bits": 4.99,
+   "size_gb": 21.97,
+   "size_bytes": 21973243328,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "IQ4_NL",
+   "bits": 5.07,
+   "size_gb": 22.32,
+   "size_bytes": 22317742272,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_M",
+   "bits": 5.07,
+   "size_gb": 22.32,
+   "size_bytes": 22317742272,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
    "repo": "mlx-community/MiniCPM-V-4.7-35B-A3B-mxfp4",
    "url": "https://huggingface.co/mlx-community/MiniCPM-V-4.7-35B-A3B-mxfp4",
    "format": "mlx",
@@ -111,6 +332,45 @@
    "first_seen": "2026-10-15"
   },
   {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_L",
+   "bits": 5.48,
+   "size_gb": 24.11,
+   "size_bytes": 24112904384,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q5_K_S",
+   "bits": 5.71,
+   "size_gb": 25.14,
+   "size_bytes": 25136314560,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q5_K_M",
+   "bits": 6.13,
+   "size_gb": 26.98,
+   "size_bytes": 26983905472,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
    "repo": "mlx-community/MiniCPM-V-4.7-35B-A3B-5bit",
    "url": "https://huggingface.co/mlx-community/MiniCPM-V-4.7-35B-A3B-5bit",
    "format": "mlx",
@@ -124,6 +384,32 @@
    "first_seen": "2026-10-15"
   },
   {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q6_K_S",
+   "bits": 6.67,
+   "size_gb": 29.37,
+   "size_bytes": 29372561600,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q6_K",
+   "bits": 6.98,
+   "size_gb": 30.74,
+   "size_bytes": 30737807552,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
    "repo": "mlx-community/MiniCPM-V-4.7-35B-A3B-6bit",
    "url": "https://huggingface.co/mlx-community/MiniCPM-V-4.7-35B-A3B-6bit",
    "format": "mlx",
@@ -135,6 +421,32 @@
    "file_count": 7,
    "qat": false,
    "first_seen": "2026-10-15"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q6_K_L",
+   "bits": 7.34,
+   "size_gb": 32.3,
+   "size_bytes": 32298088640,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 8.39,
+   "size_gb": 36.91,
+   "size_bytes": 36913920192,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-18"
   },
   {
    "repo": "mlx-community/MiniCPM-V-4.7-35B-A3B-mxfp8",
@@ -161,6 +473,19 @@
    "file_count": 8,
    "qat": false,
    "first_seen": "2026-10-15"
+  },
+  {
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "format": "gguf",
+   "label": "BF16",
+   "bits": 15.76,
+   "size_gb": 69.38,
+   "size_bytes": 69375191104,
+   "quantizer": "bartowski",
+   "file_count": 2,
+   "qat": false,
+   "first_seen": "2026-10-18"
   },
   {
    "repo": "openbmb/MiniCPM-V-4.7-35B-A3B",
@@ -191,12 +516,12 @@
  ],
  "reference": {
   "q4": {
-   "repo": "mlx-community/MiniCPM-V-4.7-35B-A3B-4bit",
-   "label": "MLX-4bit"
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "label": "Q4_K_M"
   },
   "q8": {
-   "repo": "mlx-community/MiniCPM-V-4.7-35B-A3B-8bit",
-   "label": "MLX-8bit"
+   "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
+   "label": "Q8_0"
   },
   "mlx4": {
    "repo": "mlx-community/MiniCPM-V-4.7-35B-A3B-4bit",
@@ -214,9 +539,9 @@
  },
  "timestamps": {
   "first_seen": "2026-10-15T08:11:19.665471+00:00",
-  "last_checked": "2026-10-15T08:11:19.665471+00:00",
+  "last_checked": "2026-10-18T07:57:06.460849+00:00",
   "last_changed": "2026-10-15T08:11:19.665471+00:00"
  },
- "generated_at": "2026-10-16T08:04:08+00:00",
- "sha": "4f5f561a211aee5c"
+ "generated_at": "2026-10-19T08:44:16+00:00",
+ "sha": "03c491523515296d"
 }

@@ -20,6 +20,7 @@ export const ABOUT_ANCHORS = {
   runtime: '62-runtime-gguf-llamacpp--lm-studio-vs-mlx',
   acceleration: '63-acceleration-mtp-and-draft-models-dflash--dspark',
   feelsLike: '65-feels-like--the-translation-next-to-every-speed',
+  routes: '66-every-way-to-get-128-gb',
   otherMachines: '7-other-machines-the-same-math-different-facts',
   limitations: '8-known-limitations-read-before-arguing-with-a-number',
   examples: '9-worked-examples',

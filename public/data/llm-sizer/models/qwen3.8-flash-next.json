@@ -60,7 +60,7 @@
   "moe_intermediate": 640,
   "moe_layers": 48,
   "accel_mtp": true,
-  "accel_dflash_repo": "tcclaviger/Qwen3.8-Flash-Next-Dflash2",
+  "accel_dflash_repo": "incoai/Qwen3.8-Flash-Next-DFlash2",
   "accel_dspark_repo": null,
   "conventional_assumed": false,
   "source": "config",
@@ -761,14 +761,14 @@
   }
  ],
  "drafts": {
-  "dflash": "tcclaviger/Qwen3.8-Flash-Next-Dflash2",
+  "dflash": "incoai/Qwen3.8-Flash-Next-DFlash2",
   "dspark": null
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:24:51.887134+00:00",
-  "last_checked": "2026-10-16T08:03:32.785330+00:00",
+  "last_checked": "2026-10-19T08:43:34.522736+00:00",
   "last_changed": "2026-09-02T20:24:51.887134+00:00"
  },
- "generated_at": "2026-10-16T08:04:08+00:00",
- "sha": "8ae8069af7d5a383"
+ "generated_at": "2026-10-19T08:44:16+00:00",
+ "sha": "c18227661cb0707a"
 }

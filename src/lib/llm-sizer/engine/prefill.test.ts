@@ -91,7 +91,7 @@ describe('the prefill estimate on real cells', () => {
   it('Flash Next is its own class, a special build has no estimate, and a compromise carries the fix\'s configuration', () => {
     const fn = loadModel('qwen3.8-flash-next');
     const studio = evaluateCell(fn, machineById('mac-studio-m5-ultra'), s(256), factors).prefill!;
-    expect(studio.parts).toMatchObject({ cls: 'flash_next', classFactor: 0.31 });
+    expect(studio.parts).toMatchObject({ cls: 'flash_next', classFactor: 0.34 });
     const ssd = evaluateCell(fn, mbp, s(64, { quant: fn.special_builds![0] }), factors).prefill!;
     expect(ssd.tokS).toBeNull();
     expect(ssd.notes[0]).toMatch(/streams from the SSD/);

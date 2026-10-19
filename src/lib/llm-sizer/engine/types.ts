@@ -94,20 +94,41 @@ export interface ClusterFactors {
   dispatch_caveat: { min_layers: number; note?: string };
 }
 
-export type ArchClass = 'dense' | 'moe' | 'moe_hybrid' | 'moe_latent' | 'deepseek_v4';
+export type ArchClass = 'dense' | 'moe' | 'moe_hybrid' | 'moe_latent' | 'deepseek_v4' | 'flash_next';
 export type QuantFamily = 'mlx' | 'q4_0' | 'q8_0' | 'f16' | 'mxfp4' | 'gguf_kquant';
 export type MlxGroup = 'dense' | 'small_active_moe_m4plus' | 'small_active_moe_pre_m4' | 'moe_other';
 
 /** The fixed-cost ("floor") speed model as calibrate.py writes it (METHODOLOGY §6.1). */
 export type MlxContextGroup = 'pre_m5' | 'm5plus';
 
+/**
+ * The MLX fixed cost of a mixture under 6B active (METHODOLOGY §6.2): expert layers × ms per layer for the chip
+ * generation. Absent in factor files before 0.17; those run the group factor.
+ */
+export interface ExpertLayerTerms {
+  /** keyed M1, M2, …: the generations with enough rows of their own */
+  ms_per_layer: Record<string, FittedTerm>;
+  n?: number;
+  rows_by_generation?: Record<string, number>;
+  groups?: string[];
+}
+
 export interface SpeedModel {
   kind: 'multiplier' | 'floor';
   read_factor: Record<string, FittedTerm>;
   architecture_cost_ms: Record<string, FittedTerm>;
   attention_ms_per_32k: Record<string, FittedTerm>;
-  /** the long-context cost per 32K on MLX, per chip generation: M1 to M4 (`pre_m5`) and M5 and newer (`m5plus`) */
-  mlx: { overhead_factor: Record<string, FittedTerm>; attention_ms_per_32k: Record<MlxContextGroup, FittedTerm> };
+  /**
+   * the long-context cost per 32K on MLX, per chip generation: M1 to M4 (`pre_m5`) and M5 and newer (`m5plus`);
+   * `expert_layer` is the small-mixture fixed cost per expert layer (absent before 0.17); `index_ms_per_32k` is a
+   * sparse-attention model's index pass over the whole context (absent in data sets before 0.17.3)
+   */
+  mlx: {
+    overhead_factor: Record<string, FittedTerm>;
+    attention_ms_per_32k: Record<MlxContextGroup, FittedTerm>;
+    expert_layer?: ExpertLayerTerms;
+    index_ms_per_32k?: Record<MlxContextGroup, FittedTerm>;
+  };
   validation?: {
     holdout_rule?: string | null;
     n_train: number;
@@ -426,6 +447,9 @@ export interface Speed {
   archClass?: ArchClass;
   archCostMs?: number;
   attnMs?: number;
+  /** the expert-layer rule (small mixtures on MLX): the layers it counted and the ms per layer it charged */
+  expertLayers?: number;
+  expertLayerMs?: number;
   /** present on a linked pool */
   cluster?: ClusterSpeed;
 }
@@ -461,6 +485,7 @@ export type CellFlag =
   | 'unmeasured-chip'
   | 'kv-precision-note'
   | 'ssd-build'
+  | 'table-on-ssd'
   | 'linked-layer'
   | 'linked-tensor'
   | 'linked-dispatch';

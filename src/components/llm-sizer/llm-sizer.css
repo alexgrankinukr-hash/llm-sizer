@@ -610,13 +610,18 @@ input[type='range'].lls-range {
 @media (min-width: 768px) {
   .lls-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-/* six tiles: one row once each has room for its line of text */
-@media (min-width: 1200px) {
-  .lls-tiles { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+@media (min-width: 768px) and (max-width: 1199px) {
+  .lls-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  /* seven tiles four per row: the last one takes the two empty cells */
+  .lls-tiles > .lls-tile:nth-child(7):last-child { grid-column: span 2; }
 }
-/* five tiles two per row leave one alone: it takes the whole last row */
+/* seven tiles: one row once each has room for its two lines of text */
+@media (min-width: 1200px) {
+  .lls-tiles { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+}
+/* an odd count two per row leaves one alone: it takes the whole last row */
 @media (max-width: 767px) {
-  .lls-tiles > .lls-tile:nth-child(5):last-child { grid-column: 1 / -1; }
+  .lls-tiles > .lls-tile:nth-child(odd):last-child { grid-column: 1 / -1; }
 }
 .lls-tile {
   text-align: left;
@@ -1184,4 +1189,133 @@ sup.lls-note {
   .lls-chipcell .v {
     font-size: 22px;
   }
+}
+
+/* ---- "Every way to 128 GB": the routes table (a table on wide charts, stacked cards when the chart is narrow) ---- */
+.lls-routes { container-type: inline-size; }
+.lls-routes-wrap {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+.lls-routes-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.lls-routes-table thead th {
+  text-align: left;
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--color-muted);
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+.lls-routes-group th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-light);
+  padding: 16px 12px 6px;
+  background: #fcfbf9;
+  border-bottom: 1px solid var(--color-border);
+}
+.lls-routes-row > th,
+.lls-routes-row > td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+  text-align: left;
+}
+.lls-routes-row[data-open] > th,
+.lls-routes-row[data-open] > td { border-bottom-color: transparent; background: #fdfcf9; }
+.lls-routes-name {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1.3;
+  color: var(--color-text);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.lls-routes-name:focus-visible { outline: 2px solid var(--lls-focus); outline-offset: 2px; border-radius: 4px; }
+.lls-routes-chev { flex: none; margin-top: 2px; color: var(--color-light); transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1); }
+.lls-routes-name[aria-expanded='true'] .lls-routes-chev { transform: rotate(180deg); }
+.lls-routes-cond {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 6px;
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-muted);
+  vertical-align: 1px;
+}
+.lls-routes-sub { display: block; font-size: 12px; color: var(--color-light); line-height: 1.35; margin-top: 2px; }
+.lls-routes-warn { color: var(--lls-gold-text); }
+.lls-routes-num { font-size: 16px; font-weight: 600; color: var(--color-text); }
+.lls-routes-tag {
+  display: inline-block;
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 18px;
+  vertical-align: 1px;
+  color: var(--color-muted);
+  background: #f1efea;
+}
+.lls-routes-tag[data-kind='measured'] { color: #5c470d; background: color-mix(in srgb, #d4af37 22%, #fff); }
+.lls-routes-tag[data-kind='none'] { background: transparent; border: 1px dashed var(--color-border); line-height: 16px; }
+.lls-routes-fit { display: inline-flex; align-items: flex-start; gap: 8px; }
+.lls-routes-fit > .lls-run,
+.lls-routes-fit > .lls-ring { width: 14px; height: 14px; flex: none; margin-top: 2px; }
+.lls-routes-fit > .lls-ring { border-width: 2px; }
+.lls-routes-fit > .lls-ring::after { width: 4px; height: 4px; }
+.lls-routes-fit > .lls-run { box-shadow: none; }
+.lls-routes-fit > .lls-no { flex: none; margin-top: 8px; width: 14px; }
+.lls-routes-detail-row > td { padding: 0 12px 14px; border-bottom: 1px solid var(--color-border); background: #fdfcf9; }
+.lls-routes-detail { max-width: 72ch; }
+.lls-routes-note > td {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--color-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+.lls-routes-table tbody tr:last-child > * { border-bottom: 0; }
+
+@container (max-width: 880px) {
+  .lls-routes-table, .lls-routes-table tbody, .lls-routes-table tr, .lls-routes-table th, .lls-routes-table td { display: block; }
+  .lls-routes-table thead { display: none; }
+  .lls-routes-group th { padding: 14px 12px 6px; }
+  .lls-routes-row {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 12px;
+    padding: 12px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .lls-routes-row[data-open] { border-bottom-color: transparent; background: #fdfcf9; }
+  .lls-routes-row > th, .lls-routes-row > td { padding: 0; border: 0; background: transparent !important; }
+  .lls-routes-row > th { grid-column: 1 / -1; }
+  .lls-routes-row > td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 11px;
+    color: var(--color-light);
+    margin-bottom: 2px;
+  }
+  .lls-routes-name { min-height: 28px; }
+  .lls-routes-detail-row > td { padding: 0 12px 14px; }
 }

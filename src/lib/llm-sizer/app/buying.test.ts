@@ -230,6 +230,22 @@ describe('the engram-on-SSD build on the map', () => {
     expect(at12.qualifying).toEqual([]); // every mark on this build has no speed figure: a minimum cannot be met
     expect(at12.recommendation.pick).toBeNull();
   });
+  it('with MLX the plain Q4 file runs on the 128 GB Macs with its table on the SSD, and the Spark counts the file whole', () => {
+    const mlx = { ...base, runtime: 'mlx' as const };
+    const atlas = atlasFor('qwen3.8-flash-next', mlx);
+    expect(atlas.options[0].quant?.label).toBe('MLX-4bit');
+    const map = buyingMap(atlas, 'Q4', ANY, toggles);
+    const studio = map.marks.find((m) => m.key === 'mac-studio-m5-max:128')!;
+    expect(studio).toMatchObject({ status: 'fits', qualifies: true, priceUsd: 5099 });
+    expect(studio.result.verdict).toBe('runs');
+    expect(studio.result.need.totalGb).toBeCloseTo(86.7, 1);
+    expect(studio.result.need.ssdGb).toBeCloseTo(31.56, 1);
+    expect(studio.tokS!).toBeGreaterThan(45);
+    expect(map.marks.find((m) => m.key === 'macbook-pro-m5-max:128')).toMatchObject({ status: 'fits', qualifies: true });
+    expect(map.recommendation.pick?.key).toBe('mac-studio-m5-max:128');
+    expect(map.marks.find((m) => m.key === 'nvidia-dgx-spark:128')!.result.need.weightsGb).toBe(111.52);
+  });
+
   it('a column that is the SSD build gets it as its own segment, named for what it is', () => {
     const atlas = atlasFor('qwen3.8-flash-next', base, { special: 0 });
     expect(atlas.options.map((o) => [o.key, o.label, o.isColumn])).toEqual([['Q4', 'Q4', false], ['Q8', 'Q8', false], ['column', 'SSD build', true]]);

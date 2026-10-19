@@ -140,7 +140,7 @@ def test_live_fit_is_deterministic_and_gated():
     assert v["holdout_median_err"] <= GATE_HOLDOUT_MEDIAN
     assert v["gate"]["passed"] is True
     assert sm["kind"] in ("multiplier", "floor")
-    for cls in ("dense", "moe", "moe_hybrid", "moe_latent", "deepseek_v4"):
+    for cls in ("dense", "moe", "moe_hybrid", "moe_latent", "deepseek_v4", "flash_next"):
         assert sm["architecture_cost_ms"][cls]["source"] in ("fitted", "assumed", "definition")
     assert CLAMP_READ[0] <= sm["read_factor"]["gguf_kquant"]["value"] <= CLAMP_READ[1]
     for g, t in sm["mlx"]["overhead_factor"].items():

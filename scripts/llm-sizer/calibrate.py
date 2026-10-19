@@ -192,10 +192,13 @@ def main() -> int:
     speed_model = {
         "kind": SPEED_MODEL_KIND,
         "_formula": ("ms per token = GB read per token ÷ (b_eff_ratio × spec bandwidth) × 1000 × read_factor[quant family] (the K-quant factor on the platforms it lists: Apple silicon) "
-                     "+ (t0_ms + architecture_cost_ms[class]) × mlx overhead_factor[group] (GGUF: 1) "
-                     "+ (attention_ms_per_32k[attention] + mlx attention_ms_per_32k[chip generation: pre_m5 | m5plus]) × context ÷ 32768; tok/s = 1000 ÷ ms"),
-        "_classes": "dense | moe (mixture of experts) | moe_hybrid (mixture of experts with linear-attention layers) | moe_latent (mixture of experts with MLA or latent attention) | deepseek_v4 (per-model override)",
-        "_groups": "MLX overhead groups: dense | small_active_moe_m4plus (under 6B active, M4 generation and newer) | small_active_moe_pre_m4 | moe_other. MLX context-cost groups: pre_m5 (M1 to M4, and any chip whose generation is not known) | m5plus (M5 and newer)",
+                     "+ (t0_ms + architecture_cost_ms[class]) × mlx overhead_factor[group] (GGUF: 1); on MLX a mixture under 6B active instead "
+                     "+ expert layers × mlx expert_layer.ms_per_layer[chip generation; one without rows takes the previous generation's] "
+                     "+ (attention_ms_per_32k[attention] + mlx attention_ms_per_32k[chip generation: pre_m5 | m5plus]) × attended ÷ 32768 "
+                     "+ mlx index_ms_per_32k[chip generation] × context ÷ 32768 (sparse-attention models on MLX); tok/s = 1000 ÷ ms. "
+                     "attended = the context, or a sparse-attention model's budget on MLX (constants.ts:SPARSE_ATTENTION, 2,048 for Flash Next); the cache in GB read per token counts the attended tokens"),
+        "_classes": "dense | moe (mixture of experts) | moe_hybrid (mixture of experts with linear-attention layers) | moe_latent (mixture of experts with MLA or latent attention) | deepseek_v4 (per-model override) | flash_next (the n-gram-table architecture, Qwen 3.8 Flash Next)",
+        "_groups": "MLX overhead groups: dense | small_active_moe_m4plus (under 6B active, M4 generation and newer) | small_active_moe_pre_m4 | moe_other; the two small_active groups take the expert-layer rule wherever the model has a layer count, and their overhead factors only where it has none. MLX context-cost groups: pre_m5 (M1 to M4, and any chip whose generation is not known) | m5plus (M5 and newer)",
         **speed_model,
         "bin_checks": bin_checks,
     }

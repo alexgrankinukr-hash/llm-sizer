@@ -6,16 +6,17 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { loadModel } from '../engine/__fixtures__/load';
+import { expertLayersOf } from '../engine/speed';
 
 interface Row {
   id: string;
   model_id?: string;
   active_params_b: number;
-  arch: { kv_bytes_per_token_8bit: number };
+  arch: { kv_bytes_per_token_8bit: number; moe_layers?: number };
 }
 const rows = (JSON.parse(readFileSync(new URL('../../../../public/data/llm-sizer/validation.json', import.meta.url), 'utf8')) as { rows: Row[] }).rows;
 /** every validation model that is in the catalog has a fixture copied from the export */
-const CATALOG_IDS = ['deepseek-v4-flash-0731', 'gemma-4-26b-a4b', 'gemma-4-31b', 'gemma-4-e4b', 'glm-5.2', 'glm-5.3-flash', 'gpt-oss-120b', 'gpt-oss-20b', 'kimi-k2.6', 'qwen3-coder-next', 'qwen3.5-397b-a17b', 'qwen3.6-35b-a3b', 'qwen3.8-27b'];
+const CATALOG_IDS = ['deepseek-v4-flash-0731', 'gemma-4-26b-a4b', 'gemma-4-31b', 'gemma-4-e4b', 'glm-5.2', 'glm-5.3-flash', 'gpt-oss-120b', 'gpt-oss-20b', 'kimi-k2.6', 'qwen3-coder-next', 'qwen3.5-397b-a17b', 'qwen3.6-35b-a3b', 'qwen3.8-27b', 'qwen3.8-flash-next'];
 
 describe('validation rows agree with the catalog records they name', () => {
   it('every catalog model named by a row has a fixture', () => {
@@ -31,6 +32,8 @@ describe('validation rows agree with the catalog records they name', () => {
       for (const r of rows.filter((x) => x.model_id === id)) {
         expect(Math.abs(r.active_params_b - active), `${r.id}: row ${r.active_params_b}B, catalog ${active.toFixed(2)}B`).toBeLessThanOrEqual(0.05 + 0.005 * active);
         expect(r.arch.kv_bytes_per_token_8bit, `${r.id}: cache bytes`).toBe(m.architecture?.full_bytes_per_token_8bit);
+        // the expert-layer rule reads the row's count; it must be the one the engine reads from the record
+        if (r.arch.moe_layers !== undefined) expect(r.arch.moe_layers, `${r.id}: expert layers`).toBe(expertLayersOf(m));
       }
     });
   }

@@ -46,7 +46,7 @@ def test_speed_model_block_and_profiles():
     f = json.loads((PUBLIC_DATA_DIR / "factors.json").read_text())
     sm = f["speed_model"]
     assert sm["kind"] in ("multiplier", "floor")
-    assert set(sm["architecture_cost_ms"]) == {"dense", "moe", "moe_hybrid", "moe_latent", "deepseek_v4"}
+    assert set(sm["architecture_cost_ms"]) == {"dense", "moe", "moe_hybrid", "moe_latent", "deepseek_v4", "flash_next"}
     assert sm["architecture_cost_ms"]["dense"]["value"] == 0.0
     assert set(sm["mlx"]["overhead_factor"]) == {"dense", "small_active_moe_m4plus", "small_active_moe_pre_m4", "moe_other"}
     e = f["efficiency"]

@@ -44,7 +44,7 @@ describe('the first screen', () => {
 
   it('layout carries headers, rails, prices, aria labels and footnotes', () => {
     expect(layout.headers.map((h) => h.name)).toEqual(['Qwen 3.8 27B', 'Qwen 3.8 Flash Next', 'GLM-5.3 Flash', 'Kimi K3']);
-    expect(layout.headers[1].params).toBe('180B · 6B active');
+    expect(layout.headers[1].params).toBe('180B · 6.7B active');
     expect(layout.headers[0].quantLabel).toBe('Q4');
     expect(layout.headers[0].contextLabel).toBe('32K');
     expect(layout.rails.map((r) => r.label)).toEqual(['Mac mini · M6', 'Mac Studio · M5 Ultra', 'NVIDIA DGX Spark']);

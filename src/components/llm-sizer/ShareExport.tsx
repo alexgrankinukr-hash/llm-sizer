@@ -39,7 +39,7 @@ export function ShareExport({ encoded, shareUrl, view }: ShareExportProps) {
   async function download() {
     setBusy(true);
     try {
-      const imageView = view === 'memory' || view === 'machine' || view === 'chips' ? 'table' : view; // the memory chart, the machine view and the every-chip grid have no image yet
+      const imageView = view === 'memory' || view === 'machine' || view === 'chips' || view === 'routes' ? 'table' : view; // the memory chart, the machine view, the every-chip grid and the 128 GB comparison have no image yet
       const res = await fetch(`/api/llm-sizer/image.png?s=${encodeURIComponent(encoded)}&size=table&view=${imageView}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const blob = await res.blob();

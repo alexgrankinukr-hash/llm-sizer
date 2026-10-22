@@ -63,7 +63,7 @@
   "moe_layers": null,
   "accel_mtp": false,
   "accel_dflash_repo": null,
-  "accel_dspark_repo": "rasyosef/gemma-4-E4B-it-dspark",
+  "accel_dspark_repo": "rasyosef/gemma-4-E4B-it-dspark-GGUF",
   "conventional_assumed": false,
   "source": "config",
   "config_sha": "f2530646aa8c6c45",
@@ -737,6 +737,19 @@
    "first_seen": "2026-09-02"
   },
   {
+   "repo": "ggml-org/gemma-4-E4B-GGUF",
+   "url": "https://huggingface.co/ggml-org/gemma-4-E4B-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 8.04,
+   "size_gb": 8.03,
+   "size_bytes": 8031223872,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
    "repo": "lmstudio-community/gemma-4-E4B-it-GGUF",
    "url": "https://huggingface.co/lmstudio-community/gemma-4-E4B-it-GGUF",
    "format": "gguf",
@@ -867,6 +880,19 @@
    "first_seen": "2026-09-02"
   },
   {
+   "repo": "ggml-org/gemma-4-E4B-GGUF",
+   "url": "https://huggingface.co/ggml-org/gemma-4-E4B-GGUF",
+   "format": "gguf",
+   "label": "BF16",
+   "bits": 15.06,
+   "size_gb": 15.05,
+   "size_bytes": 15053078592,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
    "repo": "bartowski/google_gemma-4-E4B-it-GGUF",
    "url": "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF",
    "format": "gguf",
@@ -919,6 +945,19 @@
    "first_seen": "2026-09-02"
   },
   {
+   "repo": "google/gemma-4-E4B",
+   "url": "https://huggingface.co/google/gemma-4-E4B",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.0,
+   "size_gb": 15.99,
+   "size_bytes": 15992595884,
+   "quantizer": "official",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
    "repo": "google/gemma-4-E4B-it",
    "url": "https://huggingface.co/google/gemma-4-E4B-it",
    "format": "safetensors",
@@ -953,13 +992,13 @@
  "special_builds": [],
  "drafts": {
   "dflash": null,
-  "dspark": "rasyosef/gemma-4-E4B-it-dspark"
+  "dspark": "rasyosef/gemma-4-E4B-it-dspark-GGUF"
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:27:10.073710+00:00",
-  "last_checked": "2026-10-19T08:43:42.435441+00:00",
+  "last_checked": "2026-10-22T08:29:59.447036+00:00",
   "last_changed": "2026-09-02T20:27:10.073710+00:00"
  },
- "generated_at": "2026-10-19T08:44:16+00:00",
- "sha": "abac3d83d3b75c62"
+ "generated_at": "2026-10-22T08:30:35+00:00",
+ "sha": "554574f7a398b38a"
 }

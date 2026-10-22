@@ -1,0 +1,142 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "laguna-s-2.1",
+ "name": "Laguna-S-2.1",
+ "provider": "poolside",
+ "hf_repo": "poolside/Laguna-S-2.1",
+ "url": "https://huggingface.co/poolside/Laguna-S-2.1",
+ "variant": "instruct",
+ "released": "2026-07-13",
+ "params_total": 117561977600,
+ "params_active": 8892803840,
+ "params_active_source": "estimated",
+ "context_max": 1048576,
+ "native_bits": 16.0,
+ "license": {
+  "name": "openmdw-1.1",
+  "url": null,
+  "commercial": null,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "laguna",
+  "text-generation",
+  "laguna-s-2.1",
+  "vllm",
+  "conversational",
+  "custom_code",
+  "eval-results",
+  "deploy:sagemaker"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [
+  "architecture read from config, but the model family is unfamiliar — treat cache math as approximate"
+ ],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "laguna",
+  "attention": "gqa",
+  "layers": 48,
+  "kv_layers": 12,
+  "sliding_layers": 36,
+  "linear_layers": 0,
+  "kv_heads": 8,
+  "head_dim": 128,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": null,
+  "window_size": 512,
+  "full_bytes_per_token_8bit": 24576,
+  "sliding_bytes_per_token_8bit": 73728,
+  "linear_state_bytes": 0,
+  "hidden_size": 3072,
+  "experts_total": 256,
+  "experts_active": 10,
+  "experts_shared": 1,
+  "moe_intermediate": 1024,
+  "moe_layers": 47,
+  "accel_mtp": false,
+  "accel_dflash_repo": "poolside/Laguna-S-2.1-DFlash-NVFP4",
+  "accel_dspark_repo": "orestis-z/Laguna-S-2.1-DSpark",
+  "conventional_assumed": true,
+  "source": "config",
+  "config_sha": "484ed9fd6eb232e4",
+  "notes": [],
+  "kv_cache_gb_at_128k_8bit": 3.26
+ },
+ "quants": [
+  {
+   "repo": "ggml-org/Laguna-S-2.1-GGUF",
+   "url": "https://huggingface.co/ggml-org/Laguna-S-2.1-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_M",
+   "bits": 4.6,
+   "size_gb": 67.66,
+   "size_bytes": 67661639264,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
+   "repo": "ggml-org/Laguna-S-2.1-GGUF",
+   "url": "https://huggingface.co/ggml-org/Laguna-S-2.1-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 8.51,
+   "size_gb": 125.02,
+   "size_bytes": 125022858848,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
+   "repo": "poolside/Laguna-S-2.1",
+   "url": "https://huggingface.co/poolside/Laguna-S-2.1",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.0,
+   "size_gb": 235.13,
+   "size_bytes": 235128558560,
+   "quantizer": "official",
+   "file_count": 46,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  }
+ ],
+ "reference": {
+  "q4": {
+   "repo": "ggml-org/Laguna-S-2.1-GGUF",
+   "label": "Q4_K_M"
+  },
+  "q8": {
+   "repo": "ggml-org/Laguna-S-2.1-GGUF",
+   "label": "Q8_0"
+  },
+  "mlx4": null,
+  "native": {
+   "repo": "poolside/Laguna-S-2.1",
+   "label": "BF16"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": "poolside/Laguna-S-2.1-DFlash-NVFP4",
+  "dspark": "orestis-z/Laguna-S-2.1-DSpark"
+ },
+ "timestamps": {
+  "first_seen": "2026-10-20T08:25:31.348466+00:00",
+  "last_checked": "2026-10-20T08:25:31.348466+00:00",
+  "last_changed": "2026-10-20T08:25:31.348466+00:00"
+ },
+ "generated_at": "2026-10-22T08:30:35+00:00",
+ "sha": "3bc79ab785ba4eff"
+}

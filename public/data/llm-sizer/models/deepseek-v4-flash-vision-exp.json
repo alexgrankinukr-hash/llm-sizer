@@ -70,6 +70,45 @@
  },
  "quants": [
   {
+   "repo": "ggml-org/DeepSeek-V4-Flash-Vision-Exp-GGUF",
+   "url": "https://huggingface.co/ggml-org/DeepSeek-V4-Flash-Vision-Exp-GGUF",
+   "format": "gguf",
+   "label": "Q2_K_S",
+   "bits": 2.59,
+   "size_gb": 98.59,
+   "size_bytes": 98592557056,
+   "quantizer": "ggml-org",
+   "file_count": 2,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
+   "repo": "ggml-org/DeepSeek-V4-Flash-Vision-Exp-GGUF",
+   "url": "https://huggingface.co/ggml-org/DeepSeek-V4-Flash-Vision-Exp-GGUF",
+   "format": "gguf",
+   "label": "Q2_K",
+   "bits": 3.08,
+   "size_gb": 117.35,
+   "size_bytes": 117349484544,
+   "quantizer": "ggml-org",
+   "file_count": 2,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
+   "repo": "ggml-org/DeepSeek-V4-Flash-Vision-Exp-GGUF",
+   "url": "https://huggingface.co/ggml-org/DeepSeek-V4-Flash-Vision-Exp-GGUF",
+   "format": "gguf",
+   "label": "MXFP4",
+   "bits": 4.07,
+   "size_gb": 154.99,
+   "size_bytes": 154991585280,
+   "quantizer": "ggml-org",
+   "file_count": 2,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
    "repo": "deepseek-ai/DeepSeek-V4-Flash-Vision-Exp",
    "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-Vision-Exp",
    "format": "safetensors",
@@ -84,7 +123,10 @@
   }
  ],
  "reference": {
-  "q4": null,
+  "q4": {
+   "repo": "ggml-org/DeepSeek-V4-Flash-Vision-Exp-GGUF",
+   "label": "MXFP4"
+  },
   "q8": null,
   "mlx4": null,
   "native": {
@@ -99,9 +141,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-04T07:54:53.379440+00:00",
-  "last_checked": "2026-09-10T08:02:41.557123+00:00",
+  "last_checked": "2026-10-20T08:25:06.760630+00:00",
   "last_changed": "2026-09-04T07:54:53.379440+00:00"
  },
- "generated_at": "2026-10-19T08:44:16+00:00",
- "sha": "2e5f250e2fdfb371"
+ "generated_at": "2026-10-22T08:30:35+00:00",
+ "sha": "1f8a61957ec56b4a"
 }

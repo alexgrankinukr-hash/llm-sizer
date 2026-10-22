@@ -8,7 +8,7 @@
  "variant": "instruct",
  "released": "2026-08-24",
  "params_total": 179999981459,
- "params_active": 6000000000,
+ "params_active": 6670000000,
  "params_active_source": "override",
  "context_max": 262144,
  "native_bits": 16.0,
@@ -34,7 +34,7 @@
  "status": "active",
  "superseded_by": null,
  "notes": [
-  "125B main model plus a 51B-parameter n-gram table (38 to 54 GB at the community builds that keep it on the SSD); 6B parameters active per token (Qwen's release notes). With the table on the SSD the memory need is the resident part only."
+  "125B main model plus a 51B-parameter n-gram table (38 to 54 GB at the community builds that keep it on the SSD); 6.67B parameters read per generated token, counted from the model's tensors (Qwen's release notes say 6B, which leaves out the 0.64B output layer). With the table on the SSD the memory need is the resident part only: Mac engines (oMLX, MTPLX, mlx-serve) leave it there for any MLX file, about 28 % of the file; plain GGUF files keep it inside the weights."
  ],
  "four_bit_native": false,
  "architecture": {
@@ -61,7 +61,7 @@
   "moe_layers": 48,
   "accel_mtp": true,
   "accel_dflash_repo": "incoai/Qwen3.8-Flash-Next-DFlash2",
-  "accel_dspark_repo": null,
+  "accel_dspark_repo": "shadowpa0327/Qwen3.8-Flash-Next-DSpark",
   "conventional_assumed": false,
   "source": "config",
   "config_sha": "1c9f263b44653d80",
@@ -219,7 +219,7 @@
    "label": "Q2_K",
    "bits": 3.69,
    "size_gb": 83.13,
-   "size_bytes": 83128778432,
+   "size_bytes": 83128778464,
    "quantizer": "ggml-org",
    "file_count": 2,
    "qat": false,
@@ -375,7 +375,7 @@
    "label": "IQ4_NL",
    "bits": 4.54,
    "size_gb": 102.05,
-   "size_bytes": 102048918944,
+   "size_bytes": 102048919008,
    "quantizer": "ggml-org",
    "file_count": 2,
    "qat": false,
@@ -557,7 +557,7 @@
    "label": "Q8_0",
    "bits": 7.23,
    "size_gb": 162.62,
-   "size_bytes": 162624826784,
+   "size_bytes": 162624826848,
    "quantizer": "ggml-org",
    "file_count": 2,
    "qat": false,
@@ -603,19 +603,6 @@
    "first_seen": "2026-09-02"
   },
   {
-   "repo": "unsloth/Qwen3.8-Flash-Next-FP8",
-   "url": "https://huggingface.co/unsloth/Qwen3.8-Flash-Next-FP8",
-   "format": "safetensors",
-   "label": "FP8",
-   "bits": 8.25,
-   "size_gb": 185.52,
-   "size_bytes": 185523317458,
-   "quantizer": "unsloth",
-   "file_count": 131,
-   "qat": false,
-   "first_seen": "2026-09-02"
-  },
-  {
    "repo": "Qwen/Qwen3.8-Flash-Next-FP8",
    "url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next-FP8",
    "format": "safetensors",
@@ -624,6 +611,19 @@
    "size_gb": 185.52,
    "size_bytes": 185523317458,
    "quantizer": "official",
+   "file_count": 131,
+   "qat": false,
+   "first_seen": "2026-09-02"
+  },
+  {
+   "repo": "unsloth/Qwen3.8-Flash-Next-FP8",
+   "url": "https://huggingface.co/unsloth/Qwen3.8-Flash-Next-FP8",
+   "format": "safetensors",
+   "label": "FP8",
+   "bits": 8.25,
+   "size_gb": 185.52,
+   "size_bytes": 185523317458,
+   "quantizer": "unsloth",
    "file_count": 131,
    "qat": false,
    "first_seen": "2026-09-02"
@@ -762,13 +762,13 @@
  ],
  "drafts": {
   "dflash": "incoai/Qwen3.8-Flash-Next-DFlash2",
-  "dspark": null
+  "dspark": "shadowpa0327/Qwen3.8-Flash-Next-DSpark"
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:24:51.887134+00:00",
-  "last_checked": "2026-10-19T08:43:34.522736+00:00",
+  "last_checked": "2026-10-22T08:29:51.734247+00:00",
   "last_changed": "2026-09-02T20:24:51.887134+00:00"
  },
- "generated_at": "2026-10-19T08:44:16+00:00",
- "sha": "c18227661cb0707a"
+ "generated_at": "2026-10-22T08:30:35+00:00",
+ "sha": "016082763c18bcb6"
 }

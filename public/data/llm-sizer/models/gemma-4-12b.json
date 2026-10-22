@@ -788,6 +788,19 @@
    "first_seen": "2026-09-02"
   },
   {
+   "repo": "ggml-org/gemma-4-12B-GGUF",
+   "url": "https://huggingface.co/ggml-org/gemma-4-12B-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 8.47,
+   "size_gb": 12.67,
+   "size_bytes": 12669628032,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
    "repo": "ggml-org/gemma-4-12B-it-GGUF",
    "url": "https://huggingface.co/ggml-org/gemma-4-12B-it-GGUF",
    "format": "gguf",
@@ -879,6 +892,19 @@
    "first_seen": "2026-09-02"
   },
   {
+   "repo": "ggml-org/gemma-4-12B-GGUF",
+   "url": "https://huggingface.co/ggml-org/gemma-4-12B-GGUF",
+   "format": "gguf",
+   "label": "BF16",
+   "bits": 15.94,
+   "size_gb": 23.83,
+   "size_bytes": 23832047232,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
    "repo": "ggml-org/gemma-4-12B-it-GGUF",
    "url": "https://huggingface.co/ggml-org/gemma-4-12B-it-GGUF",
    "format": "gguf",
@@ -931,6 +957,19 @@
    "first_seen": "2026-09-02"
   },
   {
+   "repo": "google/gemma-4-12B",
+   "url": "https://huggingface.co/google/gemma-4-12B",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.0,
+   "size_gb": 23.92,
+   "size_bytes": 23919549408,
+   "quantizer": "official",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
    "repo": "google/gemma-4-12B-it",
    "url": "https://huggingface.co/google/gemma-4-12B-it",
    "format": "safetensors",
@@ -969,9 +1008,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:25:23.565073+00:00",
-  "last_checked": "2026-10-19T08:43:38.435705+00:00",
+  "last_checked": "2026-10-22T08:29:55.561294+00:00",
   "last_changed": "2026-09-02T20:25:23.565073+00:00"
  },
- "generated_at": "2026-10-19T08:44:16+00:00",
- "sha": "60c823f65a0db500"
+ "generated_at": "2026-10-22T08:30:35+00:00",
+ "sha": "931abea97ac9af5f"
 }

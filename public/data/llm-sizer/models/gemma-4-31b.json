@@ -826,6 +826,19 @@
    "first_seen": "2026-09-02"
   },
   {
+   "repo": "ggml-org/gemma-4-31B-GGUF",
+   "url": "https://huggingface.co/ggml-org/gemma-4-31B-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 7.99,
+   "size_gb": 32.64,
+   "size_bytes": 32635657984,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
    "repo": "lmstudio-community/gemma-4-31B-it-GGUF",
    "url": "https://huggingface.co/lmstudio-community/gemma-4-31B-it-GGUF",
    "format": "gguf",
@@ -943,6 +956,19 @@
    "first_seen": "2026-09-02"
   },
   {
+   "repo": "ggml-org/gemma-4-31B-GGUF",
+   "url": "https://huggingface.co/ggml-org/gemma-4-31B-GGUF",
+   "format": "gguf",
+   "label": "BF16",
+   "bits": 15.03,
+   "size_gb": 61.41,
+   "size_bytes": 61413170944,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
    "repo": "ggml-org/gemma-4-31B-it-GGUF",
    "url": "https://huggingface.co/ggml-org/gemma-4-31B-it-GGUF",
    "format": "gguf",
@@ -995,6 +1021,19 @@
    "first_seen": "2026-09-02"
   },
   {
+   "repo": "google/gemma-4-31B",
+   "url": "https://huggingface.co/google/gemma-4-31B",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 15.31,
+   "size_gb": 62.55,
+   "size_bytes": 62546338248,
+   "quantizer": "official",
+   "file_count": 2,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
    "repo": "google/gemma-4-31B-it",
    "url": "https://huggingface.co/google/gemma-4-31B-it",
    "format": "safetensors",
@@ -1033,9 +1072,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:26:35.130576+00:00",
-  "last_checked": "2026-10-19T08:43:41.100931+00:00",
-  "last_changed": "2026-09-02T20:26:35.130576+00:00"
+  "last_checked": "2026-10-22T08:29:58.120456+00:00",
+  "last_changed": "2026-10-21T08:27:24.074180+00:00"
  },
- "generated_at": "2026-10-19T08:44:16+00:00",
- "sha": "9e78c7b915e1a612"
+ "generated_at": "2026-10-22T08:30:35+00:00",
+ "sha": "7b4703deefe17bc9"
 }

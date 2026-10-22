@@ -298,7 +298,7 @@
    "repo": "bartowski/Kolibri-1-GGUF",
    "url": "https://huggingface.co/bartowski/Kolibri-1-GGUF",
    "format": "gguf",
-   "label": "IQ4_NL",
+   "label": "Q4_K_M",
    "bits": 5.1,
    "size_gb": 49.76,
    "size_bytes": 49759219584,
@@ -311,7 +311,7 @@
    "repo": "bartowski/Kolibri-1-GGUF",
    "url": "https://huggingface.co/bartowski/Kolibri-1-GGUF",
    "format": "gguf",
-   "label": "Q4_K_M",
+   "label": "IQ4_NL",
    "bits": 5.1,
    "size_gb": 49.76,
    "size_bytes": 49759219584,
@@ -463,6 +463,6 @@
   "last_checked": "2026-10-18T07:56:57.194482+00:00",
   "last_changed": "2026-10-18T07:56:57.194482+00:00"
  },
- "generated_at": "2026-10-19T08:44:16+00:00",
- "sha": "786a6ee254cfab4e"
+ "generated_at": "2026-10-22T08:30:35+00:00",
+ "sha": "e0846f4d24df0f8b"
 }

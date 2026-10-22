@@ -8,7 +8,7 @@
  "variant": "instruct",
  "released": "2026-01-30",
  "params_total": 79674391296,
- "params_active": 3000000000,
+ "params_active": 3560000000,
  "params_active_source": "override",
  "context_max": 262144,
  "native_bits": 16.0,
@@ -36,7 +36,7 @@
  "status": "active",
  "superseded_by": null,
  "notes": [
-  "3B activated parameters per the model card (the config-derived estimate was 4.0B).",
+  "3.56B parameters read per generated token, counted from the model's tensors: 1.51B of routed experts (10 of 512) and 2.05B that every token passes through, the 0.31B output layer included. The model card's 3B is the A3B in the name: it leaves out the output layer and rounds 3.25B down.",
   "architecture read from config, but the model family is unfamiliar — treat cache math as approximate"
  ],
  "four_bit_native": false,
@@ -1242,9 +1242,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:22:58.099177+00:00",
-  "last_checked": "2026-10-19T08:43:29.335197+00:00",
+  "last_checked": "2026-10-22T08:29:46.636976+00:00",
   "last_changed": "2026-09-02T20:22:58.099177+00:00"
  },
- "generated_at": "2026-10-19T08:44:16+00:00",
- "sha": "8f4f1155ac78ec0f"
+ "generated_at": "2026-10-22T08:30:35+00:00",
+ "sha": "101ac0cf6ff7205a"
 }

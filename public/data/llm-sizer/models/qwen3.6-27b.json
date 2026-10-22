@@ -1,0 +1,152 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "qwen3.6-27b",
+ "name": "Qwen3.6-27B",
+ "provider": "Qwen",
+ "hf_repo": "Qwen/Qwen3.6-27B",
+ "url": "https://huggingface.co/Qwen/Qwen3.6-27B",
+ "variant": "instruct",
+ "released": "2026-04-21",
+ "params_total": 27781427952,
+ "params_active": 27781427952,
+ "params_active_source": "dense",
+ "context_max": 262144,
+ "native_bits": 16.0,
+ "license": {
+  "name": "apache-2.0",
+  "url": null,
+  "commercial": true,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "qwen3_5",
+  "image-text-to-text",
+  "conversational",
+  "eval-results",
+  "endpoints_compatible",
+  "deploy:sagemaker",
+  "deploy:azure"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "qwen3_5_text",
+  "attention": "gqa",
+  "layers": 64,
+  "kv_layers": 16,
+  "sliding_layers": 0,
+  "linear_layers": 48,
+  "kv_heads": 4,
+  "head_dim": 256,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": null,
+  "window_size": null,
+  "full_bytes_per_token_8bit": 32768,
+  "sliding_bytes_per_token_8bit": 0,
+  "linear_state_bytes": 75497472,
+  "hidden_size": 5120,
+  "experts_total": null,
+  "experts_active": null,
+  "experts_shared": null,
+  "moe_intermediate": null,
+  "moe_layers": null,
+  "accel_mtp": true,
+  "accel_dflash_repo": "z-lab/Qwen3.6-27B-DFlash",
+  "accel_dspark_repo": "satgeze/Qwen3.6-27B-DSpark",
+  "conventional_assumed": false,
+  "source": "config",
+  "config_sha": "ab42aafbb911602c",
+  "notes": [],
+  "kv_cache_gb_at_128k_8bit": 4.37
+ },
+ "quants": [
+  {
+   "repo": "ggml-org/Qwen3.6-27B-GGUF",
+   "url": "https://huggingface.co/ggml-org/Qwen3.6-27B-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_M",
+   "bits": 5.5,
+   "size_gb": 19.1,
+   "size_bytes": 19095766304,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
+   "repo": "ggml-org/Qwen3.6-27B-GGUF",
+   "url": "https://huggingface.co/ggml-org/Qwen3.6-27B-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 8.23,
+   "size_gb": 28.6,
+   "size_bytes": 28595762464,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
+   "repo": "ggml-org/Qwen3.6-27B-GGUF",
+   "url": "https://huggingface.co/ggml-org/Qwen3.6-27B-GGUF",
+   "format": "gguf",
+   "label": "BF16",
+   "bits": 15.49,
+   "size_gb": 53.81,
+   "size_bytes": 53808280864,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
+   "repo": "Qwen/Qwen3.6-27B",
+   "url": "https://huggingface.co/Qwen/Qwen3.6-27B",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.0,
+   "size_gb": 55.56,
+   "size_bytes": 55563006400,
+   "quantizer": "official",
+   "file_count": 15,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  }
+ ],
+ "reference": {
+  "q4": {
+   "repo": "ggml-org/Qwen3.6-27B-GGUF",
+   "label": "Q4_K_M"
+  },
+  "q8": {
+   "repo": "ggml-org/Qwen3.6-27B-GGUF",
+   "label": "Q8_0"
+  },
+  "mlx4": null,
+  "native": {
+   "repo": "Qwen/Qwen3.6-27B",
+   "label": "BF16"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": "z-lab/Qwen3.6-27B-DFlash",
+  "dspark": "satgeze/Qwen3.6-27B-DSpark"
+ },
+ "timestamps": {
+  "first_seen": "2026-10-20T08:24:54.409605+00:00",
+  "last_checked": "2026-10-20T08:24:54.409605+00:00",
+  "last_changed": "2026-10-20T08:24:54.409605+00:00"
+ },
+ "generated_at": "2026-10-22T08:30:35+00:00",
+ "sha": "5ebb53c50f1613e7"
+}

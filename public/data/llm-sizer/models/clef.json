@@ -35,6 +35,7 @@
   "classification",
   "custom-code",
   "conversational",
+  "eval-results",
   "endpoints_compatible"
  ],
  "featured": false,
@@ -415,9 +416,9 @@
  },
  "timestamps": {
   "first_seen": "2026-10-04T09:36:50.896221+00:00",
-  "last_checked": "2026-10-11T09:53:48.982215+00:00",
+  "last_checked": "2026-10-20T08:24:47.675493+00:00",
   "last_changed": "2026-10-04T09:36:50.896221+00:00"
  },
- "generated_at": "2026-10-19T08:44:16+00:00",
- "sha": "4d92b002a48fa31f"
+ "generated_at": "2026-10-22T08:30:35+00:00",
+ "sha": "13463f1a31ec5526"
 }

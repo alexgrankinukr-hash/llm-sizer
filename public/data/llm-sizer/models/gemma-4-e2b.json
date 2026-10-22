@@ -1,0 +1,193 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "gemma-4-e2b",
+ "name": "gemma-4-E2B-it",
+ "provider": "google",
+ "hf_repo": "google/gemma-4-E2B-it",
+ "url": "https://huggingface.co/google/gemma-4-E2B-it",
+ "variant": "instruct",
+ "released": "2026-03-02",
+ "params_total": 5123178051,
+ "params_active": 2371714627,
+ "params_active_source": "estimated",
+ "context_max": 131072,
+ "native_bits": 16.0,
+ "license": {
+  "name": "apache-2.0",
+  "url": null,
+  "commercial": true,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "gemma4",
+  "image-text-to-text",
+  "any-to-any",
+  "eval-results",
+  "endpoints_compatible",
+  "deploy:sagemaker",
+  "deploy:azure"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "gemma4_text",
+  "attention": "gqa",
+  "layers": 35,
+  "kv_layers": 7,
+  "sliding_layers": 28,
+  "linear_layers": 0,
+  "kv_heads": 1,
+  "head_dim": 256,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": null,
+  "window_size": 512,
+  "full_bytes_per_token_8bit": 3584,
+  "sliding_bytes_per_token_8bit": 14336,
+  "linear_state_bytes": 0,
+  "hidden_size": 1536,
+  "experts_total": null,
+  "experts_active": null,
+  "experts_shared": null,
+  "moe_intermediate": null,
+  "moe_layers": null,
+  "accel_mtp": false,
+  "accel_dflash_repo": "rasyosef/gemma-4-E2B-it-dflash2",
+  "accel_dspark_repo": "rasyosef/gemma-4-E2B-it-dspark-GGUF",
+  "conventional_assumed": false,
+  "source": "config",
+  "config_sha": "247e8b06a04cb168",
+  "notes": [
+   "per-layer embedding tables are looked up, not streamed; effective parameters exclude them"
+  ],
+  "kv_cache_gb_at_128k_8bit": 0.48
+ },
+ "quants": [
+  {
+   "repo": "ggml-org/gemma-4-E2B-it-GGUF",
+   "url": "https://huggingface.co/ggml-org/gemma-4-E2B-it-GGUF",
+   "format": "gguf",
+   "label": "Q4_0",
+   "bits": 4.44,
+   "size_gb": 2.84,
+   "size_bytes": 2841481184,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
+   "repo": "ggml-org/gemma-4-E2B-GGUF",
+   "url": "https://huggingface.co/ggml-org/gemma-4-E2B-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 7.76,
+   "size_gb": 4.97,
+   "size_bytes": 4967478336,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
+   "repo": "ggml-org/gemma-4-E2B-it-GGUF",
+   "url": "https://huggingface.co/ggml-org/gemma-4-E2B-it-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 7.76,
+   "size_gb": 4.97,
+   "size_bytes": 4967497152,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
+   "repo": "ggml-org/gemma-4-E2B-GGUF",
+   "url": "https://huggingface.co/ggml-org/gemma-4-E2B-GGUF",
+   "format": "gguf",
+   "label": "BF16",
+   "bits": 14.54,
+   "size_gb": 9.31,
+   "size_bytes": 9311286336,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
+   "repo": "ggml-org/gemma-4-E2B-it-GGUF",
+   "url": "https://huggingface.co/ggml-org/gemma-4-E2B-it-GGUF",
+   "format": "gguf",
+   "label": "BF16",
+   "bits": 14.54,
+   "size_gb": 9.31,
+   "size_bytes": 9311305152,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
+   "repo": "google/gemma-4-E2B-it",
+   "url": "https://huggingface.co/google/gemma-4-E2B-it",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.0,
+   "size_gb": 10.25,
+   "size_bytes": 10246621918,
+   "quantizer": "official",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
+   "repo": "google/gemma-4-E2B",
+   "url": "https://huggingface.co/google/gemma-4-E2B",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.0,
+   "size_gb": 10.25,
+   "size_bytes": 10246621918,
+   "quantizer": "official",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  }
+ ],
+ "reference": {
+  "q4": {
+   "repo": "ggml-org/gemma-4-E2B-it-GGUF",
+   "label": "Q4_0"
+  },
+  "q8": {
+   "repo": "ggml-org/gemma-4-E2B-GGUF",
+   "label": "Q8_0"
+  },
+  "mlx4": null,
+  "native": {
+   "repo": "google/gemma-4-E2B-it",
+   "label": "BF16"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": "rasyosef/gemma-4-E2B-it-dflash2",
+  "dspark": "rasyosef/gemma-4-E2B-it-dspark-GGUF"
+ },
+ "timestamps": {
+  "first_seen": "2026-10-20T08:25:16.199323+00:00",
+  "last_checked": "2026-10-20T08:25:17.644556+00:00",
+  "last_changed": "2026-10-20T08:25:16.199323+00:00"
+ },
+ "generated_at": "2026-10-22T08:30:35+00:00",
+ "sha": "c04b101aa7c7999b"
+}

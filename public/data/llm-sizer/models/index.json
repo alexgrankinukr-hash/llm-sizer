@@ -1,7 +1,7 @@
 {
  "schema": "llm-sizer/models v1",
- "generated_at": "2026-10-19T08:44:16+00:00",
- "count": 82,
+ "generated_at": "2026-10-22T08:30:35+00:00",
+ "count": 91,
  "featured_count": 23,
  "models": [
   {
@@ -44,7 +44,7 @@
    "quant_count": 73,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "964ad9adb546a026"
+   "detail_sha": "70db7709c503b651"
   },
   {
    "id": "qwen3.6-35b-a3b",
@@ -86,7 +86,7 @@
    "quant_count": 72,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "57204518b62bfdba"
+   "detail_sha": "8bbc94887274cb56"
   },
   {
    "id": "gemma-4-12b",
@@ -125,10 +125,10 @@
     "mlx",
     "safetensors"
    ],
-   "quant_count": 67,
+   "quant_count": 70,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "60c823f65a0db500"
+   "detail_sha": "931abea97ac9af5f"
   },
   {
    "id": "gemma-4-26b-a4b",
@@ -167,10 +167,10 @@
     "mlx",
     "safetensors"
    ],
-   "quant_count": 70,
+   "quant_count": 73,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "df74e0c1c3cf7851"
+   "detail_sha": "efe847172be7a1a8"
   },
   {
    "id": "gemma-4-e4b",
@@ -209,10 +209,10 @@
     "mlx",
     "safetensors"
    ],
-   "quant_count": 66,
+   "quant_count": 69,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "abac3d83d3b75c62"
+   "detail_sha": "554574f7a398b38a"
   },
   {
    "id": "gpt-oss-20b",
@@ -254,7 +254,7 @@
    "quant_count": 49,
    "four_bit_native": true,
    "has_special_build": false,
-   "detail_sha": "2c2771c40b3cf16e"
+   "detail_sha": "0a1464c3ecbe5721"
   },
   {
    "id": "muse-glimmer-30b",
@@ -296,7 +296,7 @@
    "quant_count": 57,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "b27faf548f27ff2b"
+   "detail_sha": "79ed527fe3bca6d7"
   },
   {
    "id": "gemma-4-31b",
@@ -335,10 +335,10 @@
     "mlx",
     "safetensors"
    ],
-   "quant_count": 72,
+   "quant_count": 75,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "9e78c7b915e1a612"
+   "detail_sha": "7b4703deefe17bc9"
   },
   {
    "id": "qwen3-coder-next",
@@ -347,7 +347,7 @@
    "hf_repo": "Qwen/Qwen3-Coder-Next",
    "released": "2026-01-30",
    "params_total_b": 79.67,
-   "params_active_b": 3.0,
+   "params_active_b": 3.56,
    "context_max": 262144,
    "featured": true,
    "tier": "studio",
@@ -380,7 +380,7 @@
    "quant_count": 88,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "8f4f1155ac78ec0f"
+   "detail_sha": "101ac0cf6ff7205a"
   },
   {
    "id": "gpt-oss-120b",
@@ -422,7 +422,7 @@
    "quant_count": 40,
    "four_bit_native": true,
    "has_special_build": false,
-   "detail_sha": "8ac2adf805a1647b"
+   "detail_sha": "732c57c09299e220"
   },
   {
    "id": "mistral-small-4-119b-2603",
@@ -464,7 +464,7 @@
    "quant_count": 60,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "a43c255854ff78be"
+   "detail_sha": "de22dc4b3b2136e4"
   },
   {
    "id": "nvidia-nemotron-3-super-120b-a12b",
@@ -506,7 +506,7 @@
    "quant_count": 62,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "ca21e86c968702da"
+   "detail_sha": "bb639322317cdefb"
   },
   {
    "id": "mistral-medium-3.5-128b",
@@ -548,7 +548,7 @@
    "quant_count": 54,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "c3adc55f5dbf330c"
+   "detail_sha": "594bde0074315b95"
   },
   {
    "id": "qwen3.8-flash-next",
@@ -557,7 +557,7 @@
    "hf_repo": "Qwen/Qwen3.8-Flash-Next",
    "released": "2026-08-24",
    "params_total_b": 180.0,
-   "params_active_b": 6.0,
+   "params_active_b": 6.67,
    "context_max": 262144,
    "featured": true,
    "tier": "studio",
@@ -573,7 +573,7 @@
    "accel": {
     "mtp": true,
     "dflash": true,
-    "dspark": false
+    "dspark": true
    },
    "kv_bytes_per_token_8bit": 12288,
    "sizes": {
@@ -590,7 +590,7 @@
    "quant_count": 49,
    "four_bit_native": false,
    "has_special_build": true,
-   "detail_sha": "c18227661cb0707a"
+   "detail_sha": "016082763c18bcb6"
   },
   {
    "id": "deepseek-v4-flash-0731",
@@ -631,7 +631,7 @@
    "quant_count": 19,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "aa5fd049754a86de"
+   "detail_sha": "77f2114abfd471f9"
   },
   {
    "id": "glm-5.3-flash",
@@ -673,7 +673,7 @@
    "quant_count": 19,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "c9cac353364489d6"
+   "detail_sha": "5f99bf79b545e0d3"
   },
   {
    "id": "qwen3.5-397b-a17b",
@@ -715,7 +715,7 @@
    "quant_count": 71,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "7746644fac5d1301"
+   "detail_sha": "b318b398da2f5578"
   },
   {
    "id": "minimax-m3",
@@ -757,7 +757,7 @@
    "quant_count": 50,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "faa058a68d4789eb"
+   "detail_sha": "073f699b3635af1f"
   },
   {
    "id": "nvidia-nemotron-3-ultra-550b-a55b",
@@ -798,7 +798,7 @@
    "quant_count": 25,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "49a40dcee4b7a071"
+   "detail_sha": "25a3d4f7a684ef24"
   },
   {
    "id": "glm-5.2",
@@ -807,7 +807,7 @@
    "hf_repo": "zai-org/GLM-5.2",
    "released": "2026-06-16",
    "params_total_b": 753.33,
-   "params_active_b": 54.03,
+   "params_active_b": 40.3,
    "context_max": 1048576,
    "featured": true,
    "tier": "frontier",
@@ -840,7 +840,7 @@
    "quant_count": 28,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "95b4d6c4ff661fe1"
+   "detail_sha": "b646c79e411bc9bc"
   },
   {
    "id": "kimi-k2.6",
@@ -881,7 +881,7 @@
    "quant_count": 21,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "a45a5c2dfdfeeee5"
+   "detail_sha": "a33673e64df8591e"
   },
   {
    "id": "deepseek-v4-pro-0813",
@@ -922,7 +922,7 @@
    "quant_count": 3,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "6126fe9721b26fbf"
+   "detail_sha": "3593aa0d1daafa56"
   },
   {
    "id": "kimi-k3",
@@ -963,7 +963,7 @@
    "quant_count": 8,
    "four_bit_native": true,
    "has_special_build": false,
-   "detail_sha": "051d691b8516dd91"
+   "detail_sha": "556a32d31b431d2f"
   },
   {
    "id": "arex-2",
@@ -1006,6 +1006,47 @@
    "four_bit_native": false,
    "has_special_build": false,
    "detail_sha": "8369f3ca7fbe35d9"
+  },
+  {
+   "id": "basal-omni-1.0-ultra",
+   "name": "basal-omni-1.0-ultra",
+   "provider": "Remek",
+   "hf_repo": "Remek/basal-omni-1.0-ultra",
+   "released": "2026-10-15",
+   "params_total_b": 31.27,
+   "params_active_b": 31.27,
+   "context_max": 262144,
+   "featured": false,
+   "tier": null,
+   "rank": null,
+   "gated": "false",
+   "status": "active",
+   "license": "apache-2.0",
+   "commercial": true,
+   "arch": "gqa",
+   "hybrid": true,
+   "moe": false,
+   "assumed": false,
+   "accel": {
+    "mtp": false,
+    "dflash": false,
+    "dspark": false
+   },
+   "kv_bytes_per_token_8bit": 81920,
+   "sizes": {
+    "min_gb": 9.16,
+    "q4_gb": 19.52,
+    "q8_gb": 32.64,
+    "native_gb": 62.55
+   },
+   "formats": [
+    "gguf",
+    "safetensors"
+   ],
+   "quant_count": 26,
+   "four_bit_native": false,
+   "has_special_build": false,
+   "detail_sha": "1a115833869007c9"
   },
   {
    "id": "beam-1.0-501b-a23b",
@@ -1088,7 +1129,7 @@
    "quant_count": 24,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "4d92b002a48fa31f"
+   "detail_sha": "13463f1a31ec5526"
   },
   {
    "id": "clef-flash",
@@ -1130,7 +1171,7 @@
    "quant_count": 24,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "5956cf5f8afa7e86"
+   "detail_sha": "202a21be2a3acc06"
   },
   {
    "id": "computer-10",
@@ -1281,18 +1322,19 @@
    },
    "kv_bytes_per_token_8bit": 23040,
    "sizes": {
-    "min_gb": 510.3,
-    "q4_gb": null,
-    "q8_gb": 510.3,
+    "min_gb": 232.98,
+    "q4_gb": 500.71,
+    "q8_gb": 508.38,
     "native_gb": 510.3
    },
    "formats": [
+    "gguf",
     "safetensors"
    ],
-   "quant_count": 1,
+   "quant_count": 10,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "4f11e4b178a70039"
+   "detail_sha": "c43de42bae67c41b"
   },
   {
    "id": "deepseek-v4-flash",
@@ -1334,7 +1376,7 @@
    "quant_count": 30,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "7b312f10f5539d26"
+   "detail_sha": "52fa5d0c5f0a5229"
   },
   {
    "id": "deepseek-v4-flash-vision-exp",
@@ -1363,18 +1405,19 @@
    },
    "kv_bytes_per_token_8bit": 24768,
    "sizes": {
-    "min_gb": 167.82,
-    "q4_gb": null,
+    "min_gb": 98.59,
+    "q4_gb": 154.99,
     "q8_gb": null,
     "native_gb": 167.82
    },
    "formats": [
+    "gguf",
     "safetensors"
    ],
-   "quant_count": 1,
+   "quant_count": 4,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "2e5f250e2fdfb371"
+   "detail_sha": "1f8a61957ec56b4a"
   },
   {
    "id": "deepseek-v4-pro",
@@ -1415,7 +1458,7 @@
    "quant_count": 4,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "001ae6bfb8c68fb8"
+   "detail_sha": "49e8ea143909f098"
   },
   {
    "id": "devstral-small-2-24b-2512",
@@ -1457,7 +1500,7 @@
    "quant_count": 65,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "dd9b71fa508d0d50"
+   "detail_sha": "0bd2d64aa520f586"
   },
   {
    "id": "flux-3-image-klein-pup",
@@ -1541,6 +1584,47 @@
    "four_bit_native": false,
    "has_special_build": false,
    "detail_sha": "9a0c931946dd7131"
+  },
+  {
+   "id": "gemma-4-e2b",
+   "name": "gemma-4-E2B-it",
+   "provider": "google",
+   "hf_repo": "google/gemma-4-E2B-it",
+   "released": "2026-03-02",
+   "params_total_b": 5.12,
+   "params_active_b": 2.37,
+   "context_max": 131072,
+   "featured": false,
+   "tier": null,
+   "rank": null,
+   "gated": "false",
+   "status": "active",
+   "license": "apache-2.0",
+   "commercial": true,
+   "arch": "gqa",
+   "hybrid": true,
+   "moe": false,
+   "assumed": false,
+   "accel": {
+    "mtp": false,
+    "dflash": true,
+    "dspark": true
+   },
+   "kv_bytes_per_token_8bit": 3584,
+   "sizes": {
+    "min_gb": 2.84,
+    "q4_gb": 2.84,
+    "q8_gb": 4.97,
+    "native_gb": 10.25
+   },
+   "formats": [
+    "gguf",
+    "safetensors"
+   ],
+   "quant_count": 7,
+   "four_bit_native": false,
+   "has_special_build": false,
+   "detail_sha": "c04b101aa7c7999b"
   },
   {
    "id": "glm-5.3",
@@ -1664,7 +1748,7 @@
    "quant_count": 26,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "814d18516620d32e"
+   "detail_sha": "5e7efc9ad7012bdb"
   },
   {
    "id": "hy4-preview",
@@ -1706,6 +1790,88 @@
    "four_bit_native": false,
    "has_special_build": false,
    "detail_sha": "37b84e22b9a97ced"
+  },
+  {
+   "id": "hybridagent-14b-agentic",
+   "name": "HybridAgent-14B-Agentic",
+   "provider": "togethercomputer",
+   "hf_repo": "togethercomputer/HybridAgent-14B-Agentic",
+   "released": "2026-10-09",
+   "params_total_b": 14.77,
+   "params_active_b": 14.77,
+   "context_max": 32768,
+   "featured": false,
+   "tier": null,
+   "rank": null,
+   "gated": "false",
+   "status": "active",
+   "license": "mit",
+   "commercial": true,
+   "arch": "gqa",
+   "hybrid": false,
+   "moe": false,
+   "assumed": false,
+   "accel": {
+    "mtp": false,
+    "dflash": false,
+    "dspark": false
+   },
+   "kv_bytes_per_token_8bit": 81920,
+   "sizes": {
+    "min_gb": 5.1,
+    "q4_gb": 9.32,
+    "q8_gb": 15.7,
+    "native_gb": 29.53
+   },
+   "formats": [
+    "gguf",
+    "safetensors"
+   ],
+   "quant_count": 24,
+   "four_bit_native": false,
+   "has_special_build": false,
+   "detail_sha": "b1606edef70111cd"
+  },
+  {
+   "id": "hy-memory-30b-a3b",
+   "name": "Hy-Memory-30B-A3B",
+   "provider": "tencent",
+   "hf_repo": "tencent/Hy-Memory-30B-A3B",
+   "released": "2026-10-15",
+   "params_total_b": 30.06,
+   "params_active_b": 3.0,
+   "context_max": 262144,
+   "featured": false,
+   "tier": null,
+   "rank": null,
+   "gated": "false",
+   "status": "active",
+   "license": "apache-2.0",
+   "commercial": true,
+   "arch": "gqa",
+   "hybrid": false,
+   "moe": true,
+   "assumed": true,
+   "accel": {
+    "mtp": false,
+    "dflash": false,
+    "dspark": false
+   },
+   "kv_bytes_per_token_8bit": 49152,
+   "sizes": {
+    "min_gb": 16.93,
+    "q4_gb": 16.93,
+    "q8_gb": 31.96,
+    "native_gb": 60.13
+   },
+   "formats": [
+    "mlx",
+    "safetensors"
+   ],
+   "quant_count": 3,
+   "four_bit_native": false,
+   "has_special_build": false,
+   "detail_sha": "c092cc09476f9cb8"
   },
   {
    "id": "ice-ai",
@@ -2078,7 +2244,7 @@
    "quant_count": 28,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "786a6ee254cfab4e"
+   "detail_sha": "e0846f4d24df0f8b"
   },
   {
    "id": "kronumos-kairos-v2",
@@ -2120,6 +2286,88 @@
    "four_bit_native": false,
    "has_special_build": false,
    "detail_sha": "86b5d6cf1cf191c0"
+  },
+  {
+   "id": "laguna-s-2.1",
+   "name": "Laguna-S-2.1",
+   "provider": "poolside",
+   "hf_repo": "poolside/Laguna-S-2.1",
+   "released": "2026-07-13",
+   "params_total_b": 117.56,
+   "params_active_b": 8.89,
+   "context_max": 1048576,
+   "featured": false,
+   "tier": null,
+   "rank": null,
+   "gated": "false",
+   "status": "active",
+   "license": "openmdw-1.1",
+   "commercial": null,
+   "arch": "gqa",
+   "hybrid": true,
+   "moe": true,
+   "assumed": true,
+   "accel": {
+    "mtp": false,
+    "dflash": true,
+    "dspark": true
+   },
+   "kv_bytes_per_token_8bit": 24576,
+   "sizes": {
+    "min_gb": 67.66,
+    "q4_gb": 67.66,
+    "q8_gb": 125.02,
+    "native_gb": 235.13
+   },
+   "formats": [
+    "gguf",
+    "safetensors"
+   ],
+   "quant_count": 3,
+   "four_bit_native": false,
+   "has_special_build": false,
+   "detail_sha": "3bc79ab785ba4eff"
+  },
+  {
+   "id": "laguna-xs-2.1",
+   "name": "Laguna-XS-2.1",
+   "provider": "poolside",
+   "hf_repo": "poolside/Laguna-XS-2.1",
+   "released": "2026-06-20",
+   "params_total_b": 33.44,
+   "params_active_b": 3.14,
+   "context_max": 262144,
+   "featured": false,
+   "tier": null,
+   "rank": null,
+   "gated": "false",
+   "status": "active",
+   "license": "openmdw-1.1",
+   "commercial": null,
+   "arch": "gqa",
+   "hybrid": true,
+   "moe": true,
+   "assumed": true,
+   "accel": {
+    "mtp": false,
+    "dflash": true,
+    "dspark": true
+   },
+   "kv_bytes_per_token_8bit": 20480,
+   "sizes": {
+    "min_gb": 19.56,
+    "q4_gb": 19.56,
+    "q8_gb": 35.6,
+    "native_gb": 66.89
+   },
+   "formats": [
+    "gguf",
+    "safetensors"
+   ],
+   "quant_count": 4,
+   "four_bit_native": false,
+   "has_special_build": false,
+   "detail_sha": "94237517d3497235"
   },
   {
    "id": "lensvlm-9b",
@@ -2201,7 +2449,7 @@
    "quant_count": 38,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "3c5a1da2bb32cc0f"
+   "detail_sha": "10b32e5b81dee969"
   },
   {
    "id": "lightonocr-3-1b",
@@ -2366,7 +2614,7 @@
    "quant_count": 31,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "09648434f5cf9d2a"
+   "detail_sha": "7ff8143a02f4bd75"
   },
   {
    "id": "lythri-4b-a2b",
@@ -2407,7 +2655,7 @@
    "quant_count": 23,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "1eafacb21aab5e18"
+   "detail_sha": "ba349859478603f9"
   },
   {
    "id": "mellum2.1-12b-a2.5b-thinking",
@@ -2531,7 +2779,7 @@
    "quant_count": 4,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "b94a19e10d526bf4"
+   "detail_sha": "0bc67f27fb69224f"
   },
   {
    "id": "mimo-v2.6-flash-rl",
@@ -2572,7 +2820,7 @@
    "quant_count": 3,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "60f48c03253ab365"
+   "detail_sha": "4ba665b4c9983515"
   },
   {
    "id": "mimo-v2.6-pro-mopd",
@@ -2613,7 +2861,7 @@
    "quant_count": 3,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "0c68f56a96e93d07"
+   "detail_sha": "6bfa8109057a6732"
   },
   {
    "id": "mimo-v2.6-pro-rl",
@@ -2820,7 +3068,48 @@
    "quant_count": 34,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "03c491523515296d"
+   "detail_sha": "4b33b608748e840f"
+  },
+  {
+   "id": "molmo2-8b",
+   "name": "Molmo2-8B",
+   "provider": "allenai",
+   "hf_repo": "allenai/Molmo2-8B",
+   "released": "2025-12-14",
+   "params_total_b": 8.66,
+   "params_active_b": 8.66,
+   "context_max": 36864,
+   "featured": false,
+   "tier": null,
+   "rank": null,
+   "gated": "false",
+   "status": "active",
+   "license": "apache-2.0",
+   "commercial": true,
+   "arch": "gqa",
+   "hybrid": false,
+   "moe": false,
+   "assumed": true,
+   "accel": {
+    "mtp": false,
+    "dflash": false,
+    "dspark": false
+   },
+   "kv_bytes_per_token_8bit": 73728,
+   "sizes": {
+    "min_gb": 6.21,
+    "q4_gb": 6.21,
+    "q8_gb": null,
+    "native_gb": 34.65
+   },
+   "formats": [
+    "mlx",
+    "safetensors"
+   ],
+   "quant_count": 2,
+   "four_bit_native": false,
+   "has_special_build": false,
+   "detail_sha": "e6ad7527ee0457c2"
   },
   {
    "id": "muse-spark-open-816b-a42b",
@@ -2944,7 +3233,7 @@
    "quant_count": 25,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "ec4220ee649cc906"
+   "detail_sha": "2a520d3275b9b753"
   },
   {
    "id": "nex-n2.5-pro",
@@ -3026,7 +3315,7 @@
    "quant_count": 4,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "52ea6082cec51b00"
+   "detail_sha": "d7bca08bbe1f299c"
   },
   {
    "id": "nvidia-nemotron-3-nano-30b-a3b",
@@ -3067,7 +3356,7 @@
    "quant_count": 4,
    "four_bit_native": false,
    "has_special_build": false,
-   "detail_sha": "53e6ae25a602a220"
+   "detail_sha": "993304c7794436fb"
   },
   {
    "id": "occamy-1.0",
@@ -3234,6 +3523,47 @@
    "detail_sha": "47d74e0abcfcdb2e"
   },
   {
+   "id": "qwen3.6-27b",
+   "name": "Qwen3.6-27B",
+   "provider": "Qwen",
+   "hf_repo": "Qwen/Qwen3.6-27B",
+   "released": "2026-04-21",
+   "params_total_b": 27.78,
+   "params_active_b": 27.78,
+   "context_max": 262144,
+   "featured": false,
+   "tier": null,
+   "rank": null,
+   "gated": "false",
+   "status": "active",
+   "license": "apache-2.0",
+   "commercial": true,
+   "arch": "gqa",
+   "hybrid": true,
+   "moe": false,
+   "assumed": false,
+   "accel": {
+    "mtp": true,
+    "dflash": true,
+    "dspark": true
+   },
+   "kv_bytes_per_token_8bit": 32768,
+   "sizes": {
+    "min_gb": 19.1,
+    "q4_gb": 19.1,
+    "q8_gb": 28.6,
+    "native_gb": 55.56
+   },
+   "formats": [
+    "gguf",
+    "safetensors"
+   ],
+   "quant_count": 4,
+   "four_bit_native": false,
+   "has_special_build": false,
+   "detail_sha": "5ebb53c50f1613e7"
+  },
+  {
    "id": "scarlet-shadow-31b",
    "name": "Scarlet-Shadow-31B",
    "provider": "Vortex5",
@@ -3396,7 +3726,48 @@
    "four_bit_native": false,
    "has_special_build": false,
    "detail_sha": "3e24c9c34a9c28c2"
+  },
+  {
+   "id": "userrepgen-4b",
+   "name": "UserRepGen-4B",
+   "provider": "microsoft",
+   "hf_repo": "microsoft/UserRepGen-4B",
+   "released": "2026-10-14",
+   "params_total_b": 4.54,
+   "params_active_b": 4.54,
+   "context_max": 262144,
+   "featured": false,
+   "tier": null,
+   "rank": null,
+   "gated": "false",
+   "status": "active",
+   "license": "mit",
+   "commercial": true,
+   "arch": "gqa",
+   "hybrid": true,
+   "moe": false,
+   "assumed": false,
+   "accel": {
+    "mtp": true,
+    "dflash": false,
+    "dspark": false
+   },
+   "kv_bytes_per_token_8bit": 16384,
+   "sizes": {
+    "min_gb": 1.59,
+    "q4_gb": 2.73,
+    "q8_gb": 4.49,
+    "native_gb": 9.08
+   },
+   "formats": [
+    "gguf",
+    "safetensors"
+   ],
+   "quant_count": 23,
+   "four_bit_native": false,
+   "has_special_build": false,
+   "detail_sha": "0047d64307f1bbb5"
   }
  ],
- "sha": "7a58ea341cb24151"
+ "sha": "e620994a2ddbdbfd"
 }

@@ -800,6 +800,19 @@
    "first_seen": "2026-09-02"
   },
   {
+   "repo": "ggml-org/gemma-4-26B-A4B-GGUF",
+   "url": "https://huggingface.co/ggml-org/gemma-4-26B-A4B-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 8.1,
+   "size_gb": 26.86,
+   "size_bytes": 26859842048,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
    "repo": "lmstudio-community/gemma-4-26B-A4B-it-GGUF",
    "url": "https://huggingface.co/lmstudio-community/gemma-4-26B-A4B-it-GGUF",
    "format": "gguf",
@@ -917,6 +930,19 @@
    "first_seen": "2026-09-02"
   },
   {
+   "repo": "ggml-org/gemma-4-26B-A4B-GGUF",
+   "url": "https://huggingface.co/ggml-org/gemma-4-26B-A4B-GGUF",
+   "format": "gguf",
+   "label": "BF16",
+   "bits": 15.22,
+   "size_gb": 50.51,
+   "size_bytes": 50505118208,
+   "quantizer": "ggml-org",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
    "repo": "bartowski/google_gemma-4-26B-A4B-it-GGUF",
    "url": "https://huggingface.co/bartowski/google_gemma-4-26B-A4B-it-GGUF",
    "format": "gguf",
@@ -969,6 +995,19 @@
    "first_seen": "2026-09-02"
   },
   {
+   "repo": "google/gemma-4-26B-A4B",
+   "url": "https://huggingface.co/google/gemma-4-26B-A4B",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 15.56,
+   "size_gb": 51.61,
+   "size_bytes": 51612009916,
+   "quantizer": "official",
+   "file_count": 2,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
    "repo": "mlx-community/gemma-4-26b-a4b-it-bf16",
    "url": "https://huggingface.co/mlx-community/gemma-4-26b-a4b-it-bf16",
    "format": "mlx",
@@ -1007,9 +1046,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:26:00.236284+00:00",
-  "last_checked": "2026-10-19T08:43:39.770804+00:00",
-  "last_changed": "2026-09-02T20:26:00.236284+00:00"
+  "last_checked": "2026-10-22T08:29:56.841357+00:00",
+  "last_changed": "2026-10-21T08:27:23.278818+00:00"
  },
- "generated_at": "2026-10-19T08:44:16+00:00",
- "sha": "df74e0c1c3cf7851"
+ "generated_at": "2026-10-22T08:30:35+00:00",
+ "sha": "efe847172be7a1a8"
 }

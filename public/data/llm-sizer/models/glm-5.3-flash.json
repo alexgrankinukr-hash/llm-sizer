@@ -132,7 +132,7 @@
    "label": "Q2_K_S",
    "bits": 2.74,
    "size_gb": 110.03,
-   "size_bytes": 110027352992,
+   "size_bytes": 110027352864,
    "quantizer": "ggml-org",
    "file_count": 2,
    "qat": false,
@@ -158,7 +158,7 @@
    "label": "Q2_K",
    "bits": 3.33,
    "size_gb": 133.81,
-   "size_bytes": 133809056672,
+   "size_bytes": 133809056544,
    "quantizer": "ggml-org",
    "file_count": 2,
    "qat": false,
@@ -197,7 +197,7 @@
    "label": "Q4_K",
    "bits": 4.52,
    "size_gb": 181.37,
-   "size_bytes": 181372463744,
+   "size_bytes": 181372463648,
    "quantizer": "ggml-org",
    "file_count": 2,
    "qat": false,
@@ -346,9 +346,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:30:03.811239+00:00",
-  "last_checked": "2026-10-19T08:43:57.366036+00:00",
+  "last_checked": "2026-10-22T08:30:14.755732+00:00",
   "last_changed": "2026-09-02T20:30:03.811239+00:00"
  },
- "generated_at": "2026-10-19T08:44:16+00:00",
- "sha": "c9cac353364489d6"
+ "generated_at": "2026-10-22T08:30:35+00:00",
+ "sha": "5f99bf79b545e0d3"
 }

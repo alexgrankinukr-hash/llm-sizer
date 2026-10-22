@@ -1,0 +1,143 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "hy-memory-30b-a3b",
+ "name": "Hy-Memory-30B-A3B",
+ "provider": "tencent",
+ "hf_repo": "tencent/Hy-Memory-30B-A3B",
+ "url": "https://huggingface.co/tencent/Hy-Memory-30B-A3B",
+ "variant": "instruct",
+ "released": "2026-10-15",
+ "params_total": 30064725888,
+ "params_active": 3000000000,
+ "params_active_source": "name",
+ "context_max": 262144,
+ "native_bits": null,
+ "license": {
+  "name": "apache-2.0",
+  "url": null,
+  "commercial": true,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "hy_v3",
+  "text-generation",
+  "conversational",
+  "en",
+  "zh",
+  "endpoints_compatible"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [
+  "architecture read from config, but the model family is unfamiliar — treat cache math as approximate"
+ ],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "hy_v3",
+  "attention": "gqa",
+  "layers": 48,
+  "kv_layers": 48,
+  "sliding_layers": 0,
+  "linear_layers": 0,
+  "kv_heads": 4,
+  "head_dim": 128,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": null,
+  "window_size": null,
+  "full_bytes_per_token_8bit": 49152,
+  "sliding_bytes_per_token_8bit": 0,
+  "linear_state_bytes": 0,
+  "hidden_size": 2048,
+  "experts_total": 128,
+  "experts_active": 8,
+  "experts_shared": 1,
+  "moe_intermediate": 1536,
+  "moe_layers": 47,
+  "accel_mtp": false,
+  "accel_dflash_repo": null,
+  "accel_dspark_repo": null,
+  "conventional_assumed": true,
+  "source": "config",
+  "config_sha": "9162f7446479f6da",
+  "notes": [],
+  "kv_cache_gb_at_128k_8bit": 6.44
+ },
+ "quants": [
+  {
+   "repo": "mlx-community/Hy-Memory-30B-A3B-4bit",
+   "url": "https://huggingface.co/mlx-community/Hy-Memory-30B-A3B-4bit",
+   "format": "mlx",
+   "label": "MLX-4bit",
+   "bits": 4.5,
+   "size_gb": 16.93,
+   "size_bytes": 16929648349,
+   "quantizer": "mlx-community",
+   "file_count": 4,
+   "qat": false,
+   "first_seen": "2026-10-21"
+  },
+  {
+   "repo": "mlx-community/Hy-Memory-30B-A3B-8bit",
+   "url": "https://huggingface.co/mlx-community/Hy-Memory-30B-A3B-8bit",
+   "format": "mlx",
+   "label": "MLX-8bit",
+   "bits": 8.5,
+   "size_gb": 31.96,
+   "size_bytes": 31955742589,
+   "quantizer": "mlx-community",
+   "file_count": 6,
+   "qat": false,
+   "first_seen": "2026-10-21"
+  },
+  {
+   "repo": "tencent/Hy-Memory-30B-A3B",
+   "url": "https://huggingface.co/tencent/Hy-Memory-30B-A3B",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.0,
+   "size_gb": 60.13,
+   "size_bytes": 60131744504,
+   "quantizer": "official",
+   "file_count": 51,
+   "qat": false,
+   "first_seen": "2026-10-21"
+  }
+ ],
+ "reference": {
+  "q4": {
+   "repo": "mlx-community/Hy-Memory-30B-A3B-4bit",
+   "label": "MLX-4bit"
+  },
+  "q8": {
+   "repo": "mlx-community/Hy-Memory-30B-A3B-8bit",
+   "label": "MLX-8bit"
+  },
+  "mlx4": {
+   "repo": "mlx-community/Hy-Memory-30B-A3B-4bit",
+   "label": "MLX-4bit"
+  },
+  "native": {
+   "repo": "tencent/Hy-Memory-30B-A3B",
+   "label": "BF16"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": null,
+  "dspark": null
+ },
+ "timestamps": {
+  "first_seen": "2026-10-21T08:27:45.263326+00:00",
+  "last_checked": "2026-10-21T08:27:45.263326+00:00",
+  "last_changed": "2026-10-21T08:27:45.263326+00:00"
+ },
+ "generated_at": "2026-10-22T08:30:35+00:00",
+ "sha": "c092cc09476f9cb8"
+}

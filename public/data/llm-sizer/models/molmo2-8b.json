@@ -1,0 +1,139 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "molmo2-8b",
+ "name": "Molmo2-8B",
+ "provider": "allenai",
+ "hf_repo": "allenai/Molmo2-8B",
+ "url": "https://huggingface.co/allenai/Molmo2-8B",
+ "variant": "instruct",
+ "released": "2025-12-14",
+ "params_total": 8661703120,
+ "params_active": 8661703120,
+ "params_active_source": "dense",
+ "context_max": 36864,
+ "native_bits": 32.0,
+ "license": {
+  "name": "apache-2.0",
+  "url": null,
+  "commercial": true,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "molmo2",
+  "image-text-to-text",
+  "multimodal",
+  "olmo",
+  "molmo",
+  "conversational",
+  "custom_code",
+  "en",
+  "dataset:allenai/Molmo2-Cap",
+  "dataset:allenai/Molmo2-VideoCapQA",
+  "dataset:allenai/Molmo2-VideoSubtitleQA",
+  "dataset:allenai/Molmo2-AskModelAnything",
+  "dataset:allenai/Molmo2-VideoPoint",
+  "dataset:allenai/Molmo2-VideoTrack",
+  "dataset:allenai/Molmo2-MultiImageQA",
+  "dataset:allenai/Molmo2-SynMultiImageQA",
+  "dataset:allenai/Molmo2-MultiImagePoint",
+  "endpoints_compatible"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [
+  "architecture read from config, but the model family is unfamiliar — treat cache math as approximate"
+ ],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "molmo2_text",
+  "attention": "gqa",
+  "layers": 36,
+  "kv_layers": 36,
+  "sliding_layers": 0,
+  "linear_layers": 0,
+  "kv_heads": 8,
+  "head_dim": 128,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": null,
+  "window_size": null,
+  "full_bytes_per_token_8bit": 73728,
+  "sliding_bytes_per_token_8bit": 0,
+  "linear_state_bytes": 0,
+  "hidden_size": 4096,
+  "experts_total": null,
+  "experts_active": null,
+  "experts_shared": null,
+  "moe_intermediate": null,
+  "moe_layers": null,
+  "accel_mtp": false,
+  "accel_dflash_repo": null,
+  "accel_dspark_repo": null,
+  "conventional_assumed": true,
+  "source": "config",
+  "config_sha": "5e6407bd0ff3b893",
+  "notes": [],
+  "kv_cache_gb_at_128k_8bit": 9.66
+ },
+ "quants": [
+  {
+   "repo": "mlx-community/Molmo2-8B-mxfp4",
+   "url": "https://huggingface.co/mlx-community/Molmo2-8B-mxfp4",
+   "format": "mlx",
+   "label": "MLX-MXFP4",
+   "bits": 5.73,
+   "size_gb": 6.21,
+   "size_bytes": 6207871457,
+   "quantizer": "mlx-community",
+   "file_count": 2,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  },
+  {
+   "repo": "allenai/Molmo2-8B",
+   "url": "https://huggingface.co/allenai/Molmo2-8B",
+   "format": "safetensors",
+   "label": "F32",
+   "bits": 32.0,
+   "size_gb": 34.65,
+   "size_bytes": 34646910272,
+   "quantizer": "official",
+   "file_count": 8,
+   "qat": false,
+   "first_seen": "2026-10-20"
+  }
+ ],
+ "reference": {
+  "q4": {
+   "repo": "mlx-community/Molmo2-8B-mxfp4",
+   "label": "MLX-MXFP4"
+  },
+  "q8": null,
+  "mlx4": {
+   "repo": "mlx-community/Molmo2-8B-mxfp4",
+   "label": "MLX-MXFP4"
+  },
+  "native": {
+   "repo": "allenai/Molmo2-8B",
+   "label": "F32"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": null,
+  "dspark": null
+ },
+ "timestamps": {
+  "first_seen": "2026-10-20T08:25:03.032632+00:00",
+  "last_checked": "2026-10-20T08:25:03.032632+00:00",
+  "last_changed": "2026-10-20T08:25:03.032632+00:00"
+ },
+ "generated_at": "2026-10-22T08:30:35+00:00",
+ "sha": "e6ad7527ee0457c2"
+}

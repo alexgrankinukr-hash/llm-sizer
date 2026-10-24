@@ -207,7 +207,7 @@
    "repo": "bartowski/Lythri_Lythri-4B-A2B-GGUF",
    "url": "https://huggingface.co/bartowski/Lythri_Lythri-4B-A2B-GGUF",
    "format": "gguf",
-   "label": "Q4_K_M",
+   "label": "IQ4_NL",
    "bits": 5.48,
    "size_gb": 3.17,
    "size_bytes": 3172045152,
@@ -220,7 +220,7 @@
    "repo": "bartowski/Lythri_Lythri-4B-A2B-GGUF",
    "url": "https://huggingface.co/bartowski/Lythri_Lythri-4B-A2B-GGUF",
    "format": "gguf",
-   "label": "IQ4_NL",
+   "label": "Q4_K_M",
    "bits": 5.48,
    "size_gb": 3.17,
    "size_bytes": 3172045152,
@@ -398,6 +398,6 @@
   "last_checked": "2026-10-05T10:17:30.271583+00:00",
   "last_changed": "2026-10-05T10:17:30.271583+00:00"
  },
- "generated_at": "2026-10-22T08:30:35+00:00",
- "sha": "ba349859478603f9"
+ "generated_at": "2026-10-23T08:26:41+00:00",
+ "sha": "1eafacb21aab5e18"
 }

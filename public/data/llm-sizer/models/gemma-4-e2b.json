@@ -137,8 +137,8 @@
    "first_seen": "2026-10-20"
   },
   {
-   "repo": "google/gemma-4-E2B-it",
-   "url": "https://huggingface.co/google/gemma-4-E2B-it",
+   "repo": "google/gemma-4-E2B",
+   "url": "https://huggingface.co/google/gemma-4-E2B",
    "format": "safetensors",
    "label": "BF16",
    "bits": 16.0,
@@ -150,8 +150,8 @@
    "first_seen": "2026-10-20"
   },
   {
-   "repo": "google/gemma-4-E2B",
-   "url": "https://huggingface.co/google/gemma-4-E2B",
+   "repo": "google/gemma-4-E2B-it",
+   "url": "https://huggingface.co/google/gemma-4-E2B-it",
    "format": "safetensors",
    "label": "BF16",
    "bits": 16.0,
@@ -188,6 +188,6 @@
   "last_checked": "2026-10-20T08:25:17.644556+00:00",
   "last_changed": "2026-10-20T08:25:16.199323+00:00"
  },
- "generated_at": "2026-10-22T08:30:35+00:00",
- "sha": "c04b101aa7c7999b"
+ "generated_at": "2026-10-23T08:26:41+00:00",
+ "sha": "de8a74e1454641db"
 }

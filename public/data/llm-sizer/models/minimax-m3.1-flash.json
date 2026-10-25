@@ -1,0 +1,120 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "minimax-m3.1-flash",
+ "name": "MiniMax-M3.1-Flash",
+ "provider": "MiniMaxAI",
+ "hf_repo": "MiniMaxAI/MiniMax-M3.1-Flash",
+ "url": "https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash",
+ "variant": "instruct",
+ "released": "2026-10-17",
+ "params_total": 220490854016,
+ "params_active": 25501732883,
+ "params_active_source": "estimated",
+ "context_max": 1048576,
+ "native_bits": 8.0,
+ "license": {
+  "name": "other",
+  "url": null,
+  "commercial": null,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "minimax_m3_vl",
+  "image-text-to-text",
+  "multimodal",
+  "moe",
+  "agent",
+  "coding",
+  "video",
+  "conversational",
+  "custom_code",
+  "eval-results",
+  "endpoints_compatible",
+  "8-bit",
+  "mxfp8"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [
+  "architecture read from config, but the model family is unfamiliar — treat cache math as approximate"
+ ],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "minimax_m3_vl",
+  "attention": "gqa",
+  "layers": 60,
+  "kv_layers": 60,
+  "sliding_layers": 0,
+  "linear_layers": 0,
+  "kv_heads": 4,
+  "head_dim": 128,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": null,
+  "window_size": null,
+  "full_bytes_per_token_8bit": 61440,
+  "sliding_bytes_per_token_8bit": 0,
+  "linear_state_bytes": 0,
+  "hidden_size": 6144,
+  "experts_total": 128,
+  "experts_active": 4,
+  "experts_shared": 1,
+  "moe_intermediate": 3072,
+  "moe_layers": 57,
+  "accel_mtp": false,
+  "accel_dflash_repo": "incoai/MiniMax-M3.1-Flash-DFlash2",
+  "accel_dspark_repo": null,
+  "conventional_assumed": true,
+  "source": "config",
+  "config_sha": "f8bb23145ec72f58",
+  "notes": [
+   "expert size taken from intermediate_size"
+  ],
+  "kv_cache_gb_at_128k_8bit": 8.05
+ },
+ "quants": [
+  {
+   "repo": "MiniMaxAI/MiniMax-M3.1-Flash",
+   "url": "https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash",
+   "format": "safetensors",
+   "label": "FP8",
+   "bits": 9.07,
+   "size_gb": 250.12,
+   "size_bytes": 250116419880,
+   "quantizer": "official",
+   "file_count": 48,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  }
+ ],
+ "reference": {
+  "q4": null,
+  "q8": {
+   "repo": "MiniMaxAI/MiniMax-M3.1-Flash",
+   "label": "FP8"
+  },
+  "mlx4": null,
+  "native": {
+   "repo": "MiniMaxAI/MiniMax-M3.1-Flash",
+   "label": "FP8"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": "incoai/MiniMax-M3.1-Flash-DFlash2",
+  "dspark": null
+ },
+ "timestamps": {
+  "first_seen": "2026-10-24T08:02:04.641279+00:00",
+  "last_checked": "2026-10-25T08:18:57.995669+00:00",
+  "last_changed": "2026-10-24T08:02:04.641279+00:00"
+ },
+ "generated_at": "2026-10-25T08:19:21+00:00",
+ "sha": "4921a447b108a74f"
+}

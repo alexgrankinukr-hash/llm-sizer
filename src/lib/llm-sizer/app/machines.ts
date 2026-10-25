@@ -168,6 +168,25 @@ export function groupLabel(group: Pick<MachineGroup, 'family' | 'chip' | 'kind'>
   return group.kind === 'prebuilt' || group.family === group.chip ? group.family : `${group.family} · ${group.chip}`;
 }
 
+/**
+ * The machine picker's search. Words match the family and chip ("macbook pro", "m4 max"); a number, with or
+ * without "GB", matches a memory size ("48", "48gb"). The words are tried as one phrase first, so "m5 pro"
+ * stays the M5 Pro chip rather than every MacBook Pro with an M5; only when the phrase matches nothing does
+ * each word count on its own ("mini m4 pro").
+ */
+export function searchMachines(groups: MachineGroup[], query: string): MachineGroup[] {
+  const tokens = query.toLowerCase().replace(/(\d)\s*gb\b/g, '$1').split(/[^a-z0-9.]+/).filter((t) => t && t !== 'gb');
+  const sizes = tokens.filter((t) => /^\d+$/.test(t)).map(Number);
+  const words = tokens.filter((t) => !/^\d+$/.test(t));
+  const hasSizes = (g: MachineGroup) => sizes.every((gb) => g.rows.some((r) => r.gb === gb));
+  const text = (g: MachineGroup) => `${g.family} ${g.chip}`.toLowerCase().replace(/[^a-z0-9.]+/g, ' ');
+  const sized = groups.filter(hasSizes);
+  if (!words.length) return sized;
+  const phrase = words.join(' ');
+  const asPhrase = sized.filter((g) => text(g).includes(phrase));
+  return asPhrase.length ? asPhrase : sized.filter((g) => words.every((w) => text(g).includes(w)));
+}
+
 /** The rail label with the count: "2 × Mac Studio · M5 Max". */
 export function linkedLabel(group: Pick<MachineGroup, 'family' | 'chip' | 'kind'>, linked: LinkedInfo | null): string {
   return linked ? `${linked.count} × ${groupLabel(group)}` : groupLabel(group);

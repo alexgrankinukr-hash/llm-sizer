@@ -2,7 +2,7 @@
 import { useMemo, useState } from 'react';
 import type { ModelIndex, ModelIndexEntry } from '../../lib/llm-sizer/engine/types';
 import { formatGb } from '../../lib/llm-sizer/engine/format';
-import { groupLabel, type LinkedInfo, type MachineGroup } from '../../lib/llm-sizer/app/machines';
+import { searchMachines, type LinkedInfo, type MachineGroup } from '../../lib/llm-sizer/app/machines';
 import { PlatformIcon } from './icons';
 
 export interface MachineListProps {
@@ -17,10 +17,11 @@ export interface MachineListProps {
 
 export function MachineList(props: MachineListProps) {
   const [showOld, setShowOld] = useState(false);
-  const needle = props.query.trim().toLowerCase();
-  const matches = (g: MachineGroup) => !needle || groupLabel(g).toLowerCase().includes(needle) || g.chip.toLowerCase().includes(needle);
-  const current = props.groups.filter((g) => g.status === 'current' && matches(g));
-  const older = props.groups.filter((g) => g.status !== 'current' && matches(g));
+  const found = searchMachines(props.groups, props.query);
+  const current = found.filter((g) => g.status === 'current');
+  const older = found.filter((g) => g.status !== 'current');
+  // a search that only older machines answer shows them without the extra click
+  const oldAuto = props.query.trim() !== '' && current.length === 0;
   const families = (list: MachineGroup[]) => {
     const out = new Map<string, MachineGroup[]>();
     for (const g of list) out.set(g.family, [...(out.get(g.family) ?? []), g]);
@@ -54,10 +55,12 @@ export function MachineList(props: MachineListProps) {
       ))}
       {older.length > 0 && (
         <div>
-          <button type="button" className="item text-[var(--color-muted)]" onClick={() => setShowOld((v) => !v)}>
-            {showOld ? 'Hide' : 'Show'} older machines ({older.length})
-          </button>
-          {showOld &&
+          {!oldAuto && (
+            <button type="button" className="item text-[var(--color-muted)]" onClick={() => setShowOld((v) => !v)}>
+              {showOld ? 'Hide' : 'Show'} older machines ({older.length})
+            </button>
+          )}
+          {(showOld || oldAuto) &&
             families(older).map(([family, list]) => (
               <div key={family}>
                 <div className="head">{family} · discontinued</div>

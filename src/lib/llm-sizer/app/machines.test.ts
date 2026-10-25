@@ -1,8 +1,33 @@
 import { describe, expect, it } from 'vitest';
 import { loadMachines } from '../engine/__fixtures__/load';
-import { customGroup, findRow, groupLabel, groupTensorCapable, linkedLabel, machineGroups, parseRowKey, pooledGb, pooledPrice, rowKey, rowLabel, slimFactors, slimMachine } from './machines';
+import { customGroup, findRow, groupLabel, groupTensorCapable, linkedLabel, machineGroups, parseRowKey, pooledGb, pooledPrice, rowKey, rowLabel, searchMachines, slimFactors, slimMachine } from './machines';
 
 const groups = machineGroups(loadMachines());
+
+describe('machine search', () => {
+  const ids = (query: string) => searchMachines(groups, query).map((g) => g.id);
+  const FORTY_EIGHT = ['macbook-pro-m3-max', 'macbook-pro-m4-pro', 'macbook-pro-m4-max', 'macbook-pro-m5-pro', 'macbook-pro-m5-max', 'mac-mini-m4-pro', 'mac-mini-m5-pro', 'mac-studio-m4-max', 'mac-studio-m5-max'];
+
+  it('finds every machine sold with a memory size, typed with or without GB', () => {
+    expect(ids('48').sort()).toEqual([...FORTY_EIGHT].sort());
+    expect(ids('48 GB')).toEqual(ids('48'));
+    expect(ids('48gb')).toEqual(ids('48'));
+    expect(ids('')).toHaveLength(groups.length);
+  });
+
+  it('combines words and sizes: "macbook pro 48" is the five MacBook Pros with a 48 GB option', () => {
+    expect(ids('macbook pro 48').sort()).toEqual(FORTY_EIGHT.filter((id) => id.startsWith('macbook-pro')).sort());
+    expect(ids('mac mini 48')).toEqual(['mac-mini-m4-pro', 'mac-mini-m5-pro']);
+    expect(ids('M5 Pro 64GB')).toEqual(['macbook-pro-m5-pro', 'mac-mini-m5-pro']);
+  });
+
+  it('keeps a phrase a phrase, and falls back to separate words only when the phrase finds nothing', () => {
+    expect(ids('m5 pro')).toEqual(['macbook-pro-m5-pro', 'mac-mini-m5-pro']);
+    expect(ids('mini m4 pro')).toEqual(['mac-mini-m4-pro']);
+    expect(ids('Mac mini · M6')).toEqual(['mac-mini-m6']);
+    expect(ids('studio 1000')).toEqual([]);
+  });
+});
 
 describe('machine groups', () => {
   it('merges bandwidth bins into one group per family × chip', () => {

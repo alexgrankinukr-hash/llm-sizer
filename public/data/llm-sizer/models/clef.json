@@ -252,9 +252,9 @@
    "url": "https://huggingface.co/ggml-org/Clef-GGUF",
    "format": "gguf",
    "label": "Q4_K_M",
-   "bits": 5.62,
-   "size_gb": 19.23,
-   "size_bytes": 19232219200,
+   "bits": 5.71,
+   "size_gb": 19.54,
+   "size_bytes": 19540136096,
    "quantizer": "ggml-org",
    "file_count": 1,
    "qat": false,
@@ -319,7 +319,7 @@
    "label": "Q8_0",
    "bits": 8.4,
    "size_gb": 28.73,
-   "size_bytes": 28732215360,
+   "size_bytes": 28732215456,
    "quantizer": "ggml-org",
    "file_count": 1,
    "qat": false,
@@ -358,7 +358,7 @@
    "label": "BF16",
    "bits": 15.81,
    "size_gb": 54.06,
-   "size_bytes": 54064664672,
+   "size_bytes": 54064664736,
    "quantizer": "ggml-org",
    "file_count": 1,
    "qat": false,
@@ -416,9 +416,9 @@
  },
  "timestamps": {
   "first_seen": "2026-10-04T09:36:50.896221+00:00",
-  "last_checked": "2026-10-20T08:24:47.675493+00:00",
+  "last_checked": "2026-10-25T08:18:52.575765+00:00",
   "last_changed": "2026-10-04T09:36:50.896221+00:00"
  },
- "generated_at": "2026-10-23T08:26:41+00:00",
- "sha": "13463f1a31ec5526"
+ "generated_at": "2026-10-25T08:19:21+00:00",
+ "sha": "8d5edb1b6a4a1899"
 }

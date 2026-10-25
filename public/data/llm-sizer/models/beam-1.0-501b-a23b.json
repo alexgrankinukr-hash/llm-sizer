@@ -88,6 +88,32 @@
    "first_seen": "2026-10-18"
   },
   {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "IQ1_S",
+   "bits": 1.75,
+   "size_gb": 109.59,
+   "size_bytes": 109586471392,
+   "quantizer": "bartowski",
+   "file_count": 3,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "IQ1_M",
+   "bits": 1.97,
+   "size_gb": 123.56,
+   "size_bytes": 123555142208,
+   "quantizer": "bartowski",
+   "file_count": 4,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
    "repo": "unsloth/Beam-1.0-501B-A23B-GGUF",
    "url": "https://huggingface.co/unsloth/Beam-1.0-501B-A23B-GGUF",
    "format": "gguf",
@@ -114,6 +140,45 @@
    "first_seen": "2026-10-18"
   },
   {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "IQ2_XXS",
+   "bits": 2.32,
+   "size_gb": 145.28,
+   "size_bytes": 145275574880,
+   "quantizer": "bartowski",
+   "file_count": 4,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "IQ2_XS",
+   "bits": 2.42,
+   "size_gb": 151.72,
+   "size_bytes": 151720589920,
+   "quantizer": "bartowski",
+   "file_count": 4,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "IQ2_S",
+   "bits": 2.57,
+   "size_gb": 161.27,
+   "size_bytes": 161266072256,
+   "quantizer": "bartowski",
+   "file_count": 5,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
    "repo": "unsloth/Beam-1.0-501B-A23B-GGUF",
    "url": "https://huggingface.co/unsloth/Beam-1.0-501B-A23B-GGUF",
    "format": "gguf",
@@ -125,6 +190,19 @@
    "file_count": 5,
    "qat": false,
    "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "IQ2_M",
+   "bits": 2.85,
+   "size_gb": 178.49,
+   "size_bytes": 178487130816,
+   "quantizer": "bartowski",
+   "file_count": 5,
+   "qat": false,
+   "first_seen": "2026-10-24"
   },
   {
    "repo": "unsloth/Beam-1.0-501B-A23B-GGUF",
@@ -140,6 +218,19 @@
    "first_seen": "2026-10-18"
   },
   {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "Q2_K",
+   "bits": 3.04,
+   "size_gb": 190.66,
+   "size_bytes": 190657657536,
+   "quantizer": "bartowski",
+   "file_count": 5,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
    "repo": "unsloth/Beam-1.0-501B-A23B-GGUF",
    "url": "https://huggingface.co/unsloth/Beam-1.0-501B-A23B-GGUF",
    "format": "gguf",
@@ -151,6 +242,58 @@
    "file_count": 5,
    "qat": false,
    "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "IQ3_XXS",
+   "bits": 3.37,
+   "size_gb": 211.1,
+   "size_bytes": 211104643936,
+   "quantizer": "bartowski",
+   "file_count": 6,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "IQ3_XS",
+   "bits": 3.58,
+   "size_gb": 224.54,
+   "size_bytes": 224539605856,
+   "quantizer": "bartowski",
+   "file_count": 6,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "Q3_K_S",
+   "bits": 3.6,
+   "size_gb": 225.88,
+   "size_bytes": 225876540256,
+   "quantizer": "bartowski",
+   "file_count": 6,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "Q3_K_M",
+   "bits": 3.78,
+   "size_gb": 236.62,
+   "size_bytes": 236624444352,
+   "quantizer": "bartowski",
+   "file_count": 7,
+   "qat": false,
+   "first_seen": "2026-10-24"
   },
   {
    "repo": "unsloth/Beam-1.0-501B-A23B-GGUF",
@@ -166,6 +309,71 @@
    "first_seen": "2026-10-18"
   },
   {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "Q3_K_L",
+   "bits": 3.98,
+   "size_gb": 249.52,
+   "size_bytes": 249521929152,
+   "quantizer": "bartowski",
+   "file_count": 7,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "IQ3_M",
+   "bits": 4.08,
+   "size_gb": 255.66,
+   "size_bytes": 255656098752,
+   "quantizer": "bartowski",
+   "file_count": 7,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "IQ4_XS",
+   "bits": 4.36,
+   "size_gb": 273.06,
+   "size_bytes": 273062460480,
+   "quantizer": "bartowski",
+   "file_count": 8,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "Q4_0",
+   "bits": 4.53,
+   "size_gb": 284.16,
+   "size_bytes": 284155590688,
+   "quantizer": "bartowski",
+   "file_count": 8,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_S",
+   "bits": 4.68,
+   "size_gb": 293.38,
+   "size_bytes": 293378620480,
+   "quantizer": "bartowski",
+   "file_count": 8,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
    "repo": "unsloth/Beam-1.0-501B-A23B-GGUF",
    "url": "https://huggingface.co/unsloth/Beam-1.0-501B-A23B-GGUF",
    "format": "gguf",
@@ -179,6 +387,58 @@
    "first_seen": "2026-10-18"
   },
   {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "IQ4_NL",
+   "bits": 4.98,
+   "size_gb": 311.91,
+   "size_bytes": 311912201408,
+   "quantizer": "bartowski",
+   "file_count": 9,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "Q4_1",
+   "bits": 5.01,
+   "size_gb": 314.07,
+   "size_bytes": 314068965536,
+   "quantizer": "bartowski",
+   "file_count": 9,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_M",
+   "bits": 5.02,
+   "size_gb": 314.53,
+   "size_bytes": 314533641408,
+   "quantizer": "bartowski",
+   "file_count": 9,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "Q5_K_S",
+   "bits": 5.67,
+   "size_gb": 355.09,
+   "size_bytes": 355087318240,
+   "quantizer": "bartowski",
+   "file_count": 9,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
    "repo": "unsloth/Beam-1.0-501B-A23B-GGUF",
    "url": "https://huggingface.co/unsloth/Beam-1.0-501B-A23B-GGUF",
    "format": "gguf",
@@ -190,6 +450,45 @@
    "file_count": 9,
    "qat": false,
    "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "Q5_K_M",
+   "bits": 6.08,
+   "size_gb": 380.78,
+   "size_bytes": 380777430368,
+   "quantizer": "bartowski",
+   "file_count": 10,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "Q6_K_S",
+   "bits": 6.71,
+   "size_gb": 420.65,
+   "size_bytes": 420649532864,
+   "quantizer": "bartowski",
+   "file_count": 11,
+   "qat": false,
+   "first_seen": "2026-10-24"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "Q6_K",
+   "bits": 7.05,
+   "size_gb": 441.78,
+   "size_bytes": 441778339360,
+   "quantizer": "bartowski",
+   "file_count": 12,
+   "qat": false,
+   "first_seen": "2026-10-24"
   },
   {
    "repo": "unsloth/Beam-1.0-501B-A23B-GGUF",
@@ -216,6 +515,19 @@
    "file_count": 13,
    "qat": false,
    "first_seen": "2026-10-18"
+  },
+  {
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "url": "https://huggingface.co/bartowski/Beam-1.0-501B-A23B-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 8.5,
+   "size_gb": 532.79,
+   "size_bytes": 532794736064,
+   "quantizer": "bartowski",
+   "file_count": 14,
+   "qat": false,
+   "first_seen": "2026-10-24"
   },
   {
    "repo": "reflection/Beam-1.0-501B-A23B",
@@ -246,8 +558,8 @@
  ],
  "reference": {
   "q4": {
-   "repo": "unsloth/Beam-1.0-501B-A23B-GGUF",
-   "label": "UD-Q4_K_XL"
+   "repo": "bartowski/Beam-1.0-501B-A23B-GGUF",
+   "label": "Q4_K_M"
   },
   "q8": {
    "repo": "unsloth/Beam-1.0-501B-A23B-GGUF",
@@ -266,9 +578,9 @@
  },
  "timestamps": {
   "first_seen": "2026-10-18T07:57:07.939665+00:00",
-  "last_checked": "2026-10-18T07:57:07.939665+00:00",
+  "last_checked": "2026-10-24T08:02:23.367559+00:00",
   "last_changed": "2026-10-18T07:57:07.939665+00:00"
  },
- "generated_at": "2026-10-23T08:26:41+00:00",
- "sha": "210fb2ff0cc91858"
+ "generated_at": "2026-10-25T08:19:21+00:00",
+ "sha": "16818276481be661"
 }

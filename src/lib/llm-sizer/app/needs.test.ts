@@ -50,6 +50,19 @@ describe('memoryNeeds', () => {
   });
 });
 
+describe('prompt scratch in the memory chart', () => {
+  it('shows a current Mac (no scratch) until a machine before the M5 is compared', () => {
+    const state: AppState = { ...defaultState(), runtime: 'mlx', columns: [{ id: 'qwen3.8-27b', quant: 'auto', ctx: 131072 }] };
+    const matrix = evaluateMatrix(state, groups, records, factors);
+    const [current] = memoryNeeds(state, matrix);
+    expect(current.buildLabel).toBe('MLX-4bit');
+    expect(current.need!.scratchGb).toBe(0);
+    expect(current.need!.totalGb).toBeCloseTo(26.38, 1);
+    const [m4] = memoryNeeds(state, matrix, null, 'pre_m5');
+    expect(m4.need!.scratchGb).toBeCloseTo(18, 6);
+  });
+});
+
 describe('special builds in the memory chart', () => {
   it('carries the SSD part beside the need', () => {
     const state = { ...defaultState(), columns: [{ id: 'qwen3.8-flash-next', quant: { special: 0 } as const, ctx: 32768 }] };

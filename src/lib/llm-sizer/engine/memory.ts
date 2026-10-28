@@ -4,7 +4,7 @@
  */
 import { BYTES_PER_GB, CLUSTER_POLICY, GIB_IN_GB, GPU_CAP_MAX_HELD_GB, GPU_CAP_TIERS, MEMORY_POLICY, NGRAM_TABLES, PREBUILT_RESERVE_GB, RUNS_HEADROOM, type ClusterPolicy, type MemoryPolicy } from './constants';
 import { clusterOf, type Cluster } from './cluster';
-import type { Architecture, Availability, Breakdown, KvBits, Machine, Need, Runtime, Settings, SpecialBuild, Quant } from './types';
+import type { Architecture, Availability, Breakdown, KvBits, Machine, MlxContextGroup, Need, Runtime, Settings, SpecialBuild, Quant } from './types';
 
 function clamp01(x: number): number {
   return Math.min(1, Math.max(0, x));
@@ -77,11 +77,16 @@ export function buffersGb(weightsGb: number, policy: MemoryPolicy = MEMORY_POLIC
   return policy.bufferCapGb === null ? raw : Math.min(policy.bufferCapGb, raw);
 }
 
-/** Prompt-processing scratch MLX allocates at long context; GGUF files and short prompts need none. */
-export function scratchGb(quant: Quant | SpecialBuild, contextTokens: number, policy: MemoryPolicy = MEMORY_POLICY): number {
+/**
+ * Prompt-processing scratch MLX allocates at long context; GGUF files and short prompts need none. `group` is the chip's
+ * (`mlxContextGroupOf`): before the M5, MLX builds the attention score matrix of a head-dim-256 prompt chunk; on the M5
+ * and later current engines compute it fused or tiled (METHODOLOGY §5).
+ */
+export function scratchGb(quant: Quant | SpecialBuild, contextTokens: number, policy: MemoryPolicy = MEMORY_POLICY, group: MlxContextGroup = 'pre_m5'): number {
   const format = 'format' in quant ? quant.format : undefined;
-  if (format !== 'mlx' || policy.mlxScratchGbPer1k <= 0) return 0;
-  return (policy.mlxScratchGbPer1k * Math.max(0, contextTokens - policy.mlxScratchFromTokens)) / 1024;
+  const rate = group === 'm5plus' ? policy.mlxScratchGbPer1kM5 : policy.mlxScratchGbPer1k;
+  if (format !== 'mlx' || rate <= 0) return 0;
+  return (rate * Math.max(0, contextTokens - policy.mlxScratchFromTokens)) / 1024;
 }
 
 /** Weights that must be resident: a quant's file size, or a special build's resident size. */
@@ -128,7 +133,8 @@ export function loaderOn(machine: Pick<Machine, 'platform'>): Runtime {
  * leaves on the SSD (`tableOnSsdGb`); the SSD part is reported beside the total, never in it.
  * Across linked machines (METHODOLOGY §5): the shards pack looser (5 % on a layer split, 8 % under tensor parallel), the
  * cache is duplicated on every machine under tensor parallel on latent-attention models, each machine keeps its own
- * working buffers and prompt scratch.
+ * working buffers and prompt scratch. `group` is the machine's chip group for the prompt scratch (`scratchGb`); left
+ * out, the pre-M5 scratch is charged.
  */
 export function neededMemory(
   quant: Quant | SpecialBuild,
@@ -140,6 +146,7 @@ export function neededMemory(
   cluster: Cluster | null = null,
   clusterPolicy: ClusterPolicy = CLUSTER_POLICY,
   loader: Runtime = 'mlx',
+  group: MlxContextGroup = 'pre_m5',
 ): Need {
   const n = cluster?.n ?? 1;
   const split = cluster?.split ?? 'layer';
@@ -150,7 +157,7 @@ export function neededMemory(
   const latent = !!arch && (arch.attention === 'mla' || arch.attention === 'latent');
   const cache = n > 1 && split === 'tensor' && latent ? cacheOne * n : cacheOne;
   const buffers = buffersGb(weights, policy) + (n - 1) * policy.bufferBaseGb;
-  const scratch = scratchGb(quant, contextTokens, policy) * n;
+  const scratch = scratchGb(quant, contextTokens, policy, group) * n;
   const total = weights + cache + buffers + scratch;
   const ssd = isSpecialBuild(quant) ? ssdGbOf(quant) : table;
   return { weightsGb: weights, cacheGb: cache, buffersGb: buffers, scratchGb: scratch, ssdGb: ssd, totalGb: total, ratio: availableGb > 0 ? total / availableGb : Number.POSITIVE_INFINITY };

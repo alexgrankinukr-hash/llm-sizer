@@ -255,9 +255,10 @@ describe('the engram-on-SSD build in the machine view', () => {
       expect(summary.marker, key).toBe('run');
       expect(summary.best, key).toMatchObject({ kind: 'bucket', bucket: 'Q4', verdict: 'runs', quant: { label: 'MLX-4bit' } });
       expect(summary.best!.tokS!, key).toBeGreaterThan(45);
-      expect(summary.best!.result.need.totalGb, key).toBeCloseTo(86.7, 1);
+      expect(summary.best!.result.need.totalGb, key).toBeCloseTo(83.1, 1); // no prompt scratch on an M5
       expect(summary.best!.result.need.ssdGb, key).toBeCloseTo(31.56, 1);
-      expect(summary.longest, key).toMatchObject({ ctx: 131072, verdict: 'runs' });
+      // with no prompt scratch on an M5 the whole 256K window fits (oMLX's peak grows 5 GiB from 4K to 128K)
+      expect(summary.longest, key).toMatchObject({ ctx: 262144, verdict: 'runs' });
     }
     // with GGUF the standard Q4 file keeps the table in memory: a 3-bit file is the best that runs
     expect(modelSummary(fn, pick('mac-studio-m5-max:128'), defaultState(), factors).best).toMatchObject({ bucket: 'Q3' });

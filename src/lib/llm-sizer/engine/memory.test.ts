@@ -194,7 +194,7 @@ describe('memory policy margins (METHODOLOGY §4, §5): explicit policies, dorma
   const glm = loadModel('glm-5.2');
   const mlx4 = quantByLabel(qwen, 'MLX-4bit');
   const q4 = quantByLabel(qwen, 'Q4_0');
-  const next = { ...MEMORY_POLICY_V08, bufferMinGb: 0, bufferBaseGb: 1.5, bufferPct: 0.01, bufferCapGb: null, mlxScratchGbPer1k: 0.15, osReservePctOnOverride: 0.055 };
+  const next = { ...MEMORY_POLICY_V08, bufferMinGb: 0, bufferBaseGb: 1.5, bufferPct: 0.01, bufferCapGb: null, mlxScratchGbPer1k: 0.15, mlxScratchGbPer1kM5: 0, osReservePctOnOverride: 0.055 };
 
   it('buffers: 1 GB or 5 % capped at 16 GB under the 0.8 policy; 1.5 GB plus 1 % of the weights under the next one', () => {
     expect(buffersGb(16.1, MEMORY_POLICY_V08)).toBeCloseTo(1, 6);
@@ -217,6 +217,18 @@ describe('memory policy margins (METHODOLOGY §4, §5): explicit policies, dorma
     const v08 = neededMemory(mlx4, qwen.architecture, 32768, 16, 100, MEMORY_POLICY_V08);
     expect(v08.scratchGb).toBe(0);
     expect(breakdown(64, availableMemory(machineById('macbook-pro-m4-max-40c'), { memoryGb: 64, workApps: 0, override: false }), need).scratch).toBeCloseTo(3.6, 6);
+  });
+
+  it('MLX prompt scratch is charged on chips before the M5 only; left unsaid, the pre-M5 rate applies', () => {
+    expect(scratchGb(mlx4, 131072, next, 'pre_m5')).toBeCloseTo(18, 6);
+    expect(scratchGb(mlx4, 131072, next, 'm5plus')).toBe(0);
+    expect(scratchGb(mlx4, 131072, next)).toBeCloseTo(18, 6);
+    const m5 = neededMemory(mlx4, qwen.architecture, 131072, 16, 100, next, null, undefined, 'mlx', 'm5plus');
+    expect(m5.scratchGb).toBe(0);
+    expect(m5.totalGb).toBeCloseTo(m5.weightsGb + m5.cacheGb + m5.buffersGb, 9);
+    expect(neededMemory(mlx4, qwen.architecture, 131072, 16, 100, next).scratchGb).toBeCloseTo(18, 6);
+    // a margin for the M5 too, should one be set, follows the same 8K start
+    expect(scratchGb(mlx4, 32768, { ...next, mlxScratchGbPer1kM5: 0.05 }, 'm5plus')).toBeCloseTo(1.2, 6);
   });
 
   it('with the GPU limit lifted, macOS keeps the larger of 6 GB and its share of the memory', () => {

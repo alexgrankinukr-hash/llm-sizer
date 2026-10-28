@@ -1,0 +1,171 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "lfm3-1.7b",
+ "name": "LFM3-1.7B",
+ "provider": "LiquidAI",
+ "hf_repo": "LiquidAI/LFM3-1.7B",
+ "url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+ "variant": "instruct",
+ "released": "2026-10-23",
+ "params_total": 1728801536,
+ "params_active": 1728801536,
+ "params_active_source": "dense",
+ "context_max": 262144,
+ "native_bits": 16.0,
+ "license": {
+  "name": "other",
+  "url": null,
+  "commercial": null,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "lfm3",
+  "text-generation",
+  "liquid",
+  "edge",
+  "conversational",
+  "custom_code",
+  "en",
+  "ar",
+  "zh",
+  "fr",
+  "de",
+  "it",
+  "ja",
+  "ko",
+  "pt",
+  "es",
+  "vi",
+  "th",
+  "id",
+  "hi",
+  "ru",
+  "pl"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [
+  "architecture read from config, but the model family is unfamiliar — treat cache math as approximate"
+ ],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "lfm3",
+  "attention": "gqa",
+  "layers": 24,
+  "kv_layers": 6,
+  "sliding_layers": 5,
+  "linear_layers": 13,
+  "kv_heads": 4,
+  "head_dim": 128,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": null,
+  "window_size": 256,
+  "full_bytes_per_token_8bit": 6144,
+  "sliding_bytes_per_token_8bit": 5120,
+  "linear_state_bytes": 6815744,
+  "hidden_size": 2048,
+  "experts_total": null,
+  "experts_active": null,
+  "experts_shared": null,
+  "moe_intermediate": null,
+  "moe_layers": null,
+  "accel_mtp": false,
+  "accel_dflash_repo": null,
+  "accel_dspark_repo": null,
+  "conventional_assumed": true,
+  "source": "config",
+  "config_sha": "429ae89635c0991b",
+  "notes": [
+   "linear-layer state size estimated"
+  ],
+  "kv_cache_gb_at_128k_8bit": 0.81
+ },
+ "quants": [
+  {
+   "repo": "lmstudio-community/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/lmstudio-community/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_M",
+   "bits": 5.09,
+   "size_gb": 1.1,
+   "size_bytes": 1099627008,
+   "quantizer": "lmstudio-community",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-28"
+  },
+  {
+   "repo": "lmstudio-community/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/lmstudio-community/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q6_K",
+   "bits": 6.61,
+   "size_gb": 1.43,
+   "size_bytes": 1427637504,
+   "quantizer": "lmstudio-community",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-28"
+  },
+  {
+   "repo": "lmstudio-community/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/lmstudio-community/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 8.54,
+   "size_gb": 1.85,
+   "size_bytes": 1846237696,
+   "quantizer": "lmstudio-community",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-28"
+  },
+  {
+   "repo": "LiquidAI/LFM3-1.7B",
+   "url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.0,
+   "size_gb": 3.46,
+   "size_bytes": 3457635448,
+   "quantizer": "official",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-28"
+  }
+ ],
+ "reference": {
+  "q4": {
+   "repo": "lmstudio-community/LFM3-1.7B-GGUF",
+   "label": "Q4_K_M"
+  },
+  "q8": {
+   "repo": "lmstudio-community/LFM3-1.7B-GGUF",
+   "label": "Q8_0"
+  },
+  "mlx4": null,
+  "native": {
+   "repo": "LiquidAI/LFM3-1.7B",
+   "label": "BF16"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": null,
+  "dspark": null
+ },
+ "timestamps": {
+  "first_seen": "2026-10-28T09:32:12.960547+00:00",
+  "last_checked": "2026-10-28T09:32:12.960547+00:00",
+  "last_changed": "2026-10-28T09:32:12.960547+00:00"
+ },
+ "generated_at": "2026-10-28T09:32:20+00:00",
+ "sha": "c91aa6a7f7b5d545"
+}

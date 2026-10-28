@@ -238,7 +238,7 @@ describe('the engram-on-SSD build on the map', () => {
     const studio = map.marks.find((m) => m.key === 'mac-studio-m5-max:128')!;
     expect(studio).toMatchObject({ status: 'fits', qualifies: true, priceUsd: 5099 });
     expect(studio.result.verdict).toBe('runs');
-    expect(studio.result.need.totalGb).toBeCloseTo(86.7, 1);
+    expect(studio.result.need.totalGb).toBeCloseTo(83.1, 1); // no prompt scratch on an M5
     expect(studio.result.need.ssdGb).toBeCloseTo(31.56, 1);
     expect(studio.tokS!).toBeGreaterThan(45);
     expect(map.marks.find((m) => m.key === 'macbook-pro-m5-max:128')).toMatchObject({ status: 'fits', qualifies: true });

@@ -32,7 +32,7 @@ TIERS = ["base", "pro", "max", "ultra", "spark"]
 SPEED_MODEL_KIND = "floor"
 
 # Memory policy margins (mirrored in engine/constants.ts MEMORY_POLICY); listed here so fit_speed.py --memory can score them.
-MEMORY_POLICY = {"bufferMinGb": 0.0, "bufferBaseGb": 1.5, "bufferPct": 0.01, "bufferCapGb": None, "mlxScratchGbPer1k": 0.15, "mlxScratchFromTokens": 8192, "osBaseGb": 6.0, "osReservePctOnOverride": 0.055}
+MEMORY_POLICY = {"bufferMinGb": 0.0, "bufferBaseGb": 1.5, "bufferPct": 0.01, "bufferCapGb": None, "mlxScratchGbPer1k": 0.15, "mlxScratchGbPer1kM5": 0.0, "mlxScratchFromTokens": 8192, "osBaseGb": 6.0, "osReservePctOnOverride": 0.055}
 
 # Published (not yet measured here) constants — see METHODOLOGY.md §6.2. Each carries its source.
 RUNTIME_FACTORS = {

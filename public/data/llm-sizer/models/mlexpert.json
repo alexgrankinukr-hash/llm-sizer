@@ -155,7 +155,7 @@
    "repo": "bartowski/InternScience_MLExpert-GGUF",
    "url": "https://huggingface.co/bartowski/InternScience_MLExpert-GGUF",
    "format": "gguf",
-   "label": "Q3_K_S",
+   "label": "IQ3_XS",
    "bits": 3.77,
    "size_gb": 16.32,
    "size_bytes": 16318691872,
@@ -168,7 +168,7 @@
    "repo": "bartowski/InternScience_MLExpert-GGUF",
    "url": "https://huggingface.co/bartowski/InternScience_MLExpert-GGUF",
    "format": "gguf",
-   "label": "IQ3_XS",
+   "label": "Q3_K_S",
    "bits": 3.77,
    "size_gb": 16.32,
    "size_bytes": 16318691872,
@@ -437,6 +437,6 @@
   "last_checked": "2026-10-24T08:01:56.147822+00:00",
   "last_changed": "2026-10-24T08:01:56.147822+00:00"
  },
- "generated_at": "2026-10-25T08:19:21+00:00",
- "sha": "0685d4241fb2f36a"
+ "generated_at": "2026-10-28T09:32:20+00:00",
+ "sha": "2b3f917b33692636"
 }

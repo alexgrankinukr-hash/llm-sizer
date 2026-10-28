@@ -5,6 +5,7 @@
  */
 import { useState } from 'react';
 import { formatContext, formatGb } from '../../lib/llm-sizer/engine/format';
+import { mlxContextGroupOf } from '../../lib/llm-sizer/engine/speed';
 import { memoryNeeds } from '../../lib/llm-sizer/app/needs';
 import { groupLabel } from '../../lib/llm-sizer/app/machines';
 import { cellKey, type Matrix, type MatrixRow } from '../../lib/llm-sizer/app/matrix';
@@ -48,14 +49,14 @@ const PARTS = [
     key: 'scratchGb',
     label: 'prompt scratch (MLX)',
     fill: 'rgba(212,175,55,0.14)',
-    about: 'What MLX sets aside to process a long prompt. Only MLX files above 8K of context carry it; GGUF files run the prompt in the buffers.',
+    about: 'What MLX sets aside to process a long prompt on an M1 to M4 Mac: MLX files above 8K of context, shown when you compare with such a Mac. M5 and later Macs, and GGUF files, process the prompt inside the buffers.',
   },
 ] as const;
 
 export function MemoryView({ state, matrix, row, present, onRow, onOpenCell }: MemoryViewProps) {
   // the chart is about the models; a machine to measure them against is something you ask for
   const [compare, setCompare] = useState(false);
-  const needs = memoryNeeds(state, matrix, compare && row?.linked ? { n: row.linked.count, split: row.linked.split } : null);
+  const needs = memoryNeeds(state, matrix, compare && row?.linked ? { n: row.linked.count, split: row.linked.split } : null, compare && row ? mlxContextGroupOf(row.group) : 'm5plus');
   const available = compare && row ? (matrix.cells.get(cellKey(row.key, matrix.columns[0]?.index ?? 0))?.result?.availability.availableGb ?? null) : null;
   const biggest = Math.max(1, ...needs.map((n) => n.need?.totalGb ?? 0), available ?? 0);
   const axisMax = biggest * 1.12;
@@ -64,7 +65,7 @@ export function MemoryView({ state, matrix, row, present, onRow, onOpenCell }: M
   const H = 34 + needs.length * rowH + 28;
   const x = (gb: number) => LABEL_W + (Math.min(gb, axisMax) / axisMax) * (W - LABEL_W - 20);
   const barH = present ? 26 : 18;
-  // the scratch part is only worth a legend entry when a bar carries it (MLX files above 8K of context)
+  // the scratch part is only worth a legend entry when a bar carries it (MLX files above 8K of context, on a Mac before the M5)
   const parts = PARTS.filter((p) => p.key !== 'scratchGb' || needs.some((n) => (n.need?.scratchGb ?? 0) > 0.02));
   const anySsd = needs.some((n) => (n.need?.ssdGb ?? 0) > 0.02);
 

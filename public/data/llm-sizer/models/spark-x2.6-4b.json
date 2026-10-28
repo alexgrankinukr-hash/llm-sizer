@@ -219,7 +219,7 @@
    "repo": "bartowski/Spark-X2.6-4B-GGUF",
    "url": "https://huggingface.co/bartowski/Spark-X2.6-4B-GGUF",
    "format": "gguf",
-   "label": "IQ4_NL",
+   "label": "Q4_K_M",
    "bits": 5.1,
    "size_gb": 2.62,
    "size_bytes": 2621104768,
@@ -232,7 +232,7 @@
    "repo": "bartowski/Spark-X2.6-4B-GGUF",
    "url": "https://huggingface.co/bartowski/Spark-X2.6-4B-GGUF",
    "format": "gguf",
-   "label": "Q4_K_M",
+   "label": "IQ4_NL",
    "bits": 5.1,
    "size_gb": 2.62,
    "size_bytes": 2621104768,
@@ -397,6 +397,6 @@
   "last_checked": "2026-10-24T08:02:12.797305+00:00",
   "last_changed": "2026-10-24T08:02:12.797305+00:00"
  },
- "generated_at": "2026-10-25T08:19:21+00:00",
- "sha": "49737498c0acaf09"
+ "generated_at": "2026-10-28T09:32:20+00:00",
+ "sha": "e6a84fac45aa7808"
 }

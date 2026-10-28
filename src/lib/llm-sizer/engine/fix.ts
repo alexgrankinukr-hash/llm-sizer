@@ -6,6 +6,7 @@
 import { CONTEXT_CHIPS, FIX_COST, MEMORY_POLICY, QUANTIZER_PREFERENCE, type MemoryPolicy } from './constants';
 import { formatContext, formatGb } from './format';
 import { clusterOf } from './cluster';
+import { mlxContextGroupOf } from './speed';
 import { availableMemory, isSpecialBuild, loaderOn, ssdGbOf, neededMemory, residentGb, tableOnSsdGb, verdictFor } from './memory';
 import type { Availability, Change, Fix, Machine, ModelDetail, Need, Quant, Settings, SpecialBuild } from './types';
 
@@ -130,7 +131,7 @@ function search(model: ModelDetail, machine: Machine, settings: Settings, reques
           if (ctx !== requestedContext) changes.push({ kind: 'context', tokens: ctx });
           if (q !== requested) changes.push(isSpecialBuild(q) ? { kind: 'ssdPaged', build: q } : { kind: 'quant', quant: q });
           if (changes.length === 0) continue; // the ask itself
-          const need = neededMemory(q, model.architecture, ctx, settings.kvBits, av.availableGb, policy, clusterOf(settings), undefined, loaderOn(machine));
+          const need = neededMemory(q, model.architecture, ctx, settings.kvBits, av.availableGb, policy, clusterOf(settings), undefined, loaderOn(machine), mlxContextGroupOf(machine));
           const v = verdictFor(need);
           if (v === 'no') continue;
           let cost = 0;
@@ -168,7 +169,7 @@ function nearestMissText(model: ModelDetail, machine: Machine, settings: Setting
   const inMemory = (q: Quant | SpecialBuild) => residentGb(q) - tableOnSsdGb(q, model.architecture, loader);
   const smallest = pool.reduce((a, b) => (inMemory(b) < inMemory(a) ? b : a));
   const best = availableMemory(machine, { memoryGb: settings.memoryGb, workApps: 0, override: machine.platform === 'apple' ? 1 : settings.override, machines: settings.machines, split: settings.split }, policy);
-  const need = neededMemory(smallest, model.architecture, requestedContext, settings.kvBits, best.availableGb, policy, clusterOf(settings), undefined, loader);
+  const need = neededMemory(smallest, model.architecture, requestedContext, settings.kvBits, best.availableGb, policy, clusterOf(settings), undefined, loader, mlxContextGroupOf(machine));
   const table = tableOnSsdGb(smallest, model.architecture, loader) > 0 ? ` (${formatGb(inMemory(smallest))} in memory, its n-gram table on the SSD)` : '';
   const label = isSpecialBuild(smallest) ? `"${smallest.label}" (${formatGb(smallest.resident_gb)} in memory)` : `${smallest.label}${nominalBits(smallest.label) ? ` (${nominalBits(smallest.label)}-bit)` : ''} at ${formatGb(residentGb(smallest))}${table}`;
   return `the smallest allowed build, ${label}, needs about ${formatGb(need.totalGb)} at ${formatContext(requestedContext)}; this machine offers ${formatGb(best.availableGb)} at most`;

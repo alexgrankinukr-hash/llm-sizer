@@ -432,7 +432,9 @@ def memory_residuals(validation: dict, policy: dict) -> list[dict]:
         buffers = max(policy["bufferMinGb"], policy.get("bufferBaseGb", 0.0) + policy["bufferPct"] * weights)
         if policy.get("bufferCapGb"):
             buffers = min(policy["bufferCapGb"], buffers)
-        scratch = policy["mlxScratchGbPer1k"] * max(0, r["context_tokens"] - policy["mlxScratchFromTokens"]) / 1024 if mlx else 0.0
+        # the prompt scratch is charged at the chip's rate: before the M5, or the M5 and later (memory.ts:scratchGb)
+        rate = policy.get("mlxScratchGbPer1kM5", policy["mlxScratchGbPer1k"]) if mlx_context_group(r.get("chip", "")) == "m5plus" else policy["mlxScratchGbPer1k"]
+        scratch = rate * max(0, r["context_tokens"] - policy["mlxScratchFromTokens"]) / 1024 if mlx else 0.0
         pred = weights + cache + buffers + scratch
         out.append({"id": r["id"], "split": r["split"], "context": r["context_tokens"], "measured_gb": r["peak_gb"], "predicted_gb": round(pred, 1),
                     "delta_gb": round(pred - r["peak_gb"], 1), "ssd_gb": round(table, 1)})

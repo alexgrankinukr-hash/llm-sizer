@@ -223,6 +223,19 @@ describe('the matrix (METHODOLOGY §9 with the data\'s numbers)', () => {
     expect(cell.flags).toContain('q8-is-repack');
   });
 
+  it('Qwen 3.8 27B in the MLX 4-bit file at 128K: no prompt scratch on an M5 Max, 18 GB of it on an M4 Max (METHODOLOGY §5)', () => {
+    const qwen = loadModel('qwen3.8-27b');
+    const mlx = { runtime: 'mlx' as const, contextTokens: 131072 };
+    const m5 = evaluateCell(qwen, mbp, s(64, mlx), factors);
+    expect(m5.quant?.label).toBe('MLX-4bit');
+    expect(m5.need.scratchGb).toBe(0);
+    // 16.05 GB file + 8.67 GB cache + 1.66 GB buffers; oMLX 0.7.1rc1 peaks at 24.8 GiB (26.6 GB) on this file at 128K
+    expect(m5.need.totalGb).toBeCloseTo(26.38, 1);
+    const m4 = evaluateCell(qwen, machineById('macbook-pro-m4-max-40c'), s(64, mlx), factors);
+    expect(m4.need.scratchGb).toBeCloseTo(18, 6);
+    expect(m4.need.totalGb).toBeCloseTo(44.38, 1);
+  });
+
   it('Flash Next on a 128 GB M5 Max with MLX runs as Mac engines run it: the n-gram table on the SSD, about 80 GB in memory', () => {
     const flash = loadModel('qwen3.8-flash-next');
     const mlx = { runtime: 'mlx' as const };
@@ -231,7 +244,8 @@ describe('the matrix (METHODOLOGY §9 with the data\'s numbers)', () => {
     expect(at32k.quant?.label).toBe('MLX-4bit');
     expect(at32k.need.weightsGb).toBeCloseTo(79.96, 1);
     expect(at32k.need.ssdGb).toBeCloseTo(31.56, 1);
-    expect(at32k.need.totalGb).toBeCloseTo(86.7, 1); // 80.7 GiB of the 107.5 GiB macOS gives the GPU
+    expect(at32k.need.totalGb).toBeCloseTo(83.1, 1); // 77.4 GiB of the 107.5 GiB macOS gives the GPU, with no prompt scratch on an M5
+    expect(at32k.need.scratchGb).toBe(0);
     expect(at32k.availability.availableGb).toBeCloseTo(115.45, 1);
     expect(at32k.flags).toContain('table-on-ssd');
     expect(at32k.flags).not.toContain('ssd-build');

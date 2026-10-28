@@ -6,7 +6,7 @@ import { CONTEXT_CHIPS, MEMORY_POLICY, Q8_REPACK_BITS, REF_4BIT, REF_8BIT, REF_M
 import { findFixes, nominalBits } from './fix';
 import { availableMemory, breakdown, isSpecialBuild, loaderOn, neededMemory, tableOnSsdGb, verdictFor } from './memory';
 import { estimatePrefill } from './prefill';
-import { archClassOf, estimateSpeed, speedSource } from './speed';
+import { archClassOf, estimateSpeed, mlxContextGroupOf, speedSource } from './speed';
 import { clusterOf, dispatchCaveat } from './cluster';
 import type { CellFlag, CellResult, Factors, Machine, ModelDetail, Quant, Runtime, Settings, SpecialBuild } from './types';
 
@@ -103,7 +103,7 @@ export function evaluateCell(model: ModelDetail, machine: Machine, settings: Set
     if (tableOnSsdGb(q, arch, loader) > 0) flags.push('table-on-ssd');
   };
 
-  const need = neededMemory(quant, arch, ctx, settings.kvBits, availability.availableGb, policy, cluster, undefined, loader);
+  const need = neededMemory(quant, arch, ctx, settings.kvBits, availability.availableGb, policy, cluster, undefined, loader, mlxContextGroupOf(machine));
   const v = verdictFor(need);
   if (v !== 'no') {
     tableFlag(quant);

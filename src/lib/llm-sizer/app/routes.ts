@@ -325,14 +325,15 @@ function residentView(quant: Quant, share: number): SpecialBuild {
 
 /**
  * The memory a file needs on a route. An MLX file leaves the n-gram table on the SSD in the engine itself, as in every
- * other view (`tableOnSsdGb`); a route whose engine keeps it out of memory whatever the file says so in the data.
+ * other view (`tableOnSsdGb`); a route whose engine keeps it out of memory whatever the file says so in the data. The
+ * prompt scratch follows the route's catalog machine (`scratchGb`); a route without one is charged the pre-M5 scratch.
  */
-function needOn(route: RouteSpec, model: ModelDetail, quant: Quant, contextTokens: number, kvBits: KvBits, availableGb: number): { need: Need; tableOutGb: number } {
+function needOn(route: RouteSpec, model: ModelDetail, quant: Quant, contextTokens: number, kvBits: KvBits, availableGb: number, machine: Pick<Machine, 'chip'> | null): { need: Need; tableOutGb: number } {
   const loader = route.speed.runtime === 'mlx' ? 'mlx' : 'gguf';
   const share = route.speed.table_off_memory && tableOnSsdGb(quant, model.architecture, loader) === 0 ? ngramTableShare(model.architecture) : 0;
   const build: Quant | SpecialBuild = share > 0 ? residentView(quant, share) : quant;
   const cluster = route.speed.rule === 'cluster' ? { n: route.speed.machines ?? 2, split: route.speed.split ?? 'layer' } : null;
-  const need = neededMemory(build, model.architecture, contextTokens, kvBits, availableGb, undefined, cluster, undefined, loader);
+  const need = neededMemory(build, model.architecture, contextTokens, kvBits, availableGb, undefined, cluster, undefined, loader, machine ? mlxContextGroupOf(machine) : 'pre_m5');
   return { need, tableOutGb: need.ssdGb };
 }
 
@@ -351,9 +352,9 @@ export interface FilePick {
  * uses for that build when it fits, else the largest smaller file of the same build that fits with room (90 %), else the
  * largest that fits at all, the way the fix search steps down. An owner runs the best copy the machine can hold, so two
  * routes can run different files of one build. A card route that cannot hold the model on the card spills the rest into
- * the PC's memory.
+ * the PC's memory. `machine` is the route's catalog machine (`catalogMachine`), whose chip sets the MLX prompt scratch.
  */
-export function pickRouteFile(route: RouteSpec, model: ModelDetail, bucket: Bucket, contextTokens: number, kvBits: KvBits): FilePick {
+export function pickRouteFile(route: RouteSpec, model: ModelDetail, bucket: Bucket, contextTokens: number, kvBits: KvBits, machine: Pick<Machine, 'chip'> | null = null): FilePick {
   const runtime = route.speed.runtime === 'mlx' ? 'mlx' : 'gguf';
   const pool = quantsInBucket(model, bucket, runtime).filter((q) => q.format !== 'safetensors' && bucketOf(q.label) === bucket);
   if (!pool.length) return { quant: null, verdict: 'no-file', need: null, tableOutGb: 0, nearest: null };
@@ -361,7 +362,7 @@ export function pickRouteFile(route: RouteSpec, model: ModelDetail, bucket: Buck
   const first = usual && pool.includes(usual) ? usual : null;
   const bySize = [...(first ? [first] : []), ...pool.filter((q) => q !== first && (!first || q.size_bytes < first.size_bytes)).sort((a, b) => b.size_bytes - a.size_bytes)];
   const usable = route.usable.gb;
-  const evals = bySize.map((q) => ({ q, ...needOn(route, model, q, contextTokens, kvBits, usable) }));
+  const evals = bySize.map((q) => ({ q, ...needOn(route, model, q, contextTokens, kvBits, usable, machine) }));
   const runs = evals.find((e) => verdictFor(e.need) === 'runs');
   const tight = evals.find((e) => verdictFor(e.need) === 'tight');
   const hit = runs ?? tight;
@@ -512,9 +513,9 @@ export function routesTable(file: RoutesFile, model: ModelDetail, bucket: Bucket
   const cls = archClassOf(model);
   return file.routes.map((route): RouteResult => {
     const machine = catalogMachine(route, ctx.machines);
-    const pick = pickRouteFile(route, model, bucket, contextTokens, kvBits);
+    const pick = pickRouteFile(route, model, bucket, contextTokens, kvBits, machine);
     let altVerdict: RouteVerdict | null = null;
-    if (route.usable.alt) altVerdict = pickRouteFile({ ...route, usable: { ...route.usable, gb: route.usable.alt.gb } }, model, bucket, contextTokens, kvBits).verdict;
+    if (route.usable.alt) altVerdict = pickRouteFile({ ...route, usable: { ...route.usable, gb: route.usable.alt.gb } }, model, bucket, contextTokens, kvBits, machine).verdict;
     const all = measurementsOf(route, file.routes).filter((m) => m.model_id === model.id && m.bucket === bucket);
     const measured = all.find((m) => m.kind === 'plain' && !m.unsettled) ?? null;
     const unsettled = all.find((m) => m.kind === 'plain' && m.unsettled) ?? null;

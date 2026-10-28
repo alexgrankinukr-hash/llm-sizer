@@ -43,8 +43,9 @@ export const BUFFER_CAP_GB = 16;
 /**
  * Memory policy margins (METHODOLOGY §4 and §5). These are safety margins, not measured facts, and are labelled as such.
  * `bufferCapGb: null` means no cap. The MLX scratch term is what MLX's prompt processing allocates at long context,
- * per 1K tokens beyond `mlxScratchFromTokens`; the override reserve is what macOS actually keeps once the GPU limit is
- * lifted, as a share of the machine's memory (the larger of it and `osBaseGb` applies).
+ * per 1K tokens beyond `mlxScratchFromTokens`, on Apple chips before the M5 (and any chip whose generation cannot be
+ * read) and on the M5 and later (`mlxScratchGbPer1kM5`); the override reserve is what macOS actually keeps once the GPU
+ * limit is lifted, as a share of the machine's memory (the larger of it and `osBaseGb` applies).
  */
 export interface MemoryPolicy {
   /** buffers = min(cap, max(min, base + pct × weights)) */
@@ -53,19 +54,22 @@ export interface MemoryPolicy {
   bufferPct: number;
   bufferCapGb: number | null;
   mlxScratchGbPer1k: number;
+  mlxScratchGbPer1kM5: number;
   mlxScratchFromTokens: number;
   osBaseGb: number;
   osReservePctOnOverride: number;
 }
 /** The margins the tool shipped with through METHODOLOGY 0.8: max(1 GB, 5 % of weights) capped at 16 GB, no scratch term, 6 GB for macOS. */
-export const MEMORY_POLICY_V08: MemoryPolicy = { bufferMinGb: 1, bufferBaseGb: 0, bufferPct: 0.05, bufferCapGb: 16, mlxScratchGbPer1k: 0, mlxScratchFromTokens: 8192, osBaseGb: 6, osReservePctOnOverride: 0 };
+export const MEMORY_POLICY_V08: MemoryPolicy = { bufferMinGb: 1, bufferBaseGb: 0, bufferPct: 0.05, bufferCapGb: 16, mlxScratchGbPer1k: 0, mlxScratchGbPer1kM5: 0, mlxScratchFromTokens: 8192, osBaseGb: 6, osReservePctOnOverride: 0 };
 /**
  * The margins in force since METHODOLOGY 0.9: buffers of 1.5 GB plus 1 % of the weights (measured working room sits
  * near 0.4 GB on a 224 GB model and near 1.6 GB on a 16 GB one), 0.15 GB of MLX prompt scratch per 1K tokens beyond 8K
  * (the growth measured on the 27B and 397B MLX sweeps), and macOS keeping 5.5 % of the memory once the GPU limit is
- * lifted (27 to 30 GB observed on a 512 GB Studio).
+ * lifted (27 to 30 GB observed on a 512 GB Studio). Since 0.17.4 the scratch is charged on chips before the M5 only:
+ * it is the score matrix MLX builds for a head-dim-256 prompt chunk, which MLX 0.32.2 and oMLX 0.7.0 compute fused or
+ * tiled on the M5 (oMLX 0.7.1rc1 peaks grow by the context cache alone from 4K to 200K on an M5 Max).
  */
-export const MEMORY_POLICY: MemoryPolicy = { bufferMinGb: 0, bufferBaseGb: 1.5, bufferPct: 0.01, bufferCapGb: null, mlxScratchGbPer1k: 0.15, mlxScratchFromTokens: 8192, osBaseGb: 6, osReservePctOnOverride: 0.055 };
+export const MEMORY_POLICY: MemoryPolicy = { bufferMinGb: 0, bufferBaseGb: 1.5, bufferPct: 0.01, bufferCapGb: null, mlxScratchGbPer1k: 0.15, mlxScratchGbPer1kM5: 0, mlxScratchFromTokens: 8192, osBaseGb: 6, osReservePctOnOverride: 0.055 };
 
 /**
  * Architectures with an n-gram table that Mac engines keep on the SSD when they run an MLX file (METHODOLOGY §5), keyed

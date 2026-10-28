@@ -249,6 +249,12 @@ describe('the file a route runs', () => {
     expect(['runs', 'tight']).toContain(spark.verdict);
   });
 
+  it('charges the MLX prompt scratch on the routes whose Mac is older than the M5', () => {
+    const on = (id: string) => pickRouteFile(route(id), qwen27, 'Q4', 131072, 16, catalogMachine(route(id), machines));
+    expect(on('mac-studio-m5-max').need!.scratchGb).toBe(0);
+    expect(on('mac-studio-m4-max').need!.scratchGb).toBeCloseTo(18, 6);
+  });
+
   it('caps an offload route by memory speed, below what the card alone would allow', () => {
     const pc = route('gaming-pc-128');
     const q = pickRouteFile(pc, oss, 'Q4', 4096, 16).quant!;

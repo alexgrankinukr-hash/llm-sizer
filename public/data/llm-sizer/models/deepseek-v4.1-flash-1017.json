@@ -24,9 +24,11 @@
   "deepseek_v41",
   "text-generation",
   "image-text-to-text",
+  "eval-results",
   "endpoints_compatible",
   "8-bit",
-  "fp8"
+  "fp8",
+  "deploy:azure"
  ],
  "featured": false,
  "tier": null,
@@ -223,9 +225,9 @@
  },
  "timestamps": {
   "first_seen": "2026-10-19T08:44:08.718782+00:00",
-  "last_checked": "2026-10-21T08:27:41.392019+00:00",
+  "last_checked": "2026-10-31T09:30:32.393857+00:00",
   "last_changed": "2026-10-19T08:44:08.718782+00:00"
  },
- "generated_at": "2026-10-28T09:32:20+00:00",
- "sha": "c43de42bae67c41b"
+ "generated_at": "2026-10-31T09:30:41+00:00",
+ "sha": "3dc7e9bbeb8d44d1"
 }

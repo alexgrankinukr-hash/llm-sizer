@@ -357,7 +357,7 @@
    "repo": "bartowski/Ornith-1.5-122B-GGUF",
    "url": "https://huggingface.co/bartowski/Ornith-1.5-122B-GGUF",
    "format": "gguf",
-   "label": "IQ4_NL",
+   "label": "Q4_K_M",
    "bits": 5.05,
    "size_gb": 78.92,
    "size_bytes": 78921736736,
@@ -370,7 +370,7 @@
    "repo": "bartowski/Ornith-1.5-122B-GGUF",
    "url": "https://huggingface.co/bartowski/Ornith-1.5-122B-GGUF",
    "format": "gguf",
-   "label": "Q4_K_M",
+   "label": "IQ4_NL",
    "bits": 5.05,
    "size_gb": 78.92,
    "size_bytes": 78921736736,
@@ -574,6 +574,6 @@
   "last_checked": "2026-10-23T08:26:39.267958+00:00",
   "last_changed": "2026-10-23T08:26:39.267958+00:00"
  },
- "generated_at": "2026-10-28T09:32:20+00:00",
- "sha": "9113c8677751d315"
+ "generated_at": "2026-10-31T09:30:41+00:00",
+ "sha": "28729fa77eac202f"
 }

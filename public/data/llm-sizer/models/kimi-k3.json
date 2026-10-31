@@ -65,7 +65,7 @@
   "moe_intermediate": 3072,
   "moe_layers": 92,
   "accel_mtp": false,
-  "accel_dflash_repo": "lightseekorg/kimi-k3-dflash2",
+  "accel_dflash_repo": "modal-labs/Kimi-K3-DFlash",
   "accel_dspark_repo": "RadixArk/Kimi-K3-DSpark",
   "conventional_assumed": false,
   "source": "config",
@@ -198,14 +198,14 @@
  },
  "special_builds": [],
  "drafts": {
-  "dflash": "lightseekorg/kimi-k3-dflash2",
+  "dflash": "modal-labs/Kimi-K3-DFlash",
   "dspark": "RadixArk/Kimi-K3-DSpark"
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:28:57.198926+00:00",
-  "last_checked": "2026-10-28T09:32:07.228044+00:00",
+  "last_checked": "2026-10-31T09:30:11.174052+00:00",
   "last_changed": "2026-09-02T20:28:57.198926+00:00"
  },
- "generated_at": "2026-10-28T09:32:20+00:00",
- "sha": "898d0006391398ff"
+ "generated_at": "2026-10-31T09:30:41+00:00",
+ "sha": "a5e62d82e883ba9f"
 }

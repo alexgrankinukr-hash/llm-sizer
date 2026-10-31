@@ -42,7 +42,8 @@
   "id",
   "hi",
   "ru",
-  "pl"
+  "pl",
+  "eval-results"
  ],
  "featured": false,
  "tier": null,
@@ -89,6 +90,149 @@
  },
  "quants": [
   {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "IQ2_M",
+   "bits": 3.02,
+   "size_gb": 0.65,
+   "size_bytes": 651650624,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q2_K",
+   "bits": 3.25,
+   "size_gb": 0.7,
+   "size_bytes": 701310528,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "IQ3_XXS",
+   "bits": 3.61,
+   "size_gb": 0.78,
+   "size_bytes": 780871232,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q3_K_S",
+   "bits": 3.76,
+   "size_gb": 0.81,
+   "size_bytes": 811501120,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "IQ3_XS",
+   "bits": 3.76,
+   "size_gb": 0.81,
+   "size_bytes": 812467776,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q3_K_M",
+   "bits": 3.92,
+   "size_gb": 0.85,
+   "size_bytes": 847300160,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q3_K_L",
+   "bits": 4.11,
+   "size_gb": 0.89,
+   "size_bytes": 887580224,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "IQ3_M",
+   "bits": 4.28,
+   "size_gb": 0.93,
+   "size_bytes": 925533760,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "IQ4_XS",
+   "bits": 4.62,
+   "size_gb": 1.0,
+   "size_bytes": 997303872,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_S",
+   "bits": 4.88,
+   "size_gb": 1.05,
+   "size_bytes": 1053787712,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q4_0",
+   "bits": 4.9,
+   "size_gb": 1.06,
+   "size_bytes": 1057971776,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
    "repo": "lmstudio-community/LFM3-1.7B-GGUF",
    "url": "https://huggingface.co/lmstudio-community/LFM3-1.7B-GGUF",
    "format": "gguf",
@@ -100,6 +244,84 @@
    "file_count": 1,
    "qat": false,
    "first_seen": "2026-10-28"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_M",
+   "bits": 5.16,
+   "size_gb": 1.12,
+   "size_bytes": 1115637312,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "IQ4_NL",
+   "bits": 5.16,
+   "size_gb": 1.12,
+   "size_bytes": 1115637312,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q4_1",
+   "bits": 5.3,
+   "size_gb": 1.15,
+   "size_bytes": 1145353792,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_L",
+   "bits": 5.51,
+   "size_gb": 1.19,
+   "size_bytes": 1190389312,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q5_K_S",
+   "bits": 5.87,
+   "size_gb": 1.27,
+   "size_bytes": 1268172352,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q5_K_M",
+   "bits": 6.26,
+   "size_gb": 1.35,
+   "size_bytes": 1352451648,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
   },
   {
    "repo": "lmstudio-community/LFM3-1.7B-GGUF",
@@ -115,6 +337,45 @@
    "first_seen": "2026-10-28"
   },
   {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q6_K_S",
+   "bits": 6.74,
+   "size_gb": 1.46,
+   "size_bytes": 1456719424,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q6_K",
+   "bits": 7.02,
+   "size_gb": 1.52,
+   "size_bytes": 1516144192,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q6_K_L",
+   "bits": 7.32,
+   "size_gb": 1.58,
+   "size_bytes": 1582933568,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
    "repo": "lmstudio-community/LFM3-1.7B-GGUF",
    "url": "https://huggingface.co/lmstudio-community/LFM3-1.7B-GGUF",
    "format": "gguf",
@@ -128,6 +389,19 @@
    "first_seen": "2026-10-28"
   },
   {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "Q8_0",
+   "bits": 8.54,
+   "size_gb": 1.85,
+   "size_bytes": 1846238784,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
    "repo": "LiquidAI/LFM3-1.7B",
    "url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
    "format": "safetensors",
@@ -139,6 +413,19 @@
    "file_count": 1,
    "qat": false,
    "first_seen": "2026-10-28"
+  },
+  {
+   "repo": "bartowski/LFM3-1.7B-GGUF",
+   "url": "https://huggingface.co/bartowski/LFM3-1.7B-GGUF",
+   "format": "gguf",
+   "label": "BF16",
+   "bits": 16.04,
+   "size_gb": 3.47,
+   "size_bytes": 3466626336,
+   "quantizer": "bartowski",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
   }
  ],
  "reference": {
@@ -163,9 +450,9 @@
  },
  "timestamps": {
   "first_seen": "2026-10-28T09:32:12.960547+00:00",
-  "last_checked": "2026-10-28T09:32:12.960547+00:00",
+  "last_checked": "2026-10-29T09:46:13.212632+00:00",
   "last_changed": "2026-10-28T09:32:12.960547+00:00"
  },
- "generated_at": "2026-10-28T09:32:20+00:00",
- "sha": "c91aa6a7f7b5d545"
+ "generated_at": "2026-10-31T09:30:41+00:00",
+ "sha": "c1926f46539121df"
 }

@@ -24,6 +24,7 @@ export function NotifyForm({ encoded, bare = false, onSuccess, title = 'New mode
   const [message, setMessage] = useState('');
   const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const confirmed = params?.get('notify') === 'confirmed';
+  const accessOnly = params?.get('notify') === 'access';
   const linkProblem = params?.get('link'); // invalid | expired | unavailable, from the confirm route
   return (
     <form
@@ -47,7 +48,9 @@ export function NotifyForm({ encoded, bare = false, onSuccess, title = 'New mode
       {linkProblem && state === 'idle' && (
         <p className="mt-3 text-sm text-[var(--color-error)]">{linkProblem === 'expired' ? 'That confirmation link has expired. Enter your email again for a fresh one.' : 'That confirmation link did not work. Enter your email again for a fresh one.'}</p>
       )}
-      {confirmed ? (
+      {accessOnly ? (
+        <p className="mt-3 text-sm">Your free-resource access is restored. Newsletter updates remain off for this address.</p>
+      ) : confirmed ? (
         <p className="mt-3 text-sm text-[var(--color-success)]">Confirmed. The first note comes with the next batch of models.</p>
       ) : state === 'sent' ? (
         <p className="mt-3 text-sm">Check your inbox: one click confirms it.</p>

@@ -1,0 +1,171 @@
+{
+ "schema": "llm-sizer/models v1",
+ "id": "unlimited-ocr-2",
+ "name": "Unlimited-OCR-2",
+ "provider": "baidu",
+ "hf_repo": "baidu/Unlimited-OCR-2",
+ "url": "https://huggingface.co/baidu/Unlimited-OCR-2",
+ "variant": "instruct",
+ "released": "2026-10-26",
+ "params_total": 3343978497,
+ "params_active": 869662720,
+ "params_active_source": "estimated",
+ "context_max": 131072,
+ "native_bits": 16.0,
+ "license": {
+  "name": "mit",
+  "url": null,
+  "commercial": true,
+  "note": null
+ },
+ "tags": [
+  "transformers",
+  "safetensors",
+  "unlimited-ocr",
+  "feature-extraction",
+  "baidu",
+  "vision-language",
+  "ocr",
+  "custom_code",
+  "image-text-to-text",
+  "multilingual"
+ ],
+ "featured": false,
+ "tier": null,
+ "rank": null,
+ "gated": "false",
+ "status": "active",
+ "superseded_by": null,
+ "notes": [
+  "architecture read from config, but the model family is unfamiliar — treat cache math as approximate"
+ ],
+ "four_bit_native": false,
+ "architecture": {
+  "model_type": "unlimited-ocr",
+  "attention": "gqa",
+  "layers": 12,
+  "kv_layers": 12,
+  "sliding_layers": 0,
+  "linear_layers": 0,
+  "kv_heads": 10,
+  "head_dim": 128,
+  "k_eq_v": false,
+  "kv_lora_rank": null,
+  "rope_dim": null,
+  "window_size": null,
+  "full_bytes_per_token_8bit": 30720,
+  "sliding_bytes_per_token_8bit": 0,
+  "linear_state_bytes": 0,
+  "hidden_size": 1280,
+  "experts_total": 64,
+  "experts_active": 6,
+  "experts_shared": 2,
+  "moe_intermediate": 896,
+  "moe_layers": 11,
+  "accel_mtp": false,
+  "accel_dflash_repo": null,
+  "accel_dspark_repo": null,
+  "conventional_assumed": true,
+  "source": "config",
+  "config_sha": "0f99d8e298dd032e",
+  "notes": [],
+  "kv_cache_gb_at_128k_8bit": 4.03
+ },
+ "quants": [
+  {
+   "repo": "mlx-community/Unlimited-OCR-2-4bit",
+   "url": "https://huggingface.co/mlx-community/Unlimited-OCR-2-4bit",
+   "format": "mlx",
+   "label": "MLX-4bit",
+   "bits": 5.88,
+   "size_gb": 2.46,
+   "size_bytes": 2459096904,
+   "quantizer": "mlx-community",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "mlx-community/Unlimited-OCR-2-6bit",
+   "url": "https://huggingface.co/mlx-community/Unlimited-OCR-2-6bit",
+   "format": "mlx",
+   "label": "MLX-6bit",
+   "bits": 7.64,
+   "size_gb": 3.19,
+   "size_bytes": 3193202663,
+   "quantizer": "mlx-community",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "mlx-community/Unlimited-OCR-2-8bit",
+   "url": "https://huggingface.co/mlx-community/Unlimited-OCR-2-8bit",
+   "format": "mlx",
+   "label": "MLX-8bit",
+   "bits": 9.4,
+   "size_gb": 3.93,
+   "size_bytes": 3927308361,
+   "quantizer": "mlx-community",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "mlx-community/Unlimited-OCR-2-bf16",
+   "url": "https://huggingface.co/mlx-community/Unlimited-OCR-2-bf16",
+   "format": "mlx",
+   "label": "MLX-BF16",
+   "bits": 15.98,
+   "size_gb": 6.68,
+   "size_bytes": 6680172255,
+   "quantizer": "mlx-community",
+   "file_count": 2,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  },
+  {
+   "repo": "baidu/Unlimited-OCR-2",
+   "url": "https://huggingface.co/baidu/Unlimited-OCR-2",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.0,
+   "size_gb": 6.69,
+   "size_bytes": 6688305576,
+   "quantizer": "official",
+   "file_count": 2,
+   "qat": false,
+   "first_seen": "2026-10-29"
+  }
+ ],
+ "reference": {
+  "q4": {
+   "repo": "mlx-community/Unlimited-OCR-2-4bit",
+   "label": "MLX-4bit"
+  },
+  "q8": {
+   "repo": "mlx-community/Unlimited-OCR-2-8bit",
+   "label": "MLX-8bit"
+  },
+  "mlx4": {
+   "repo": "mlx-community/Unlimited-OCR-2-4bit",
+   "label": "MLX-4bit"
+  },
+  "native": {
+   "repo": "baidu/Unlimited-OCR-2",
+   "label": "BF16"
+  }
+ },
+ "special_builds": [],
+ "drafts": {
+  "dflash": null,
+  "dspark": null
+ },
+ "timestamps": {
+  "first_seen": "2026-10-29T09:46:23.582777+00:00",
+  "last_checked": "2026-10-29T09:46:23.582777+00:00",
+  "last_changed": "2026-10-29T09:46:23.582777+00:00"
+ },
+ "generated_at": "2026-10-31T09:30:41+00:00",
+ "sha": "bfb1e727257f7f86"
+}

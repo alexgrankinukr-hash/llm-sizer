@@ -153,7 +153,7 @@
    "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
    "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
    "format": "gguf",
-   "label": "IQ3_XS",
+   "label": "Q3_K_S",
    "bits": 3.71,
    "size_gb": 16.32,
    "size_bytes": 16317921472,
@@ -166,7 +166,7 @@
    "repo": "bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
    "url": "https://huggingface.co/bartowski/MiniCPM-V-4.7-35B-A3B-GGUF",
    "format": "gguf",
-   "label": "Q3_K_S",
+   "label": "IQ3_XS",
    "bits": 3.71,
    "size_gb": 16.32,
    "size_bytes": 16317921472,
@@ -542,6 +542,6 @@
   "last_checked": "2026-10-18T07:57:06.460849+00:00",
   "last_changed": "2026-10-15T08:11:19.665471+00:00"
  },
- "generated_at": "2026-10-28T09:32:20+00:00",
- "sha": "a97c02ad8cf1bc23"
+ "generated_at": "2026-10-31T09:30:41+00:00",
+ "sha": "4b33b608748e840f"
 }

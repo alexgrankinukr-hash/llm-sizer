@@ -166,19 +166,6 @@
    "first_seen": "2026-10-19"
   },
   {
-   "repo": "black-forest-labs/flux-3-image-klein-pup",
-   "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-pup",
-   "format": "safetensors",
-   "label": "BF16",
-   "bits": 16.0,
-   "size_gb": 18.82,
-   "size_bytes": 18819722392,
-   "quantizer": "official",
-   "file_count": 1,
-   "qat": false,
-   "first_seen": "2026-10-19"
-  },
-  {
    "repo": "mlx-community/flux-3-image-klein-pup-bf16",
    "url": "https://huggingface.co/mlx-community/flux-3-image-klein-pup-bf16",
    "format": "mlx",
@@ -187,6 +174,19 @@
    "size_gb": 18.82,
    "size_bytes": 18819722392,
    "quantizer": "mlx-community",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-10-19"
+  },
+  {
+   "repo": "black-forest-labs/flux-3-image-klein-pup",
+   "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-pup",
+   "format": "safetensors",
+   "label": "BF16",
+   "bits": 16.0,
+   "size_gb": 18.82,
+   "size_bytes": 18819722392,
+   "quantizer": "official",
    "file_count": 1,
    "qat": false,
    "first_seen": "2026-10-19"
@@ -220,6 +220,6 @@
   "last_checked": "2026-10-19T08:43:58.367742+00:00",
   "last_changed": "2026-10-19T08:43:58.367742+00:00"
  },
- "generated_at": "2026-10-28T09:32:20+00:00",
- "sha": "3ef7225d07fc431d"
+ "generated_at": "2026-10-31T09:30:41+00:00",
+ "sha": "736bb472dfea76b2"
 }

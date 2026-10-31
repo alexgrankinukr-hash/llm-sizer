@@ -7,8 +7,8 @@
  "url": "https://huggingface.co/mistralai/Devstral-Small-2-24B-Instruct-2512",
  "variant": "instruct",
  "released": "2025-11-28",
- "params_total": 24011361840,
- "params_active": 24011361840,
+ "params_total": 24011361280,
+ "params_active": 24011361280,
  "params_active_source": "dense",
  "context_max": 393216,
  "native_bits": 8.0,
@@ -937,9 +937,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:30:56.995437+00:00",
-  "last_checked": "2026-10-28T09:32:19.630137+00:00",
-  "last_changed": "2026-09-02T20:30:56.995437+00:00"
+  "last_checked": "2026-10-31T09:30:39.161828+00:00",
+  "last_changed": "2026-10-31T09:30:39.161828+00:00"
  },
- "generated_at": "2026-10-28T09:32:20+00:00",
- "sha": "4a17887bc5abdb2f"
+ "generated_at": "2026-10-31T09:30:41+00:00",
+ "sha": "0a2b13b179cec280"
 }

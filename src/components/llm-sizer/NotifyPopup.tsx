@@ -56,7 +56,7 @@ export function NotifyPopup({ encoded, interactions, disabled = false, request =
   useEffect(() => {
     setMounted(true);
     const params = new URLSearchParams(window.location.search);
-    const landed = params.get('notify') === 'confirmed' || params.has('link');
+    const landed = ['confirmed', 'access'].includes(params.get('notify') ?? '') || params.has('link');
     const s = read();
     const recent = s.dismissedAt ? Date.now() - new Date(s.dismissedAt).getTime() < DISMISS_DAYS * 86400e3 : false;
     const allowed = !disabled && !s.done && (landed || !recent);

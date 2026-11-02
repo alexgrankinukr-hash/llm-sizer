@@ -250,7 +250,7 @@
    "repo": "bartowski/LFM3-VL-2B-GGUF",
    "url": "https://huggingface.co/bartowski/LFM3-VL-2B-GGUF",
    "format": "gguf",
-   "label": "Q4_K_M",
+   "label": "IQ4_NL",
    "bits": 4.65,
    "size_gb": 1.12,
    "size_bytes": 1115637408,
@@ -263,7 +263,7 @@
    "repo": "bartowski/LFM3-VL-2B-GGUF",
    "url": "https://huggingface.co/bartowski/LFM3-VL-2B-GGUF",
    "format": "gguf",
-   "label": "IQ4_NL",
+   "label": "Q4_K_M",
    "bits": 4.65,
    "size_gb": 1.12,
    "size_bytes": 1115637408,
@@ -454,6 +454,6 @@
   "last_checked": "2026-10-29T09:46:19.147431+00:00",
   "last_changed": "2026-10-29T09:46:19.147431+00:00"
  },
- "generated_at": "2026-10-31T09:30:41+00:00",
- "sha": "e4906085b203f460"
+ "generated_at": "2026-11-01T10:20:17+00:00",
+ "sha": "b9792a209ecec944"
 }

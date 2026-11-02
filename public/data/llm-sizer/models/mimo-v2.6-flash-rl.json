@@ -86,7 +86,7 @@
    "label": "Q2_K",
    "bits": 3.25,
    "size_gb": 126.37,
-   "size_bytes": 126365949248,
+   "size_bytes": 126365949344,
    "quantizer": "ggml-org",
    "file_count": 2,
    "qat": false,
@@ -99,7 +99,7 @@
    "label": "MXFP4",
    "bits": 4.31,
    "size_gb": 167.37,
-   "size_bytes": 167369465152,
+   "size_bytes": 167369465248,
    "quantizer": "ggml-org",
    "file_count": 2,
    "qat": false,
@@ -141,9 +141,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-23T08:29:15.090771+00:00",
-  "last_checked": "2026-10-20T08:25:00.633544+00:00",
+  "last_checked": "2026-11-01T10:20:06.750039+00:00",
   "last_changed": "2026-09-25T08:43:45.590179+00:00"
  },
- "generated_at": "2026-10-31T09:30:41+00:00",
- "sha": "4ba665b4c9983515"
+ "generated_at": "2026-11-01T10:20:17+00:00",
+ "sha": "f01611fa2944426e"
 }

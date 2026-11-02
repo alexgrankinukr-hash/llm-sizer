@@ -149,7 +149,7 @@
    "repo": "bartowski/nex-agi_Nex-N2.5-mini-GGUF",
    "url": "https://huggingface.co/bartowski/nex-agi_Nex-N2.5-mini-GGUF",
    "format": "gguf",
-   "label": "Q3_K_S",
+   "label": "IQ3_XS",
    "bits": 3.72,
    "size_gb": 16.32,
    "size_bytes": 16318691456,
@@ -162,7 +162,7 @@
    "repo": "bartowski/nex-agi_Nex-N2.5-mini-GGUF",
    "url": "https://huggingface.co/bartowski/nex-agi_Nex-N2.5-mini-GGUF",
    "format": "gguf",
-   "label": "IQ3_XS",
+   "label": "Q3_K_S",
    "bits": 3.72,
    "size_gb": 16.32,
    "size_bytes": 16318691456,
@@ -266,7 +266,7 @@
    "repo": "bartowski/nex-agi_Nex-N2.5-mini-GGUF",
    "url": "https://huggingface.co/bartowski/nex-agi_Nex-N2.5-mini-GGUF",
    "format": "gguf",
-   "label": "IQ4_NL",
+   "label": "Q4_K_M",
    "bits": 5.09,
    "size_gb": 22.32,
    "size_bytes": 22318512256,
@@ -279,7 +279,7 @@
    "repo": "bartowski/nex-agi_Nex-N2.5-mini-GGUF",
    "url": "https://huggingface.co/bartowski/nex-agi_Nex-N2.5-mini-GGUF",
    "format": "gguf",
-   "label": "Q4_K_M",
+   "label": "IQ4_NL",
    "bits": 5.09,
    "size_gb": 22.32,
    "size_bytes": 22318512256,
@@ -418,6 +418,6 @@
   "last_checked": "2026-09-12T07:51:22.283455+00:00",
   "last_changed": "2026-09-12T07:51:22.283455+00:00"
  },
- "generated_at": "2026-10-31T09:30:41+00:00",
- "sha": "6545604f3c4010b6"
+ "generated_at": "2026-11-01T10:20:17+00:00",
+ "sha": "2a520d3275b9b753"
 }

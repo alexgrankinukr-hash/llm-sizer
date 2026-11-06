@@ -304,7 +304,7 @@
    "repo": "bartowski/NVIDIA-Nemotron-3.5-Bolt-E4B-GGUF",
    "url": "https://huggingface.co/bartowski/NVIDIA-Nemotron-3.5-Bolt-E4B-GGUF",
    "format": "gguf",
-   "label": "Q4_K_M",
+   "label": "IQ4_NL",
    "bits": 5.16,
    "size_gb": 5.16,
    "size_bytes": 5162292576,
@@ -317,7 +317,7 @@
    "repo": "bartowski/NVIDIA-Nemotron-3.5-Bolt-E4B-GGUF",
    "url": "https://huggingface.co/bartowski/NVIDIA-Nemotron-3.5-Bolt-E4B-GGUF",
    "format": "gguf",
-   "label": "IQ4_NL",
+   "label": "Q4_K_M",
    "bits": 5.16,
    "size_gb": 5.16,
    "size_bytes": 5162292576,
@@ -628,6 +628,6 @@
   "last_checked": "2026-10-25T08:19:13.152545+00:00",
   "last_changed": "2026-10-25T08:19:13.152545+00:00"
  },
- "generated_at": "2026-11-01T10:20:17+00:00",
- "sha": "bf0d89c12d1a3ede"
+ "generated_at": "2026-11-05T10:41:25+00:00",
+ "sha": "79666faee846e42f"
 }

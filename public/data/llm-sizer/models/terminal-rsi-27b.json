@@ -261,7 +261,7 @@
    "repo": "bartowski/Teriminal-RSI_Terminal-RSI-27B-GGUF",
    "url": "https://huggingface.co/bartowski/Teriminal-RSI_Terminal-RSI-27B-GGUF",
    "format": "gguf",
-   "label": "IQ4_NL",
+   "label": "Q4_K_M",
    "bits": 5.02,
    "size_gb": 17.44,
    "size_bytes": 17442400384,
@@ -274,7 +274,7 @@
    "repo": "bartowski/Teriminal-RSI_Terminal-RSI-27B-GGUF",
    "url": "https://huggingface.co/bartowski/Teriminal-RSI_Terminal-RSI-27B-GGUF",
    "format": "gguf",
-   "label": "Q4_K_M",
+   "label": "IQ4_NL",
    "bits": 5.02,
    "size_gb": 17.44,
    "size_bytes": 17442400384,
@@ -439,6 +439,6 @@
   "last_checked": "2026-10-26T08:46:18.789123+00:00",
   "last_changed": "2026-10-26T08:46:18.789123+00:00"
  },
- "generated_at": "2026-11-01T10:20:17+00:00",
- "sha": "a50531967a5bfb7c"
+ "generated_at": "2026-11-05T10:41:25+00:00",
+ "sha": "53aecb9d9d43534e"
 }

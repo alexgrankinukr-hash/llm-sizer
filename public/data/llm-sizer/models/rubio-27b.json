@@ -256,7 +256,7 @@
    "repo": "bartowski/mulkzz_RuBio-27B-GGUF",
    "url": "https://huggingface.co/bartowski/mulkzz_RuBio-27B-GGUF",
    "format": "gguf",
-   "label": "Q4_K_M",
+   "label": "IQ4_NL",
    "bits": 5.02,
    "size_gb": 17.44,
    "size_bytes": 17442401504,
@@ -269,7 +269,7 @@
    "repo": "bartowski/mulkzz_RuBio-27B-GGUF",
    "url": "https://huggingface.co/bartowski/mulkzz_RuBio-27B-GGUF",
    "format": "gguf",
-   "label": "IQ4_NL",
+   "label": "Q4_K_M",
    "bits": 5.02,
    "size_gb": 17.44,
    "size_bytes": 17442401504,
@@ -434,6 +434,6 @@
   "last_checked": "2026-11-04T10:45:33.968706+00:00",
   "last_changed": "2026-11-04T10:45:33.968706+00:00"
  },
- "generated_at": "2026-11-05T10:41:25+00:00",
- "sha": "d0d7320b68f73045"
+ "generated_at": "2026-11-09T11:17:01+00:00",
+ "sha": "e0add814e955993c"
 }

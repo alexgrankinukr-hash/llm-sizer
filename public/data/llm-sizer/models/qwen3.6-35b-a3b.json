@@ -451,9 +451,9 @@
    "url": "https://huggingface.co/ggml-org/Qwen3.6-35B-A3B-GGUF",
    "format": "gguf",
    "label": "Q4_K_M",
-   "bits": 4.54,
-   "size_gb": 20.42,
-   "size_bytes": 20419565568,
+   "bits": 4.57,
+   "size_gb": 20.54,
+   "size_bytes": 20542732576,
    "quantizer": "ggml-org",
    "file_count": 1,
    "qat": false,
@@ -830,7 +830,7 @@
    "label": "Q8_0",
    "bits": 8.21,
    "size_gb": 36.9,
-   "size_bytes": 36903139328,
+   "size_bytes": 36903139616,
    "quantizer": "ggml-org",
    "file_count": 1,
    "qat": false,
@@ -947,7 +947,7 @@
    "label": "BF16",
    "bits": 15.44,
    "size_gb": 69.38,
-   "size_bytes": 69376637248,
+   "size_bytes": 69376637536,
    "quantizer": "ggml-org",
    "file_count": 1,
    "qat": false,
@@ -1031,9 +1031,9 @@
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:23:54.503541+00:00",
-  "last_checked": "2026-11-05T10:41:00.333359+00:00",
+  "last_checked": "2026-11-09T11:16:37.841560+00:00",
   "last_changed": "2026-09-02T20:23:54.503541+00:00"
  },
- "generated_at": "2026-11-05T10:41:25+00:00",
- "sha": "86c9735e391d5c2b"
+ "generated_at": "2026-11-09T11:17:01+00:00",
+ "sha": "6c6a6db2f9f9130d"
 }

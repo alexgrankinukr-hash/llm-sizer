@@ -63,7 +63,7 @@
   "moe_layers": null,
   "accel_mtp": false,
   "accel_dflash_repo": "z-lab/Muse-Glimmer-30B-DFlash2",
-  "accel_dspark_repo": "Anbeeld/Muse-Glimmer-30B-DSpark-GGUF",
+  "accel_dspark_repo": "DaoCloud/Muse-Glimmer-30B-DSpark",
   "conventional_assumed": true,
   "source": "config",
   "config_sha": "895983101d062fa3",
@@ -397,19 +397,6 @@
    "first_seen": "2026-09-02"
   },
   {
-   "repo": "lmstudio-community/Muse-Glimmer-30B-GGUF",
-   "url": "https://huggingface.co/lmstudio-community/Muse-Glimmer-30B-GGUF",
-   "format": "gguf",
-   "label": "Q4_K_M",
-   "bits": 4.5,
-   "size_gb": 16.76,
-   "size_bytes": 16756683904,
-   "quantizer": "lmstudio-community",
-   "file_count": 1,
-   "qat": false,
-   "first_seen": "2026-09-02"
-  },
-  {
    "repo": "meta-models/Muse-Glimmer-30B-GGUF",
    "url": "https://huggingface.co/meta-models/Muse-Glimmer-30B-GGUF",
    "format": "gguf",
@@ -418,6 +405,19 @@
    "size_gb": 16.76,
    "size_bytes": 16756683904,
    "quantizer": "official",
+   "file_count": 1,
+   "qat": false,
+   "first_seen": "2026-09-02"
+  },
+  {
+   "repo": "lmstudio-community/Muse-Glimmer-30B-GGUF",
+   "url": "https://huggingface.co/lmstudio-community/Muse-Glimmer-30B-GGUF",
+   "format": "gguf",
+   "label": "Q4_K_M",
+   "bits": 4.5,
+   "size_gb": 16.76,
+   "size_bytes": 16756683904,
+   "quantizer": "lmstudio-community",
    "file_count": 1,
    "qat": false,
    "first_seen": "2026-09-02"
@@ -834,13 +834,13 @@
  "special_builds": [],
  "drafts": {
   "dflash": "z-lab/Muse-Glimmer-30B-DFlash2",
-  "dspark": "Anbeeld/Muse-Glimmer-30B-DSpark-GGUF"
+  "dspark": "DaoCloud/Muse-Glimmer-30B-DSpark"
  },
  "timestamps": {
   "first_seen": "2026-09-02T20:27:49.678978+00:00",
-  "last_checked": "2026-11-05T10:41:08.963943+00:00",
+  "last_checked": "2026-11-09T11:16:45.822542+00:00",
   "last_changed": "2026-09-02T20:27:49.678978+00:00"
  },
- "generated_at": "2026-11-05T10:41:25+00:00",
- "sha": "51798c4d8ef0c8fc"
+ "generated_at": "2026-11-09T11:17:01+00:00",
+ "sha": "08dac28c920389c6"
 }
